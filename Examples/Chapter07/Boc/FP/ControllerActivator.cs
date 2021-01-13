@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Mvc.Internal;
+//using Microsoft.AspNetCore.Mvc.Internal;
 using System;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
@@ -16,14 +16,14 @@ namespace Boc.Chapter7.Delegate
    public class ControllerActivator : IControllerActivator
    {
       internal ILoggerFactory loggerFactory { get; set; }
-      DefaultControllerActivator defaultActivator;
-      TypeActivatorCache typeActivatorCache;
+      //DefaultControllerActivator defaultActivator;
+      //TypeActivatorCache typeActivatorCache;
       IConfigurationRoot configuration;
 
       public ControllerActivator(IConfigurationRoot configuration)
       {
-         typeActivatorCache = new TypeActivatorCache();
-         defaultActivator = new DefaultControllerActivator(typeActivatorCache);
+         //typeActivatorCache = new TypeActivatorCache();
+         //defaultActivator = new DefaultControllerActivator(typeActivatorCache);
          this.configuration = configuration;
       }
 
@@ -33,7 +33,7 @@ namespace Boc.Chapter7.Delegate
          if (type.AsType().Equals(typeof(BookTransferController_FunctionDependencies)))
             return ConfigureTransferOnsController(context.HttpContext.RequestServices);
 
-         return defaultActivator.Create(context);
+         throw new NotImplementedException(); //return defaultActivator.Create(context);
       }
 
       BookTransferController_FunctionDependencies ConfigureTransferOnsController(IServiceProvider serviceProvider)

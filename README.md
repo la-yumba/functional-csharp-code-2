@@ -24,21 +24,21 @@ For a more fully-fledged functional library, consider [LanguageExt](https://gith
 
 ## Working with the code samples
 
-The code samples use .NET Standard 1.6 and .NET Core 2.0, and should compile and run on all major OS's
+The code samples use .NET Standard 1.6 and .NET Core 3.1, and should compile and run on all major OS's
 via the `dotnet` CLI.
 
 ### Prerequisites
 
-- [.NET Core 2.0.3 SDK](https://www.microsoft.com/net/download/core)
+- [.NET Core 3.1 SDK](https://www.microsoft.com/net/download/core)
 
-To check this is available, type `dotnet --version` at the command prompt, and you should get `2.0.3` or greater
+To check this is available, type `dotnet --version` at the command prompt, and you should get `3.1` or greater
 
 ### One-time setup
 
 ```
-$ git clone git@github.com:la-yumba/functional-csharp-code.git
-$ cd functional-csharp-code
-$ dotnet restore
+$ git clone git@github.com:la-yumba/functional-csharp-code-2.git
+$ cd functional-csharp-code-2
+$ dotnet restore -s "https://api.nuget.org/v3/index.json"
 ```
 
 ### Running the tests
@@ -79,7 +79,7 @@ You'll often need to import `LaYumba.Functional` in the REPL. In C# Interactive,
 this can be done like so:
 
 ```csharp
-#r "functional-csharp-code\LaYumba.Functional\bin\Debug\netstandard1.6\LaYumba.Functional.dll"
+#r "functional-csharp-code-2\LaYumba.Functional\bin\Debug\netstandard1.6\LaYumba.Functional.dll"
 ```
 
 The path above may not work for you, in which case use an absolute path to the dll,

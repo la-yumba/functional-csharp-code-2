@@ -1,15 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Mvc.Internal;
 using System;
-using Microsoft.Extensions.Configuration;
-using System.Linq;
 using Boc.Commands;
 using LaYumba.Functional;
-using static LaYumba.Functional.F;
 using System.Collections.Generic;
-using Examples;
 using System.Threading.Tasks;
 using Boc.Chapter10.Domain;
 using Unit = System.ValueTuple;

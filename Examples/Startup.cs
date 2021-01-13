@@ -24,7 +24,7 @@ namespace Boc
 
    public class Startup
    {
-      public Startup(IHostingEnvironment env)
+      public Startup(IWebHostEnvironment env)
       {
          var builder = new ConfigurationBuilder()
              .SetBasePath(env.ContentRootPath)
@@ -50,10 +50,19 @@ namespace Boc
          services.AddOptions();
          services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
 
+         services.AddLogging(loggingBuilder =>
+         {
+            loggingBuilder.AddConfiguration(Configuration.GetSection("Logging"));
+            loggingBuilder.AddConsole();
+            loggingBuilder.AddDebug();
+         });
+
          // relevant for chapter 7
-         var ctrlActivator = new ControllerActivator(Configuration);
-         services.AddSingleton<IControllerActivator>(ctrlActivator);
-         services.AddSingleton<ControllerActivator>(ctrlActivator);
+         // TODO will have to revisit this
+         //var ctrlActivator = new ControllerActivator(Configuration);
+         //services.AddSingleton<IControllerActivator>(ctrlActivator);
+         //services.AddSingleton<ControllerActivator>(ctrlActivator);
+         //ctrlActivator.loggerFactory = loggingBuilder; ???
 
          services.AddSwaggerGen();
          //services.ConfigureSwaggerGen(options =>
@@ -70,13 +79,8 @@ namespace Boc
       }
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-      public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, ControllerActivator ctrlActivator)
-      {
-         ctrlActivator.loggerFactory = loggerFactory;
-         
-         loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-         loggerFactory.AddDebug();
-         
+      public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)//, ControllerActivator ctrlActivator)
+      {                  
          //var routeBuilder = new RouteBuilder(app);
          //routeBuilder.MapRoute("echo", (context) =>
          //{
@@ -102,7 +106,7 @@ namespace Boc
          app.UseMvcWithDefaultRoute();
 
          app.UseSwagger();
-         app.UseSwaggerUi();
+         //app.UseSwaggerUi();
       }
 
       private Task WriteResponse(HttpResponse response, IActionResult result)
