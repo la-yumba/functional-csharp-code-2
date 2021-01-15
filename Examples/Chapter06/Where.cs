@@ -30,13 +30,5 @@ class Interview_Example_Either
          .Bind(Interview);
 }
 
-class Candidate { }
-class Rejection
-{
-   private string reason;
-
-   public Rejection(string reason)
-   {
-      this.reason = reason;
-   }
-}
+record Candidate { }
+record Rejection(string Reason);
