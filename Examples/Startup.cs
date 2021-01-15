@@ -103,6 +103,7 @@ namespace Boc
             await WriteResponse(ctx.Response, result);
          }));
 
+         //MvcOptions.EnableEndpointRouting = false;
          app.UseMvcWithDefaultRoute();
 
          app.UseSwagger();

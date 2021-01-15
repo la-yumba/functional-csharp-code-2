@@ -1,13 +1,15 @@
 ﻿using System;
 using static System.Console;
 using System.Collections.Generic;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
+
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+
 using LaYumba.Functional;
 
-using System.Reflection;
-using Microsoft.AspNetCore;
+// workaround to enable C# 9 syntax
+namespace System.Runtime.CompilerServices { public class IsExternalInit { } }
 
 namespace Examples
 {
