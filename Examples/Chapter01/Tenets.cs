@@ -11,7 +11,7 @@ namespace Examples.Chapter0.Introduction
 
    class Tenets
    {
-      static void _main()
+      static void Run()
       {
          var ints = new List<int> { 1, 2, 3, 4, 5 };
 

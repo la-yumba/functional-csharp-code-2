@@ -1,10 +1,8 @@
 ﻿using System;
-using static System.Console;
 using System.Collections.Generic;
 
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 using LaYumba.Functional;
 
@@ -34,7 +32,7 @@ namespace Examples
          if (args.Length > 0)
             cliExamples.Lookup(args[0])
                .Match(
-                  None: () => WriteLine($"Unknown option: '{args[0]}'"),
+                  None: () => Console.WriteLine($"Unknown option: '{args[0]}'"),
                   Some: (main) => main()
                );
 
@@ -42,12 +40,10 @@ namespace Examples
       }
 
       static void StartWebApi()
-      {
-         var host = WebHost.CreateDefaultBuilder()
-            .UseStartup<Boc.Startup>()
-            .Build();
-
-         host.Run();
-      }
+         => Host
+            .CreateDefaultBuilder()
+            .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
+            .Build()
+            .Run();
    }
 }

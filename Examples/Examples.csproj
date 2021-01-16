@@ -4,11 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <StartupObject>Examples.Program</StartupObject>
     <LangVersion>9.0</LangVersion>
-    <Nullable>Enable</Nullable>
+    <NoWarn>1701;1702;8321;0168;0649</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-
     <PackageReference Include="Dapper" Version="1.50.2" />
     <PackageReference Include="StackExchange.Redis" Version="2.2.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
@@ -17,12 +16,10 @@
     <PackageReference Include="System.Reactive" Version="3.1.1" />
     <PackageReference Include="System.Reactive.Core" Version="3.1.1" />
 
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3"></PackageReference>
-    <PackageReference Include="NUnit" Version="3.13.0"></PackageReference>
-    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0"></PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="NUnit" Version="3.13.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    
     <ProjectReference Include="..\LaYumba.Functional.Data\LaYumba.Functional.Data.csproj" />
     <ProjectReference Include="..\LaYumba.Functional\LaYumba.Functional.csproj" />
   </ItemGroup>
