@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Examples.Chapter0.Introduction
+namespace Examples.Chapter1
 {
    class Names
    {
@@ -16,6 +16,8 @@ namespace Examples.Chapter0.Introduction
       public void Sort(List<string> names)
          => names.Sort((x, y) => x.ToUpper().CompareTo(y.ToUpper()));
    }
+
+   public class Employee { public string LastName { get; } }
 
    public class Lambda_Closure
    {

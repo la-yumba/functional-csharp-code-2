@@ -5,6 +5,8 @@ using System.Linq;
 
 namespace Examples.Chapter7
 {
+   public class Employee { public string LastName { get; } }
+
    public static class EmployeeLookup
    {
       public static void Run()

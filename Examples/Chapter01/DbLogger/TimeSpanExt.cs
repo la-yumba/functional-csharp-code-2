@@ -1,6 +1,6 @@
 using System;
 
-namespace Examples
+namespace Examples.Chapter1.DbLogger
 {
    public static class TimeSpanExt
    {

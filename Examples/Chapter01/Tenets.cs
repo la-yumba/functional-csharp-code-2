@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace Examples.Chapter0.Introduction
+namespace Examples.Chapter1
 {
    using static Enumerable;
    using static Console;

@@ -6,6 +6,8 @@ using System;
 
 namespace Examples.Chapter1.DbLogger
 {
+   public class LogMessage { }
+
    public class DbLogger_V1
    {
       string connString;
