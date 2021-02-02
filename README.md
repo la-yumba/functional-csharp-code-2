@@ -29,9 +29,9 @@ via the `dotnet` CLI.
 
 ### Prerequisites
 
-- [.NET Core 3.1 SDK](https://www.microsoft.com/net/download/core)
+- [.NET Core 5 SDK](https://www.microsoft.com/net/download/core)
 
-To check this is available, type `dotnet --version` at the command prompt, and you should get `3.1` or greater
+To check this is available, type `dotnet --version` at the command prompt, and you should get `5.0` or greater
 
 ### One-time setup
 

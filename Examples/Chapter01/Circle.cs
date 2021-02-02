@@ -41,8 +41,8 @@ namespace Examples.Chapter1
          public static double Area(this Shape shape)
             => shape switch
             {
-               Circle c => PI * Pow(c.Radius, 2),
-               Rectangle r => r.Length * r.Height,
+               Circle(var r) => PI * Pow(r, 2),
+               Rectangle(var l, var h) => l * h,
                _ => throw new ArgumentException(),
             };
       }
