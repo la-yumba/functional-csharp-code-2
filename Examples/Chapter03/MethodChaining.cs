@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Examples.Chapter3
+namespace Examples.Chapter4
 {
    public static class MethodChaining
    {

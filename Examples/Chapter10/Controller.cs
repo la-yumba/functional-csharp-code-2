@@ -3,12 +3,12 @@ using System;
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
 using Boc.Domain.Events;
-using AccountState = Boc.Chapter10.Domain.AccountState;
-using Boc.Chapter10.Domain;
+using AccountState = Boc.Chapter11.Domain.AccountState;
+using Boc.Chapter11.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Boc.Domain;
 
-namespace Boc.Chapter10
+namespace Boc.Chapter11
 {
    namespace Unsafe
    {

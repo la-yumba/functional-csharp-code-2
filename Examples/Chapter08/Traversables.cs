@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Double = LaYumba.Functional.Double;
 using String = LaYumba.Functional.String;
 
-namespace Examples.Chapter8
+namespace Examples.Chapter9
 {
    using static F;
 

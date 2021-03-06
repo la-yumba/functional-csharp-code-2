@@ -2,7 +2,7 @@
 
 using LaYumba.Functional;
 
-namespace Examples.Chapter11
+namespace Examples.Chapter12
 {
    class Model
    {

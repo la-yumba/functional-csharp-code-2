@@ -1,10 +1,10 @@
-using LaYumba.Functional;
+﻿using LaYumba.Functional;
 using static LaYumba.Functional.F;
 using System.Collections.Generic;
 using NUnit.Framework;
 using System.Linq;
 
-namespace Boc.Chapter7
+namespace Boc.Chapter8
 {   
    using static ValidationStrategies;
    

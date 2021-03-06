@@ -3,11 +3,11 @@ using LaYumba.Functional;
 using static LaYumba.Functional.F;
 using System;
 using System.Threading.Tasks;
-using Boc.Chapter10.Domain;
+using Boc.Chapter11.Domain;
 using Boc.Domain.Events;
 using Unit = System.ValueTuple;
 
-namespace Boc.Chapter15
+namespace Boc.Chapter16
 {
    using Result = Validation<(Event Event, AccountState NewState)>;
 

@@ -6,7 +6,7 @@ using System;
 using LaYumba.Functional;
 using Unit = System.ValueTuple;
 
-namespace Boc.Chapter7
+namespace Boc.Chapter8
 {
    // option 1. use MVC, and inject an IValidator and IRepository as dependencies
    namespace OOP

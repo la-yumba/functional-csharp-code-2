@@ -1,7 +1,7 @@
 ﻿using Boc.Commands;
 using Boc.Domain.Events;
 
-namespace Boc.Chapter10
+namespace Boc.Chapter11
 {
    public static class CommandExt
    {

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Examples.Chapter7
+namespace Examples.Chapter8
 {
    public class Employee { public string LastName { get; } }
 

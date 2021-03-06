@@ -9,7 +9,7 @@ using LaYumba.Functional;
 
 using static System.Console;
 
-namespace Examples.Chapter14
+namespace Examples.Chapter15
 {
    static class CreatingObservables
    {

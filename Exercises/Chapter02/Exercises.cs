@@ -1,4 +1,4 @@
-﻿namespace Exercises.Chapter2
+﻿namespace Exercises.Chapter3
 {
    // 1. Write a console app that calculates a user's Body-Mass Index:
    //   - prompt the user for her height in metres and weight in kg

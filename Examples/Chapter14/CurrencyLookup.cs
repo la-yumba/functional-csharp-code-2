@@ -9,7 +9,7 @@ using System.Collections.Immutable;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
-namespace Examples.Chapter14
+namespace Examples.Chapter15
 {
    using static F;
    using CcyCache = ImmutableDictionary<string, decimal>;

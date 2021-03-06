@@ -1,7 +1,7 @@
 ﻿using LaYumba.Functional;
 using System;
 
-namespace Examples.Chapter5.Either.Unbiased
+namespace Examples.Chapter6.Either.Unbiased
 {
    interface IResearch
    {

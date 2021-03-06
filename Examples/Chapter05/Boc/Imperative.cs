@@ -3,7 +3,7 @@ using System;
 using Boc.Commands;
 using Boc.Services;
 
-namespace Boc.Chapter5.Imperative
+namespace Boc.Chapter6.Imperative
 {
    public class Chapter5_TransfersController : ControllerBase
    {

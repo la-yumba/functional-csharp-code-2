@@ -1,6 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Examples.Chapter2
+namespace Examples.Chapter3
 {
    public static class Examples
    {

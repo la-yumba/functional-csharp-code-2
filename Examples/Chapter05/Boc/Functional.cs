@@ -1,14 +1,14 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
 using Boc.Commands;
 using Boc.Services;
 
-namespace Boc.Chapter5
+namespace Boc.Chapter6
 {
    // top-level workflow
-   [ApiController, Route("chapter5/transfer")]
+   [ApiController, Route("Chapter6/transfer")]
    public class Chapter5_TransfersController : ControllerBase
    {
       IValidator<MakeTransfer> validator;

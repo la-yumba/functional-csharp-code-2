@@ -1,9 +1,9 @@
-using Boc.Commands;
+﻿using Boc.Commands;
 using LaYumba.Functional;
 using Boc.Domain;
 using Boc.Services.Validation.WithDI;
 
-namespace Boc.Chapter7.OOP
+namespace Boc.Chapter8.OOP
 {
    public class DateNotPastValidator : IValidator<MakeTransfer>
    {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 //using System.Configuration;
@@ -6,7 +6,7 @@ using LaYumba.Functional;
 using static LaYumba.Functional.F;
 using System.Text.RegularExpressions;
 
-namespace Exercises.Chapter3
+namespace Exercises.Chapter4
 {
    using static F;
 

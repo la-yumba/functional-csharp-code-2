@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using LaYumba.Functional;
 
 using Name = System.String;
 using Greeting = System.String;
 using PersonalizedGreeting = System.String;
 
-namespace Examples.Chapter7
+namespace Examples.Chapter8
 {
    using static Console;
 

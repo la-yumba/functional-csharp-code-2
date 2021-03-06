@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 //using System.Configuration;
 using LaYumba.Functional;
 
-namespace Exercises.Chapter3
+namespace Exercises.Chapter4
 {
    public static class Exercises
    {

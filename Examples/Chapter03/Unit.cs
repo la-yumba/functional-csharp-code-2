@@ -2,7 +2,7 @@
 using System.Text;
 using LaYumba.Functional;
 
-namespace Examples.Chapter3
+namespace Examples.Chapter4
 {
    using static F;
 

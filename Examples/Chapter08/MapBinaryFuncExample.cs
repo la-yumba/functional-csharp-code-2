@@ -4,7 +4,7 @@ using static LaYumba.Functional.F;
 using static System.Console;
 using System.Collections.Generic;
 
-namespace Examples.Chapter7.Apply
+namespace Examples.Chapter8.Apply
 {
    public static class MapBinaryFuncExample
    {

@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using LaYumba.Functional;
 using Boc.Commands;
 using Unit = System.ValueTuple;
 
-namespace Boc.Chapter7
+namespace Boc.Chapter8
 {
    using static F;
    using Examples;

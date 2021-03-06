@@ -2,7 +2,7 @@
 using System.Collections.Specialized;
 using static LaYumba.Functional.F;
 
-namespace Examples.Chapter4
+namespace Examples.Chapter5
 {
    public static class NameValueCollectionExt
    {

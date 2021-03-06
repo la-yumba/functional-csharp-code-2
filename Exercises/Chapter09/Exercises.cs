@@ -1,4 +1,4 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 
 using LaYumba.Functional;
@@ -8,7 +8,7 @@ using static LaYumba.Functional.Data.LinkedList.LinkedList;
 using LaYumba.Functional.Data.BinaryTree;
 using static LaYumba.Functional.Data.BinaryTree.Tree;
 
-namespace Exercises.Chapter9
+namespace Exercises.Chapter10
 {
    static class Exercises
    {

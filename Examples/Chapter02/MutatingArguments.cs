@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Examples.Chapter2
+namespace Examples.Chapter3
 {
    class MutatingArguments
    {

@@ -2,7 +2,7 @@
 using static LaYumba.Functional.F;
 using System;
 
-namespace Exercises.Chapter6
+namespace Exercises.Chapter7
 {
    static class Exercises
    {

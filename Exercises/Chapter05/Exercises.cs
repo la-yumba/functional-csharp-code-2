@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using Examples.Chapter3;
+using Examples.Chapter4;
 
-namespace Exercises.Chapter5
+namespace Exercises.Chapter6
 {
    public static class Exercises
    {

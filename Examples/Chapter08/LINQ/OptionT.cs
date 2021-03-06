@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Examples.Chapter9.LINQ
+namespace Examples.Chapter10.LINQ
 {
    using static F;
    using static Console;

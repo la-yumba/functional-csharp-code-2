@@ -5,11 +5,11 @@ using Boc.Commands;
 using LaYumba.Functional;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Boc.Chapter10.Domain;
+using Boc.Chapter11.Domain;
 using Unit = System.ValueTuple;
 using Boc.Domain.Events;
 
-namespace Boc.Chapter15
+namespace Boc.Chapter16
 {
    public class ControllerActivator : IControllerActivator
    {

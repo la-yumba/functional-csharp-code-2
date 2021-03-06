@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using NUnit.Framework;
 
-namespace Exercises.Chapter2.Solutions
+namespace Exercises.Chapter3.Solutions
 {
    using static Console;
    using static Math;

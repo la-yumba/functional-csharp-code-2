@@ -1,9 +1,9 @@
-using Boc.Commands;
+﻿using Boc.Commands;
 using LaYumba.Functional;
 using System.Text.RegularExpressions;
 using Boc.Domain;
 
-namespace Boc.Chapter7.OOP
+namespace Boc.Chapter8.OOP
 {
    public class BicCodeValidator : IValidator<MakeTransfer>
    {

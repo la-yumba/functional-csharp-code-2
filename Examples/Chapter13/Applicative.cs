@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
 
-namespace Examples.Chapter13
+namespace Examples.Chapter14
 {
    using static Instrumentation;
    using static Enumerable;

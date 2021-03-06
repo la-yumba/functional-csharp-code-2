@@ -5,7 +5,7 @@ using System;
 using String = LaYumba.Functional.String;
 using static LaYumba.Functional.Data.LinkedList.LinkedList;
 
-namespace Examples.Chapter10.Data
+namespace Examples.Chapter11.Data
 {
    public class CoyoExample
    {

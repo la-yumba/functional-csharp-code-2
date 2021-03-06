@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Boc.Chapter10.Query
+namespace Boc.Chapter11.Query
 {
    public class Transaction
    {

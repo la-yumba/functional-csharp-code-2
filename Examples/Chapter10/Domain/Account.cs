@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Boc.Chapter10.Domain
+namespace Boc.Chapter11.Domain
 {
    public static class Account
    {

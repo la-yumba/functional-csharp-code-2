@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using LaYumba.Functional;
 using NUnit.Framework;
 
-namespace Examples.Chapter3
+namespace Examples.Chapter4
 {
    using static F;
    
