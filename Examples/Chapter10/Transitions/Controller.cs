@@ -12,7 +12,7 @@ namespace Boc.Chapter10.Transitions
 {
    namespace WithValidation
    {
-      public class Chapter10_Transfers_WithValidation : Controller
+      public class Chapter10_Transfers_WithValidation : ControllerBase
       {
          Func<CreateAccountWithOptions, Validation<CreateAccountWithOptions>> validate;
          Func<Guid> generateId;

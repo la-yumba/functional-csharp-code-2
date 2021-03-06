@@ -1,4 +1,4 @@
-using Boc.Commands;
+﻿using Boc.Commands;
 using Boc.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,7 +22,7 @@ namespace Boc.Chapter7
          Exceptional<Unit> Save(T entity);
       }
 
-      public class BookTransferController : Controller
+      public class BookTransferController : ControllerBase
       {
          IValidator<BookTransfer> validator;
          IRepository<BookTransfer> repository;

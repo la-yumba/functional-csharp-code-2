@@ -1,4 +1,4 @@
-using Boc.Commands;
+﻿using Boc.Commands;
 using LaYumba.Functional;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,7 +10,7 @@ namespace Boc.EitherImpl.Services.ValidationMethods
    using Domain;
    using static F;
 
-   class BookTransferController_Skeleton : Controller
+   class BookTransferController_Skeleton : ControllerBase
    {
       DateTime now;
       Regex bicRegex = new Regex("[A-Z]{11}");

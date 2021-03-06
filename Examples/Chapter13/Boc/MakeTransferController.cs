@@ -11,7 +11,7 @@ using Unit = System.ValueTuple;
 
 namespace Boc.Chapter10.Services
 {
-   public class TransferNowController : Controller
+   public class TransferNowController : ControllerBase
    {
       Func<MakeTransfer, Validation<MakeTransfer>> validate;
       Func<Guid, Task<Option<AccountState>>> getAccount;

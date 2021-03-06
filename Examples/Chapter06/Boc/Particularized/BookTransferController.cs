@@ -1,4 +1,4 @@
-using Boc.Commands;
+﻿using Boc.Commands;
 using Boc.Domain;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +12,7 @@ using Examples.Chapter1.DbLogger;
 
 namespace Boc.ValidImpl
 {
-   public class Chapter6_BookTransferController_WithValidation : Controller
+   public class Chapter6_BookTransferController_WithValidation : ControllerBase
    {
       ILogger<Chapter6_BookTransferController_WithValidation> logger;
 

@@ -1,4 +1,4 @@
-﻿{
+{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
@@ -19,11 +19,10 @@
     "Examples": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/values",
+      "applicationUrl": "http://localhost:52333",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:52333"
+      }
     }
   }
 }

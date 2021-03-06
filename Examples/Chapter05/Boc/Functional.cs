@@ -8,13 +8,14 @@ using Boc.Services;
 namespace Boc.Chapter5
 {
    // top-level workflow
-
-   public class Chapter5_TransfersController : Controller
+   [ApiController, Route("chapter5/transfer")]
+   public class Chapter5_TransfersController : ControllerBase
    {
       IValidator<MakeTransfer> validator;
       IRepository<AccountState> accounts;
       ISwiftService swift;
-      
+
+      [HttpPost]      
       public void MakeTransfer([FromBody] MakeTransfer transfer)
          => Some(transfer)
             .Map(Normalize)

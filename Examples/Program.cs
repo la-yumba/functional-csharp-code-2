@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 using LaYumba.Functional;
 
@@ -42,7 +44,23 @@ namespace Examples
       static void StartWebApi()
          => Host
             .CreateDefaultBuilder()
-            .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
+            .ConfigureServices(services =>
+            {
+                services.AddControllers();
+                services.AddSwaggerGen();
+            })
+            .ConfigureWebHostDefaults(webBuilder => webBuilder.Configure(app =>
+            {
+               app.UseDeveloperExceptionPage()
+                  .UseSwagger()
+                  .UseSwaggerUI(swagger =>
+                  {
+                     swagger.SwaggerEndpoint("v1/swagger.json", "Examples API");
+                     swagger.RoutePrefix = string.Empty;
+                  })
+                  .UseRouting()
+                  .UseEndpoints(endpoints => endpoints.MapControllers());
+            }))
             .Build()
             .Run();
    }

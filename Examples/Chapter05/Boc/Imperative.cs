@@ -1,11 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using Boc.Commands;
 using Boc.Services;
 
 namespace Boc.Chapter5.Imperative
 {
-   public class Chapter5_TransfersController : Controller
+   public class Chapter5_TransfersController : ControllerBase
    {
       IValidator<MakeTransfer> validator;
 

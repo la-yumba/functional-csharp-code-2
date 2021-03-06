@@ -9,7 +9,7 @@ using Boc.Domain;
 
 namespace Boc.Chapter15
 {
-   public class MakeTransferController : Controller
+   public class MakeTransferController : ControllerBase
    {
       public MakeTransferController(Func<Guid, Task<Option<AccountProcess>>> getAccount
          , Func<MakeTransfer, Validation<MakeTransfer>> validate)

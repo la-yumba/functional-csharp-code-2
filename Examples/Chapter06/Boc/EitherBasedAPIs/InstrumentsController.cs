@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Boc.Api
 {
-   public class Chapter6_InstrumentsController : Controller
+   public class Chapter6_InstrumentsController : ControllerBase
    {
       private IInstrumentService instruments;
 

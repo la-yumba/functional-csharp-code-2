@@ -1,4 +1,4 @@
-using Boc.Commands;
+﻿using Boc.Commands;
 using Boc.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -24,7 +24,7 @@ namespace Boc.Chapter7
                : Valid(cmd);
       }
 
-      public class BookTransferController_FunctionDependencies : Controller
+      public class BookTransferController_FunctionDependencies : ControllerBase
       {
          Validator<BookTransfer> validate;
          Func<BookTransfer, Exceptional<Unit>> save;

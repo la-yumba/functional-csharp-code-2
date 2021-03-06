@@ -5,7 +5,7 @@ using Boc.Domain;
 
 namespace Examples.Chapter13
 {
-   public class FxController : Controller
+   public class FxController : ControllerBase
    {
 
       //$ curl http://localhost:5000/convert/1000/USD/to/EUR -s

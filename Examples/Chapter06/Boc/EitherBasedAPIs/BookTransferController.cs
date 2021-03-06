@@ -6,7 +6,7 @@ using Unit = System.ValueTuple;
 
 namespace Boc.Api
 {
-   public class Chapter6_BookTransferController : Controller
+   public class Chapter6_BookTransferController : ControllerBase
    {
       [HttpPost, Route("api/Chapters6/transfers/future/restful")]
       public IActionResult BookTransfer_v1([FromBody] BookTransfer request)

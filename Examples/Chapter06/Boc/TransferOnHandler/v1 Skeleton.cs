@@ -1,4 +1,4 @@
-using Boc.Commands;
+﻿using Boc.Commands;
 using LaYumba.Functional;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -6,7 +6,7 @@ using Unit = System.ValueTuple;
 
 namespace Boc.EitherImpl.Services.Skeleton
 {
-   class BookTransferController_Skeleton : Controller
+   class BookTransferController_Skeleton : ControllerBase
    {
       [HttpPost, Route("transfers/book/skeleton")]
       public void BookTransfer([FromBody] BookTransfer request)

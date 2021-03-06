@@ -12,7 +12,7 @@ namespace Boc.Chapter10
 {
    namespace Unsafe
    {
-      public class Chapter10_Transfers_NoValidation : Controller
+      public class Chapter10_Transfers_NoValidation : ControllerBase
       {
          Func<Guid, AccountState> getAccount;
          Action<Event> saveAndPublish;
@@ -67,7 +67,7 @@ namespace Boc.Chapter10
 
    namespace WithValidation
    {
-      public class Chapter10_Transfers_WithValidation : Controller
+      public class Chapter10_Transfers_WithValidation : ControllerBase
       {
          Func<MakeTransfer, Validation<MakeTransfer>> validate;
          Func<Guid, AccountState> getAccount;
