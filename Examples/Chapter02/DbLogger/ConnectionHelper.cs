@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
 using static LaYumba.Functional.F;
 
-namespace Examples.Chapter1.DbLogger
+namespace Examples.Chapter2.DbLogger
 {
    public static class ConnectionHelper
    {

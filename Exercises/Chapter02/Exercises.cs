@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Exercises.Chapter1
+namespace Exercises.Chapter2
 {
    static class Exercises
    {

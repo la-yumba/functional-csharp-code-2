@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Dapper;
-using Examples.Chapter1.DbLogger;
+using Examples.Chapter2.DbLogger;
 
 namespace Examples
 {

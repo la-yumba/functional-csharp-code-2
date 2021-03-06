@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Examples.Chapter1
+namespace Examples.Chapter2
 {
    class Names
    {

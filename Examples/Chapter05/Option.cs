@@ -1,6 +1,6 @@
 ﻿using LaYumba.Functional;
 
-namespace Examples.Chapter1
+namespace Examples.Chapter2
 {
    using static F;
    using System;

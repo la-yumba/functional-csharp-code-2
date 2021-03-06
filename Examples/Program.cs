@@ -19,7 +19,7 @@ namespace Examples
       {
          var cliExamples = new Dictionary<string, Action>
          {
-            ["HOFs"] = Chapter1.HOFs.Run,
+            ["HOFs"] = Chapter2.HOFs.Run,
             ["Greetings"] = Chapter8.Greetings.Run,
             ["Timer"] = Chapter15.CreatingObservables.Timer.Run,
             ["Subjects"] = Chapter15.CreatingObservables.Subjects.Run,

@@ -5,7 +5,7 @@ using NUnit.Framework;
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
 
-namespace Exercises.Chapter1
+namespace Exercises.Chapter2
 {
    static class Solutions
    {
@@ -33,10 +33,11 @@ namespace Exercises.Chapter1
       // a more terse solution, using helper methods that will be discussed later in the book
       static List<int> QSort(this List<int> list)
          => list.Match(
-               () => List<int>(),
-               (pivot, rest) => rest.Where(i => i <= pivot).ToList().QSort()
-                  .Append(pivot)
-                  .Concat(rest.Where(i => pivot < i).ToList().QSort())
+               () => List<int>(), // base case, the list is empty, so it's sorted
+               (pivot, rest) => // otherwise, use the first element as a pivot
+                  rest.Where(i => i <= pivot).ToList().QSort() // take all elements smaller than the pivot and sort them
+                     .Append(pivot) // then the pivot
+                     .Concat(rest.Where(i => pivot < i).ToList().QSort()) // then all elements greater than the pivot, sorted
             ).ToList();
 
       [Test]

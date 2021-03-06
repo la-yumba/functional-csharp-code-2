@@ -1,11 +1,11 @@
-using Dapper;
+﻿using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
-using Examples.Chapter1.DbLogger;
+using Examples.Chapter2.DbLogger;
 using Examples;
 using Microsoft.Extensions.Logging;
 using Unit = System.ValueTuple;

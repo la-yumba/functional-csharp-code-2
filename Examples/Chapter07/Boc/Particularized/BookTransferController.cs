@@ -8,7 +8,7 @@ using static LaYumba.Functional.F;
 using Unit = System.ValueTuple;
 using System.Text.RegularExpressions;
 using System;
-using Examples.Chapter1.DbLogger;
+using Examples.Chapter2.DbLogger;
 
 namespace Boc.ValidImpl
 {

@@ -1,10 +1,10 @@
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
 using Dapper;
 using System.Collections.Generic;
 using System;
 
-namespace Examples.Chapter1.DbLogger
+namespace Examples.Chapter2.DbLogger
 {
    public class LogMessage { }
 

@@ -1,9 +1,9 @@
-using Dapper;
+﻿using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Data;
 
-namespace Examples.Chapter1.DbLogger
+namespace Examples.Chapter2.DbLogger
 {
    using static ConnectionHelper;
 

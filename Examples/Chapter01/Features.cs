@@ -43,7 +43,7 @@ namespace Examples.Chapter1
             {
                Circle(var r) => PI * Pow(r, 2),
                Rectangle(var l, var h) => l * h,
-               _ => throw new ArgumentException(),
+               _ => throw new ArgumentException("unknown shape"),
             };
       }
    }

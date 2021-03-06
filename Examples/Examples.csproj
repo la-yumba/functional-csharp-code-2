@@ -27,4 +27,8 @@
     <ProjectReference Include="..\LaYumba.Functional\LaYumba.Functional.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Chapter02\" />
+    <Folder Include="Chapter02\DbLogger\" />
+  </ItemGroup>
 </Project>
