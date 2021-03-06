@@ -1,28 +1,50 @@
-﻿using LaYumba.Functional;
-using static LaYumba.Functional.F;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
-using Examples.Chapter4;
+using LaYumba.Functional;
 
-namespace Exercises.Chapter6
+namespace Exercises.Chapter5
 {
-   public static class Exercises
+   static class Exercises
    {
-      // 1. Without looking at any code or documentation (or intllisense), write the function signatures of
-      // `OrderByDescending`, `Take` and `Average`, which we used to implement `AverageEarningsOfRichestQuartile`:
-      static decimal AverageEarningsOfRichestQuartile(List<Person> population)
-         => population
-            .OrderByDescending(p => p.Earnings)
-            .Take(population.Count/4)
-            .Select(p => p.Earnings)
-            .Average();
+      // 1 Implement Map for ISet<T> and IDictionary<K, T>. (Tip: start by writing down
+      // the signature in arrow notation.)
 
-      // 2 Check your answer with the MSDN documentation: https://docs.microsoft.com/
-      // en-us/dotnet/api/system.linq.enumerable. How is Average different?
+      // 2 Implement Map for Option and IEnumerable in terms of Bind and Return.
 
-      // 3 Implement a general purpose Compose function that takes two unary functions
-      // and returns the composition of the two.
+      // 3 Use Bind and an Option-returning Lookup function (such as the one we defined
+      // in chapter 3) to implement GetWorkPermit, shown below. 
+
+      // Then enrich the implementation so that `GetWorkPermit`
+      // returns `None` if the work permit has expired.
+
+      static Option<WorkPermit> GetWorkPermit(Dictionary<string, Employee> people, string employeeId)
+      {
+         throw new NotImplementedException();
+      }
+
+      // 4 Use Bind to implement AverageYearsWorkedAtTheCompany, shown below (only
+      // employees who have left should be included).
+
+      static double AverageYearsWorkedAtTheCompany(List<Employee> employees)
+      {
+         // your implementation here...
+         throw new NotImplementedException();
+      }
+   }
+
+   public struct WorkPermit
+   {
+      public string Number { get; set; }
+      public DateTime Expiry { get; set; }
+   }
+
+   public class Employee
+   {
+      public string Id { get; set; }
+      public Option<WorkPermit> WorkPermit { get; set; }
+
+      public DateTime JoinedOn { get; }
+      public Option<DateTime> LeftOn { get; }
    }
 }

@@ -20,15 +20,15 @@ namespace Examples
          var cliExamples = new Dictionary<string, Action>
          {
             ["HOFs"] = Chapter1.HOFs.Run,
-            ["Greetings"] = Chapter7.Greetings.Run,
-            ["Timer"] = Chapter14.CreatingObservables.Timer.Run,
-            ["Subjects"] = Chapter14.CreatingObservables.Subjects.Run,
-            ["Create"] = Chapter14.CreatingObservables.Create.Run,
-            ["Generate"] = Chapter14.CreatingObservables.Generate.Run,
-            ["CurrencyLookup_Unsafe"] = Chapter14.CurrencyLookup_Unsafe.Run,
-            ["CurrencyLookup_Safe"] = Chapter14.CurrencyLookup_Safe.Run,
-            ["VoidContinuations"] = Chapter14.VoidContinuations.Run,
-            ["KeySequences"] = Chapter14.KeySequences.Run,
+            ["Greetings"] = Chapter8.Greetings.Run,
+            ["Timer"] = Chapter15.CreatingObservables.Timer.Run,
+            ["Subjects"] = Chapter15.CreatingObservables.Subjects.Run,
+            ["Create"] = Chapter15.CreatingObservables.Create.Run,
+            ["Generate"] = Chapter15.CreatingObservables.Generate.Run,
+            ["CurrencyLookup_Unsafe"] = Chapter15.CurrencyLookup_Unsafe.Run,
+            ["CurrencyLookup_Safe"] = Chapter15.CurrencyLookup_Safe.Run,
+            ["VoidContinuations"] = Chapter15.VoidContinuations.Run,
+            ["KeySequences"] = Chapter15.KeySequences.Run,
          };
 
          if (args.Length > 0)

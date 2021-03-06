@@ -1,79 +1,53 @@
 ﻿using LaYumba.Functional;
 using static LaYumba.Functional.F;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework;
 using Examples.Chapter4;
 
-namespace Exercises.Chapter7.Solutions
+namespace Exercises.Chapter6.Solutions
 {
    static class Exercises
    {
-      // 1. Write a `ToOption` extension method to convert an `Either` into an
-      // `Option`. Then write a `ToEither` method to convert an `Option` into an
-      // `Either`, with a suitable parameter that can be invoked to obtain the
-      // appropriate `Left` value, if the `Option` is `None`.
+      // 1. Without looking at any code or documentation (or intllisense), write the function signatures of
+      // `OrderByDescending`, `Take` and `Average`, which we used to implement `AverageEarningsOfRichestQuartile`:
+      static decimal AverageEarningsOfRichestQuartile(List<Person> population)
+         => population
+            .OrderByDescending(p => p.Earnings)
+            .Take(population.Count/4)
+            .Select(p => p.Earnings)
+            .Average();
 
-      // ToOption : Either<L, R> -> Option<R>
-      static Option<R> ToOption<L, R>(this Either<L, R> @this)
-         => @this.Match(l => None, r => Some(r));
+      // OrderByDescending : (IEnumerable<T>, (T -> decimal)) -> IEnumerable<T>
+      // particularized for this case:
+      // OrderByDescending : (IEnumerable<Person>, (Person -> decimal)) -> IEnumerable<Person>
 
-      // ToEither : (Option<R>, Func<L>) -> Either<L, R>
-      static Either<L, R> ToEither<L, R>(this Option<R> @this, Func<L> left)
-         => @this.Match<Either<L, R>>(
-            None: () => left(), 
-            Some: r => r);
+      // Take : (IEnumerable<T>, int) -> IEnumerable<T>
+      // particularized for this case:
+      // Take : (IEnumerable<Person>, int) -> IEnumerable<Person>
 
-      // 2. Take a workflow where 2 or more functions that return an `Option`
-      // are chained using `Bind`. 
+      // Select : (IEnumerable<T>, (T -> R)) -> IEnumerable<R>
+      // particularized for this case:
+      // Select : (IEnumerable<Person>, (Person -> decimal)) -> IEnumerable<decimal>
 
-      // example taken from chapter 3
-      static Func<string, Option<Age>> parseAge = s
-         => Int.Parse(s).Bind(Age.Of);
-
-      // Then change the first one of the functions to return an `Either`.
-
-      static Either<string, int> ParseIntVerbose(this string s)
-         => Int.Parse(s).ToEither(() => $"'{s}' is not a valid representation of an int");
-
-      // This should cause compilation to fail. Since `Either` can be
-      // converted into an `Option` as we have done in the previous exercise,
-      // write extension overloads for `Bind`, so that
-      // functions returning `Either` and `Option` can be chained with `Bind`,
-      // yielding an `Option`.
-
-      public static Option<RR> Bind<L, R, RR>(this Either<L, R> @this, Func<R, Option<RR>> func)
-          => @this.Match(
-             Left: _ => None,
-             Right: r => func(r));
-
-      public static Option<RR> Bind<L, R, RR>(this Option<R> @this, Func<R, Either<L, RR>> func)
-          => @this.Match(
-             None: () => None,
-             Some: v => func(v).ToOption());
-
-      static Func<string, Option<Age>> parseAge2 = s
-         => s.ParseIntVerbose().Bind(Age.Of);
+      // Average : IEnumerable<T> -> T
+      // particularized for this case:
+      // Average : IEnumerable<decimal> -> decimal
 
 
-      // 3. Write a function `Safely` of type ((() → R), (Exception → L)) → Either<L, R> that will
-      // run the given function in a `try/catch`, returning an appropriately
-      // populated `Either`.
+      // 2 Check your answer with the MSDN documentation: https://docs.microsoft.com/
+      // en-us/dotnet/api/system.linq.enumerable. How is Average different?
 
-      // Safely : ((() → R), (Exception → L)) → Either<L, R>
-      static Either<L, R> Safely<L, R>(Func<R> func, Func<Exception, L> left)
-      {
-         try { return func(); }
-         catch(Exception ex) { return left(ex); }
-      }
+      // Average is the only method call that does not return an IEnumerable;
+      // this also means that Average is the only greedy method and causes all the
+      // previous ones in the chain to be evaluated
 
-      // 4. Write a function `Try` of type (() → T) → Exceptional<T> that will
-      // run the given function in a `try/catch`, returning an appropriately
-      // populated `Exceptional`.
 
-      // Try : (() → T) → Exceptional<T>
-      static Exceptional<T> Try<T>(Func<T> func)
-      {
-         try { return func(); }
-         catch (Exception ex) { return ex; }
-      }
+      // 3 Implement a general purpose Compose function that takes two unary functions
+      // and returns the composition of the two.
+
+      static Func<T1, R> Compose<T1, T2, R>(this Func<T2, R> g, Func<T1, T2> f)
+         => x => g(f(x));
    }
 }

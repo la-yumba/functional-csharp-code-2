@@ -1,72 +1,84 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
+using LaYumba.Functional;
+using static LaYumba.Functional.F;
 
-namespace Exercises.Chapter3.Solutions
+namespace Exercises.Chapter1
 {
-   using static Console;
-   using static Math;
-
-   public enum BmiRange { Underweight, Healthy, Overweight }
-
-   static class Bmi
+   static class Solutions
    {
-      public static void Run()
+      // 1. 
+      static Func<T, bool> Negate<T>(this Func<T, bool> pred) 
+         => t => !pred(t);
+
+      // 2.
+      static List<int> QuickSort(this List<int> list)
       {
-         Run(Read, Write);
+         if (list.Count == 0) return new List<int>();
+
+         var pivot = list[0];
+         var rest = list.Skip(1);
+
+         var small = from item in rest where item <= pivot select item;
+         var large = from item in rest where pivot < item select item;
+
+         return small.ToList().QuickSort()
+            .Append(pivot)
+            .Concat(large.ToList().QuickSort())
+            .ToList();
       }
 
-      internal static void Run(Func<string, double> read, Action<BmiRange> write)
-      {
-         // input
-         double weight = read("weight")
-              , height = read("height");
+      // a more terse solution, using helper methods that will be discussed later in the book
+      static List<int> QSort(this List<int> list)
+         => list.Match(
+               () => List<int>(),
+               (pivot, rest) => rest.Where(i => i <= pivot).ToList().QSort()
+                  .Append(pivot)
+                  .Concat(rest.Where(i => pivot < i).ToList().QSort())
+            ).ToList();
 
-         // computation
-         var bmiRange = CalculateBmi(height, weight).ToBmiRange();
-         
-         // output
-         write(bmiRange);
+      [Test]
+      public static void TestQuickSort()
+      {
+         var list = new List<int> {-100, 63, 30, 45, 1, 1000, -23, -67, 1, 2, 56, 75, 975, 432, -600, 193, 85, 12};
+         var expected = new List<int> {-600, -100, -67, -23, 1, 1, 2, 12, 30, 45, 56, 63, 75, 85, 193, 432, 975, 1000};
+         var actual = list.QuickSort();
+         Assert.AreEqual(expected, actual);
       }
 
-      internal static double CalculateBmi(double height, double weight)
-         => Round(weight / Pow(height, 2), 2);
-
-      internal static BmiRange ToBmiRange(this double bmi)
-         => bmi < 18.5 ? BmiRange.Underweight 
-            : 25 <= bmi ? BmiRange.Overweight 
-            : BmiRange.Healthy;
-
-      private static double Read(string field)
+      [Test]
+      public static void TestQSort()
       {
-         WriteLine($"Please enter your {field}");
-         return double.Parse(ReadLine());
+         var list = new List<int> {-100, 63, 30, 45, 1, 1000, -23, -67, 1, 2, 56, 75, 975, 432, -600, 193, 85, 12};
+         var expected = new List<int> {-600, -100, -67, -23, 1, 1, 2, 12, 30, 45, 56, 63, 75, 85, 193, 432, 975, 1000};
+         var actual = list.QSort();
+         Assert.AreEqual(expected, actual);
       }
 
-      private static void Write(BmiRange bmiRange)
-         => WriteLine($"Based on your BMI, you are {bmiRange}");
-   }
-
-   public class BmiTests
-   {
-      [TestCase(1.80, 77, ExpectedResult = 23.77)]
-      [TestCase(1.60, 77, ExpectedResult = 30.08)]
-      public double CalculateBmi(double height, double weight)
-         => Bmi.CalculateBmi(height, weight);
-
-      [TestCase(23.77, ExpectedResult = BmiRange.Healthy)]
-      [TestCase(30.08, ExpectedResult = BmiRange.Overweight)]
-      public BmiRange ToBmiRange(double bmi) => bmi.ToBmiRange();
-
-      [TestCase(1.80, 77, ExpectedResult = BmiRange.Healthy)]
-      [TestCase(1.60, 77, ExpectedResult = BmiRange.Overweight)]
-      public BmiRange ReadBmi(double height, double weight)
+      // 3.
+      static List<T> QuickSort<T>(this List<T> list, Comparison<T> compare)
       {
-         var result = default(BmiRange);
-         Func<string, double> read = s => s == "height" ? height : weight;
-         Action<BmiRange> write = r => result = r;
+         if (list.Count == 0) return new List<T>();
 
-         Bmi.Run(read, write);
-         return result;
+         var pivot = list[0];
+         var rest = list.Skip(1);
+
+         var small = from item in rest where compare(item, pivot) <= 0 select item;
+         var large = from item in rest where 0 < compare(item, pivot) select item;
+
+         return small.ToList().QuickSort(compare)
+            .Concat(new List<T> { pivot })
+            .Concat(large.ToList().QuickSort(compare))
+            .ToList();
+      }
+
+      // 4.
+      static R Using<TDisp, R>(Func<TDisp> createDisposable
+         , Func<TDisp, R> func) where TDisp : IDisposable
+      {
+         using (var disp = createDisposable()) return func(disp);
       }
    }
 }

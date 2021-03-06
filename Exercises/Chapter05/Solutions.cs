@@ -1,53 +1,82 @@
-﻿using LaYumba.Functional;
-using static LaYumba.Functional.F;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
-using Examples.Chapter4;
+using LaYumba.Functional;
+using static LaYumba.Functional.F;
 
-namespace Exercises.Chapter6.Solutions
+namespace Exercises.Chapter5.Solutions
 {
-   static class Exercises
+   using static F;
+
+   static class Solutions
    {
-      // 1. Without looking at any code or documentation (or intllisense), write the function signatures of
-      // `OrderByDescending`, `Take` and `Average`, which we used to implement `AverageEarningsOfRichestQuartile`:
-      static decimal AverageEarningsOfRichestQuartile(List<Person> population)
-         => population
-            .OrderByDescending(p => p.Earnings)
-            .Take(population.Count/4)
-            .Select(p => p.Earnings)
+      // 1 Implement Map for ISet<T> and IDictionary<K, T>. (Tip: start by writing down
+      // the signature in arrow notation.)
+
+      // Map : ISet<T> -> (T -> R) -> ISet<R>
+      static ISet<R> Map<T, R>(this ISet<T> ts, Func<T, R> f)
+      {
+         var rs = new HashSet<R>();
+         foreach (var t in ts)
+            rs.Add(f(t));
+         return rs;
+      }
+
+      // Map : IDictionary<K, T> -> (T -> R) -> IDictionary<K, R>
+      static IDictionary<K, R> Map<K, T, R>
+         (this IDictionary<K, T> dict, Func<T, R> f)
+      {
+         var rs = new Dictionary<K, R>();
+         foreach (var pair in dict)
+            rs[pair.Key] = f(pair.Value);
+         return rs;
+      }
+
+
+      // 2 Implement Map for Option and IEnumerable in terms of Bind and Return.
+
+      public static Option<R> Map<T, R>(this Option<T> opt, Func<T, R> f)
+         => opt.Bind(t => Some(f(t)));
+
+      public static IEnumerable<R> Map<T, R>(this IEnumerable<T> ts, Func<T, R> f)
+         => ts.Bind(t => List(f(t)));
+
+
+      // 3 Use Bind and an Option-returning Lookup function (such as the one we defined
+      // in chapter 3) to implement GetWorkPermit, shown below. 
+
+      static Option<WorkPermit> GetWorkPermit(Dictionary<string, Employee> employees, string employeeId)
+         => employees.Lookup(employeeId).Bind(e => e.WorkPermit);
+
+
+      // Then enrich the implementation so that `GetWorkPermit`
+      // returns `None` if the work permit has expired.
+
+      static Option<WorkPermit> GetValidWorkPermit(Dictionary<string, Employee> employees, string employeeId)
+         => employees
+            .Lookup(employeeId)
+            .Bind(e => e.WorkPermit)
+            .Where(HasExpired.Negate());
+
+      static Func<WorkPermit, bool> HasExpired => permit => permit.Expiry < DateTime.Now.Date;
+
+
+      // 4 Use Bind to implement AverageYearsWorkedAtTheCompany, shown below (only
+      // employees who have left should be included).
+
+      static double AverageYearsWorkedAtTheCompany(List<Employee> employees)
+         => employees
+            .Bind(e => e.LeftOn.Map(leftOn => YearsBetween(e.JoinedOn, leftOn)))
             .Average();
 
-      // OrderByDescending : (IEnumerable<T>, (T -> decimal)) -> IEnumerable<T>
-      // particularized for this case:
-      // OrderByDescending : (IEnumerable<Person>, (Person -> decimal)) -> IEnumerable<Person>
+      // a more elegant solution, which will become clear in Chapter 9
+      static double AverageYearsWorkedAtTheCompany_LINQ(List<Employee> employees)
+         => (from e in employees
+             from leftOn in e.LeftOn
+             select YearsBetween(e.JoinedOn, leftOn)
+            ).Average();
 
-      // Take : (IEnumerable<T>, int) -> IEnumerable<T>
-      // particularized for this case:
-      // Take : (IEnumerable<Person>, int) -> IEnumerable<Person>
-
-      // Select : (IEnumerable<T>, (T -> R)) -> IEnumerable<R>
-      // particularized for this case:
-      // Select : (IEnumerable<Person>, (Person -> decimal)) -> IEnumerable<decimal>
-
-      // Average : IEnumerable<T> -> T
-      // particularized for this case:
-      // Average : IEnumerable<decimal> -> decimal
-
-
-      // 2 Check your answer with the MSDN documentation: https://docs.microsoft.com/
-      // en-us/dotnet/api/system.linq.enumerable. How is Average different?
-
-      // Average is the only method call that does not return an IEnumerable;
-      // this also means that Average is the only greedy method and causes all the
-      // previous ones in the chain to be evaluated
-
-
-      // 3 Implement a general purpose Compose function that takes two unary functions
-      // and returns the composition of the two.
-
-      static Func<T1, R> Compose<T1, T2, R>(this Func<T2, R> g, Func<T1, T2> f)
-         => x => g(f(x));
+      static double YearsBetween(DateTime start, DateTime end)
+         => (end - start).Days / 365d;
    }
 }
