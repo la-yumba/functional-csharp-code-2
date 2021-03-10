@@ -21,7 +21,7 @@ namespace Examples.Chapter1
          {
             get
             {
-               double Square(double d) => Pow(d, 2);
+               static double Square(double d) => Pow(d, 2);
                return PI * Square(Radius);
             }
          }
