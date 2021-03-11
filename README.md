@@ -1,4 +1,6 @@
-# Functional Programming in C# #
+# Functional Programming in C# #, 2nd Edition
+
+Work in progress!
 
 This repo contains the code samples, exercises and solutions for the book
 [Functional Programming in C#](https://www.manning.com/books/functional-programming-in-c-sharp?a_aid=functional-programming-in-c-sharp&a_bid=ad9af506)
@@ -24,7 +26,7 @@ For a more fully-fledged functional library, consider [LanguageExt](https://gith
 
 ## Working with the code samples
 
-The code samples use .NET Standard 1.6 and .NET Core 3.1, and should compile and run on all major OS's
+The code samples use .NET 5, and should compile and run on all major OS's
 via the `dotnet` CLI.
 
 ### Prerequisites
@@ -38,8 +40,14 @@ To check this is available, type `dotnet --version` at the command prompt, and y
 ```
 $ git clone git@github.com:la-yumba/functional-csharp-code-2.git
 $ cd functional-csharp-code-2
-$ dotnet restore -s "https://api.nuget.org/v3/index.json"
+$ dotnet restore
 ```
+
+If `restore` fails, try 
+
+````
+$ dotnet restore -s "https://api.nuget.org/v3/index.json"
+````
 
 ### Running the tests
 
