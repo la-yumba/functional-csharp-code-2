@@ -1,4 +1,4 @@
-# Functional Programming in C# #, 2nd Edition
+# Functional Programming in C#, 2nd Edition
 
 Work in progress!
 
