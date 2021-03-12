@@ -17,27 +17,27 @@ namespace Boc.Chapter8
    {
       public static class Validation
       {
-         public static Validator<BookTransfer> DateNotPast(Func<DateTime> clock)
+         public static Validator<MakeTransfer> DateNotPast(Func<DateTime> clock)
             => cmd 
             => cmd.Date.Date < clock().Date
                ? Errors.TransferDateIsPast
                : Valid(cmd);
       }
 
-      public class BookTransferController_FunctionDependencies : ControllerBase
+      public class MakeTransferController_FunctionDependencies : ControllerBase
       {
-         Validator<BookTransfer> validate;
-         Func<BookTransfer, Exceptional<Unit>> save;
+         Validator<MakeTransfer> validate;
+         Func<MakeTransfer, Exceptional<Unit>> save;
 
-         public BookTransferController_FunctionDependencies(Validator<BookTransfer> validate
-            , Func<BookTransfer, Exceptional<Unit>> save)
+         public MakeTransferController_FunctionDependencies(Validator<MakeTransfer> validate
+            , Func<MakeTransfer, Exceptional<Unit>> save)
          {
             this.validate = validate;
             this.save = save;
          }
 
          //[HttpPut, Route("api/TransferOn")]
-         public IActionResult BookTransfer([FromBody] BookTransfer cmd)
+         public IActionResult MakeTransfer([FromBody] MakeTransfer cmd)
             => validate(cmd).Map(save).Match( 
                Invalid: BadRequest,
                Valid: result => result.Match<IActionResult>(
@@ -47,14 +47,16 @@ namespace Boc.Chapter8
 
       public class Tests
       {
+         readonly MakeTransfer makeTransfer = new(default, default, default, default, default, default, default);
+
          [Test]
          public void WhenValid_AndSaveSucceeds_ThenResponseIsOk()
          {
-            var controller = new BookTransferController_FunctionDependencies(
+            var controller = new MakeTransferController_FunctionDependencies(
                validate: cmd => Valid(cmd),
                save: cmd => Exceptional(Unit()));
 
-            var result = controller.BookTransfer(new BookTransfer());
+            var result = controller.MakeTransfer(makeTransfer);
 
             Assert.AreEqual(typeof(OkResult), result.GetType());
          }
@@ -70,8 +72,8 @@ namespace Boc.Chapter8
       public class UseCases
       {
          public static Func<ILogger
-            , Func<BookTransfer, Validation<Exceptional<Unit>>>
-            , BookTransfer
+            , Func<MakeTransfer, Validation<Exceptional<Unit>>>
+            , MakeTransfer
             , IActionResult>
          TransferOn => (logger, handle, cmd) =>
          {

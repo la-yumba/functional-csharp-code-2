@@ -2,29 +2,26 @@
 
 namespace Boc.Commands
 {
-   public abstract class Command
+   public abstract record Command(DateTime Timestamp);
+
+   public record MakeTransfer
+   (
+      Guid DebitedAccountId,
+
+      string Beneficiary,
+      string Iban,
+      string Bic,
+
+      DateTime Date,
+      decimal Amount,
+      string Reference,
+
+      DateTime Timestamp = default
+   )
+      : Command(Timestamp)
    {
-      public DateTime Timestamp { get; set; }
-
-      public T WithTimestamp<T>(DateTime timestamp)
-         where T : Command
-      {
-         T result = (T)MemberwiseClone();
-         result.Timestamp = timestamp;   
-         return result;
-      }
-   }
-
-   public class MakeTransfer : Command
-   {
-      public Guid DebitedAccountId { get; set; }
-
-      public string Beneficiary { get; set; }
-      public string Iban { get; set; }
-      public string Bic { get; set; }
-
-      public DateTime Date { get; set; }
-      public decimal Amount { get; set; }
-      public string Reference { get; set; }
+      // useful for testing, when you don't need all the properties to be populated
+      internal static MakeTransfer Dummy
+         => new(default, default, default, default, default, default, default);
    }
 }

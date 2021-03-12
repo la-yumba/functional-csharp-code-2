@@ -40,10 +40,12 @@ namespace Boc.Services.Validation
    {
       static string[] validCodes = { "ABCDEFGJ123" };
 
+      readonly MakeTransfer makeTransfer = new (default, default, default, default, default, default, default, default);
+
       [TestCase("ABCDEFGJ123", ExpectedResult = true)]
       [TestCase("XXXXXXXXXXX", ExpectedResult = false)]
       public bool WhenBicNotFound_ThenValidationFails(string bic)
          => new BicExistsValidator(() => validCodes)
-            .IsValid(new MakeTransfer { Bic = bic });
+            .IsValid(makeTransfer with { Bic = bic });
    }
 }

@@ -4,7 +4,8 @@ Work in progress!
 
 This repo contains the code samples, exercises and solutions for the book
 [Functional Programming in C#](https://www.manning.com/books/functional-programming-in-c-sharp?a_aid=functional-programming-in-c-sharp&a_bid=ad9af506)
-published by Manning.
+published by Manning. The 2nd edition has been updated to reflect new features
+in C# 9 and .NET 5.
 
 [![Functional Programming in C#](cover.jpg)](https://www.manning.com/books/functional-programming-in-c-sharp?a_aid=functional-programming-in-c-sharp&a_bid=ad9af506)
 
@@ -14,10 +15,10 @@ The code samples are organized in the following projects:
 - **Exercises**: placeholders for you to do the exercises, compile and run them;
   and compare to the provided solutions
 - **LaYumba.Functional**: a functional library that we develop throughout the book
-- **LaYumba.Functional.Data**: very simple functional data structures discussed in Chapter 9
+- **LaYumba.Functional.Data**: very simple functional data structures discussed in Chapter 10
 - **LaYumba.Functional.Tests**: also illustrative of topics explained in the book, and
   useful to better understand the constructs in the library
-- **Boc.Domain**: an example of using F# for domain objects
+- **Boc.Domain**: an example of using F# for domain objects, discussed in Appendix A
 
 **Note:** you are welcome to reference `LaYumba.Functional` from your projects
 via [NuGet](https://www.nuget.org/packages/LaYumba.Functional), and submit
@@ -33,7 +34,8 @@ via the `dotnet` CLI.
 
 - [.NET Core 5 SDK](https://www.microsoft.com/net/download/core)
 
-To check this is available, type `dotnet --version` at the command prompt, and you should get `5.0` or greater
+To check this is available, type `dotnet --version` at the command prompt, 
+and you should get `5.0` or greater
 
 ### One-time setup
 

@@ -25,9 +25,17 @@ namespace Boc.Services.Validation.WithDI
       {
          this.clock = clock;
       }
-      
+
       public bool IsValid(MakeTransfer request)
          => clock.UtcNow.Date <= request.Date.Date;
+   }
+
+   // testable record removes the need for a trivial constructor
+   public record DateNotPastValidator_Record(IDateTimeService Clock)
+      : IValidator<MakeTransfer>
+   {
+      public bool IsValid(MakeTransfer request)
+         => Clock.UtcNow.Date <= request.Date.Date;
    }
 
    // can be tested using fakes
@@ -46,7 +54,10 @@ namespace Boc.Services.Validation.WithDI
       public void WhenTransferDateIsPast_ThenValidatorFails()
       {
          var sut = new DateNotPastValidator_Testable(new FakeDateTimeService());
-         var transfer = new MakeTransfer { Date = presentDate.AddDays(-1) };
+         var transfer = MakeTransfer.Dummy with
+         {
+            Date = presentDate.AddDays(-1)
+         };
          Assert.AreEqual(false, sut.IsValid(transfer));
       }
 
@@ -58,7 +69,7 @@ namespace Boc.Services.Validation.WithDI
       {
          var sut = new DateNotPastValidator_Testable(new FakeDateTimeService());
          var transferDate = presentDate.AddDays(offset);
-         var transfer = new MakeTransfer { Date = transferDate };
+         var transfer = MakeTransfer.Dummy with { Date = transferDate };
 
          return sut.IsValid(transfer);
       }

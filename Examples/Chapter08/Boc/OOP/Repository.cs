@@ -8,19 +8,19 @@ namespace Boc.Chapter8.OOP
    using static F;
    using Examples;
 
-   public class BookTransferRepository : IRepository<BookTransfer>
+   public class MakeTransferRepository : IRepository<MakeTransfer>
    {
       ConnectionString conn;
 
-      public BookTransferRepository(ConnectionString conn)
+      public MakeTransferRepository(ConnectionString conn)
       {
          this.conn = conn;
       }
 
-      public Option<BookTransfer> Lookup(Guid id)
+      public Option<MakeTransfer> Lookup(Guid id)
       { throw new NotImplementedException("Illustrates violating interface segregation"); }
 
-      public Exceptional<Unit> Save(BookTransfer transfer)
+      public Exceptional<Unit> Save(MakeTransfer transfer)
       {
          try { conn.Execute("INSERT ...", transfer); }
          catch (Exception ex) { return ex; }

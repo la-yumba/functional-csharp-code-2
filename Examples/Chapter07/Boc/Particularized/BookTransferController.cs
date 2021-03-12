@@ -12,12 +12,12 @@ using Examples.Chapter2.DbLogger;
 
 namespace Boc.ValidImpl
 {
-   public class Chapter6_BookTransferController_WithValidation : ControllerBase
+   public class Chapter6_MakeTransferController_WithValidation : ControllerBase
    {
-      ILogger<Chapter6_BookTransferController_WithValidation> logger;
+      ILogger<Chapter6_MakeTransferController_WithValidation> logger;
 
       [HttpPost, Route("api/Chapters6/transfers/future/particularized")]
-      public IActionResult MakeFutureTransfer([FromBody] BookTransfer request)
+      public IActionResult MakeFutureTransfer([FromBody] MakeTransfer request)
          => Handle(request).Match(
             Invalid: BadRequest,
             Valid: result => result.Match(
@@ -30,11 +30,11 @@ namespace Boc.ValidImpl
          return StatusCode(500, Errors.UnexpectedError);
       }
 
-      Validation<Exceptional<Unit>> Handle(BookTransfer request)
+      Validation<Exceptional<Unit>> Handle(MakeTransfer request)
          => Validate(request)
             .Map(Save);
 
-      Validation<BookTransfer> Validate(BookTransfer cmd)
+      Validation<MakeTransfer> Validate(MakeTransfer cmd)
          => ValidateBic(cmd).Bind(ValidateDate);
 
 
@@ -42,7 +42,7 @@ namespace Boc.ValidImpl
 
       static readonly Regex regex = new Regex("^[A-Z]{6}[A-Z1-9]{5}$");
 
-      Validation<BookTransfer> ValidateBic(BookTransfer cmd)
+      Validation<MakeTransfer> ValidateBic(MakeTransfer cmd)
       {
          if (!regex.IsMatch(cmd.Bic.ToUpper()))
             return Errors.InvalidBic;
@@ -53,7 +53,7 @@ namespace Boc.ValidImpl
 
       DateTime now;
       
-      Validation<BookTransfer> ValidateDate(BookTransfer cmd)
+      Validation<MakeTransfer> ValidateDate(MakeTransfer cmd)
       {
          if (cmd.Date.Date <= now.Date)
             return Errors.TransferDateIsPast;
@@ -64,7 +64,7 @@ namespace Boc.ValidImpl
 
       string connString;
 
-      Exceptional<Unit> Save(BookTransfer transfer)
+      Exceptional<Unit> Save(MakeTransfer transfer)
       {
          try
          {

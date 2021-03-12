@@ -30,21 +30,21 @@ namespace Boc.Chapter8.Delegate
       public object Create(ControllerContext context)
       {
          var type = context.ActionDescriptor.ControllerTypeInfo;
-         if (type.AsType().Equals(typeof(BookTransferController_FunctionDependencies)))
+         if (type.AsType().Equals(typeof(MakeTransferController_FunctionDependencies)))
             return ConfigureTransferOnsController(context.HttpContext.RequestServices);
 
          throw new NotImplementedException(); //return defaultActivator.Create(context);
       }
 
-      BookTransferController_FunctionDependencies ConfigureTransferOnsController(IServiceProvider serviceProvider)
+      MakeTransferController_FunctionDependencies ConfigureTransferOnsController(IServiceProvider serviceProvider)
       {
          ConnectionString connString = configuration.GetSection("ConnectionString").Value;
          var save = Sql.TryExecute.Apply(connString).Apply(Sql.Queries.InsertTransferOn);
 
          var validate = Validation.DateNotPast(() => DateTime.UtcNow);
 
-         // var logger = loggerFactory.CreateLogger<BookTransferController_FunctionDependencies>();
-         return new BookTransferController_FunctionDependencies(validate, save);
+         // var logger = loggerFactory.CreateLogger<MakeTransferController_FunctionDependencies>();
+         return new MakeTransferController_FunctionDependencies(validate, save);
       }
 
       public void Release(ControllerContext context, object controller)
@@ -72,7 +72,7 @@ namespace Boc.Chapter8.Delegate
       //   IServiceProvider serviceProvider = context.HttpContext.RequestServices;
       //}
 
-      public Func<BookTransfer, IActionResult> PersistTransferOn()
+      public Func<MakeTransfer, IActionResult> PersistTransferOn()
       {
          // // persistence layer
          // ConnectionString connString = configuration.GetSection("ConnectionString").Value;

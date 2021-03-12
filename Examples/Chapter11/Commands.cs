@@ -4,11 +4,14 @@ using System;
 
 namespace Boc.Commands
 {
-   public class CreateAccount : Command
+   public record CreateAccount
+   (
+      DateTime Timestamp,
+      Guid AccountId,
+      CurrencyCode Currency
+   )
+      : Command(Timestamp)
    {
-      public Guid AccountId { get; set; }
-      public CurrencyCode Currency { get; set; }
-
       public CreatedAccount ToEvent() => new CreatedAccount
       {
          EntityId = this.AccountId,
@@ -17,12 +20,15 @@ namespace Boc.Commands
       };
    }
 
-   public class AcknowledgeCashDeposit : Command
+   public record AcknowledgeCashDeposit
+   (
+      DateTime Timestamp,
+      Guid AccountId,
+      decimal Amount,
+      Guid BranchId
+   )
+      : Command(Timestamp)
    {
-      public Guid AccountId { get; set; }
-      public decimal Amount { get; set; }
-      public Guid BranchId { get; set; }
-
       public DepositedCash ToEvent() => new DepositedCash
       {
          EntityId = this.AccountId,
@@ -32,11 +38,14 @@ namespace Boc.Commands
       };
    }
 
-   public class SetOverdraft : Command
+   public record SetOverdraft
+   (
+      DateTime Timestamp,
+      Guid AccountId,
+      decimal Amount
+   )
+      : Command(Timestamp)
    {
-      public Guid AccountId { get; set; }
-      public decimal Amount { get; set; }
-
       public AlteredOverdraft ToEvent(decimal by) => new AlteredOverdraft
       {
          EntityId = this.AccountId,
@@ -45,10 +54,13 @@ namespace Boc.Commands
       };
    }
 
-   public class FreezeAccount : Command
+   public record FreezeAccount
+   (
+      DateTime Timestamp,
+      Guid AccountId
+   )
+      : Command(Timestamp)
    {
-      public Guid AccountId { get; set; }
-
       public FrozeAccount ToEvent() => new FrozeAccount
       {
          EntityId = this.AccountId,

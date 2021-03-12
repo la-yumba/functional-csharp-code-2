@@ -17,7 +17,10 @@ namespace Boc.Services.Validation.NotTestable
       public void WhenTransferDateIsFuture_ThenValidatorPasses()
       {
          var sut = new DateNotPastValidator();
-         var transfer = new MakeTransfer { Date = new DateTime(2016, 12, 12) };
+         var transfer = MakeTransfer.Dummy with
+         {
+            Date = new DateTime(2021, 3, 12)
+         };
 
          var actual = sut.IsValid(transfer);
          Assert.AreEqual(true, actual);

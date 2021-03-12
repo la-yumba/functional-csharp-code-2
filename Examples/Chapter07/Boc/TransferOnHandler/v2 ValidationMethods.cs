@@ -10,32 +10,32 @@ namespace Boc.EitherImpl.Services.ValidationMethods
    using Domain;
    using static F;
 
-   class BookTransferController_Skeleton : ControllerBase
+   class MakeTransferController_Skeleton : ControllerBase
    {
       DateTime now;
       Regex bicRegex = new Regex("[A-Z]{11}");
 
-      Either<Error, Unit> Handle(BookTransfer request)
+      Either<Error, Unit> Handle(MakeTransfer request)
          => Right(request)
             .Bind(ValidateBic)
             .Bind(ValidateDate)
             .Bind(Save);
 
-      Either<Error, BookTransfer> ValidateBic(BookTransfer request)
+      Either<Error, MakeTransfer> ValidateBic(MakeTransfer request)
       {
          if (!bicRegex.IsMatch(request.Bic))
             return Errors.InvalidBic;
          else return request;
       }
 
-      Either<Error, BookTransfer> ValidateDate(BookTransfer request)
+      Either<Error, MakeTransfer> ValidateDate(MakeTransfer request)
       {
          if (request.Date.Date <= now.Date)
             return Errors.TransferDateIsPast;
          else return request;
       }
 
-      Either<Error, Unit> Save(BookTransfer request)
+      Either<Error, Unit> Save(MakeTransfer request)
       { throw new NotImplementedException(); }
    }
 }

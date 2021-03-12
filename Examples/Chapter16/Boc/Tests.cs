@@ -11,6 +11,8 @@ namespace Boc.Chapter16
 {
    public class Tests
    {
+      readonly MakeTransfer makeTransfer = new (default, default, default, default, default, default, default, default);
+
       [Test]
       public void WhenAccountDoesntExist_Then400()
       {
@@ -22,7 +24,7 @@ namespace Boc.Chapter16
             validate: cmd => Valid(cmd),
             getAccount: id => registry.Lookup(id));
 
-         var response = controller.MakeTransfer(new MakeTransfer()).Result;
+         var response = controller.MakeTransfer(makeTransfer).Result;
 
          Assert.AreEqual(typeof(BadRequestObjectResult), response.GetType());
       }
@@ -44,7 +46,7 @@ namespace Boc.Chapter16
             validate: cmd => Invalid("invalid"),
             getAccount: id => registry.Lookup(id));
 
-         var response = controller.MakeTransfer(new MakeTransfer()).Result;
+         var response = controller.MakeTransfer(makeTransfer).Result;
 
          Assert.IsFalse(changesPersisted);
          Assert.AreEqual(typeof(BadRequestObjectResult), response.GetType());
@@ -74,7 +76,7 @@ namespace Boc.Chapter16
             validate: cmd => Invalid("invalid"),
             getAccount: id => registry.Lookup(id));
 
-         var response = controller.MakeTransfer(new MakeTransfer
+         var response = controller.MakeTransfer(makeTransfer with
          {
             Amount = 1200
          }).Result;
@@ -107,7 +109,7 @@ namespace Boc.Chapter16
             validate: cmd => Valid(cmd),
             getAccount: id => registry.Lookup(id));
 
-         var response = controller.MakeTransfer(new MakeTransfer
+         var response = controller.MakeTransfer(makeTransfer with
          {
             Amount = 200
          }).Result;
@@ -140,7 +142,7 @@ namespace Boc.Chapter16
             validate: cmd => Valid(cmd),
             getAccount: id => registry.Lookup(id));
 
-         var response = controller.MakeTransfer(new MakeTransfer
+         var response = controller.MakeTransfer(makeTransfer with
          {
             Amount = 200
          }).Result;
@@ -179,7 +181,7 @@ namespace Boc.Chapter16
             getAccount: id => registry.Lookup(id));
 
          // make 2 transfers
-         var cmd = new MakeTransfer { Amount = 200 };
+         var cmd = makeTransfer with { Amount = 200 };
          var x = controller.MakeTransfer(cmd).Result;
          var y = controller.MakeTransfer(cmd).Result;
 
@@ -205,7 +207,7 @@ namespace Boc.Chapter16
             validate: cmd => Valid(cmd),
             getAccount: id => registry.Lookup(id));
 
-         var response = controller.MakeTransfer(new MakeTransfer
+         var response = controller.MakeTransfer(makeTransfer with
          {
             Amount = 200
          }).Result;

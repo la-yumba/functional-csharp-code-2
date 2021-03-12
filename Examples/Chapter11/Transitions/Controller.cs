@@ -6,7 +6,6 @@ using static LaYumba.Functional.F;
 using Boc.Domain.Events;
 using AccountState = Boc.Chapter11.Domain.AccountState;
 using Microsoft.AspNetCore.Mvc;
-using Boc.Chapter11.Domain;
 
 namespace Boc.Chapter11.Transitions
 {
@@ -31,26 +30,26 @@ namespace Boc.Chapter11.Transitions
             DateTime now = DateTime.UtcNow;
 
             var create = new CreateAccount
-            {
-               AccountId = id,
-               Timestamp = now,
-               Currency = cmd.Currency,
-            };
+            (
+               Timestamp: now,
+               AccountId: id,
+               Currency: cmd.Currency
+            );
 
             var depositCash = new AcknowledgeCashDeposit
-            {
-               AccountId = id,
-               Timestamp = now,
-               Amount = cmd.InitialDepositAccount,
-               BranchId = cmd.BranchId,
-            };
+            (
+               Timestamp: now,
+               AccountId: id,
+               Amount: cmd.InitialDepositAccount,
+               BranchId: cmd.BranchId
+            );
 
             var setOverdraft = new SetOverdraft
-            {
-               AccountId = id,
-               Timestamp = now,
-               Amount = cmd.AllowedOverdraft,
-            };
+            (
+               Timestamp: now,
+               AccountId: id,
+               Amount: cmd.AllowedOverdraft
+            );
 
             var transitions =
                from e1 in Account.Create(create)
@@ -64,12 +63,15 @@ namespace Boc.Chapter11.Transitions
          }
       }
 
-      public class CreateAccountWithOptions : Command
-      {
-         public CurrencyCode Currency { get; set; }
-         public decimal InitialDepositAccount { get; set; }
-         public decimal AllowedOverdraft { get; set; }
-         public Guid BranchId { get; set; }
-      }
+      public record CreateAccountWithOptions
+      (
+         DateTime Timestamp,
+
+         CurrencyCode Currency,
+         decimal InitialDepositAccount,
+         decimal AllowedOverdraft,
+         Guid BranchId
+      )
+         : Command(Timestamp);
    }
 }

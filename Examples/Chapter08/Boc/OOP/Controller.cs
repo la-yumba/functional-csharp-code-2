@@ -22,20 +22,20 @@ namespace Boc.Chapter8
          Exceptional<Unit> Save(T entity);
       }
 
-      public class BookTransferController : ControllerBase
+      public class MakeTransferController : ControllerBase
       {
-         IValidator<BookTransfer> validator;
-         IRepository<BookTransfer> repository;
+         IValidator<MakeTransfer> validator;
+         IRepository<MakeTransfer> repository;
 
-         public BookTransferController
-            (IValidator<BookTransfer> validator, IRepository<BookTransfer> repository)
+         public MakeTransferController
+            (IValidator<MakeTransfer> validator, IRepository<MakeTransfer> repository)
          {
             this.validator = validator;
             this.repository = repository;
          }
 
          //[HttpPost, Route("api/Chapters7/transfers/future")]
-         public IActionResult BookTransfer([FromBody] BookTransfer cmd)
+         public IActionResult MakeTransfer([FromBody] MakeTransfer cmd)
             => validator.Validate(cmd)
                .Map(repository.Save)
                .Match(

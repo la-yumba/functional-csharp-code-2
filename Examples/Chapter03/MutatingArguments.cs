@@ -15,7 +15,8 @@ namespace Examples.Chapter3
          return result;
       }
 
-      (decimal, IEnumerable<OrderLine>) RecomputeTotal_NoSideEffects(Order order)
+      (decimal NewTotal, IEnumerable<OrderLine> LinesToDelete)
+         RecomputeTotal_NoSideEffects(Order order)
          => ( order.OrderLines.Sum(l => l.Product.Price * l.Quantity)
             , order.OrderLines.Where(l => l.Quantity == 0));
 
