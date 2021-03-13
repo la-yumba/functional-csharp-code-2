@@ -8,6 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 using LaYumba.Functional;
 
+using Boc.Services;
+using Boc.Commands;
+
 // workaround to enable C# 9 syntax
 namespace System.Runtime.CompilerServices { public class IsExternalInit { } }
 
@@ -46,8 +49,25 @@ namespace Examples
             .CreateDefaultBuilder()
             .ConfigureServices(services =>
             {
-                services.AddControllers();
-                services.AddSwaggerGen();
+               services.AddControllers();
+               services.AddSwaggerGen();
+
+               // Chapter 3
+               // inject an interface
+               services.AddTransient<Chapter03.Boc.InjectInterface.IDateTimeService, Chapter03.Boc.InjectInterface.DefaultDateTimeService>();
+               services.AddTransient<IValidator<MakeTransfer>, Chapter03.Boc.InjectInterface.DateNotPastValidator_Record>();
+
+               // inject a value
+               services.AddTransient<IValidator<MakeTransfer>, Chapter03.Boc.InjectValue.DateNotPastValidator>
+                  (_ => new Chapter03.Boc.InjectValue.DateNotPastValidator(DateTime.UtcNow.Date));
+
+               // inject a func
+               services.AddTransient<IValidator<MakeTransfer>, Chapter03.Boc.InjectFunc.DateNotPastValidator>
+                  (_ => new Chapter03.Boc.InjectFunc.DateNotPastValidator(() => DateTime.UtcNow.Date));
+
+               // inject a delegate
+               services.AddTransient<Chapter03.Boc.InjectDelegate.Clock>(_ => () => DateTime.UtcNow);
+               services.AddTransient<IValidator<MakeTransfer>, Chapter03.Boc.InjectDelegate.DateNotPastValidator>();
             })
             .ConfigureWebHostDefaults(webBuilder => webBuilder.Configure(app =>
             {

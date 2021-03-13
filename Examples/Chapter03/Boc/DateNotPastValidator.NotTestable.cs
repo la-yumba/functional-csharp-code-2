@@ -1,8 +1,10 @@
-using System;
 using Boc.Commands;
+using Boc.Services;
+
+using System;
 using NUnit.Framework;
 
-namespace Boc.Services.Validation.NotTestable
+namespace Examples.Chapter03.Boc.NotTestable
 {
    public class DateNotPastValidator : IValidator<MakeTransfer>
    {

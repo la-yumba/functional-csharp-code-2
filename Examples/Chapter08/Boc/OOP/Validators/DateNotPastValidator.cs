@@ -1,7 +1,7 @@
 ﻿using Boc.Commands;
 using LaYumba.Functional;
 using Boc.Domain;
-using Boc.Services.Validation.WithDI;
+using Examples.Chapter03.Boc.InjectInterface;
 
 namespace Boc.Chapter8.OOP
 {

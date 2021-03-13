@@ -24,4 +24,11 @@ namespace Boc.Commands
       internal static MakeTransfer Dummy
          => new(default, default, default, default, default, default, default);
    }
+
+   public static class CommandExt
+   {
+      // when a command is receieved by the server, set a timestamp
+      public static T SetTimestamp<T>(this T cmd) where T : Command
+         => cmd with { Timestamp = DateTime.UtcNow };
+   }
 }

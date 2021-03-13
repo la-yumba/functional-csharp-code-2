@@ -1,8 +1,10 @@
 using Boc.Commands;
+using Boc.Services;
+
 using NUnit.Framework;
 using System;
 
-namespace Boc.Services.Validation.WithDI
+namespace Examples.Chapter03.Boc.InjectInterface
 {
    // interface
    public interface IDateTimeService
@@ -19,23 +21,26 @@ namespace Boc.Services.Validation.WithDI
    // testable class depends on interface
    public class DateNotPastValidator_Testable : IValidator<MakeTransfer>
    {
-      private readonly IDateTimeService clock;
+      private readonly IDateTimeService dateService;
 
-      public DateNotPastValidator_Testable(IDateTimeService clock)
+      public DateNotPastValidator_Testable(IDateTimeService dateService)
       {
-         this.clock = clock;
+         this.dateService = dateService;
       }
 
       public bool IsValid(MakeTransfer request)
-         => clock.UtcNow.Date <= request.Date.Date;
+         => dateService.UtcNow.Date <= request.Date.Date;
    }
 
    // testable record removes the need for a trivial constructor
-   public record DateNotPastValidator_Record(IDateTimeService Clock)
+   public record DateNotPastValidator_Record(IDateTimeService DateService)
       : IValidator<MakeTransfer>
    {
+      // we want our dependency to be private (by default it would be public)
+      private IDateTimeService DateService { get; init; } = DateService;
+
       public bool IsValid(MakeTransfer request)
-         => Clock.UtcNow.Date <= request.Date.Date;
+         => DateService.UtcNow.Date <= request.Date.Date;
    }
 
    // can be tested using fakes
