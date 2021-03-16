@@ -45,6 +45,26 @@ namespace LaYumba.Functional.Tests
    }
 
 
+   public class Option_Convert_Test
+   {
+      [Fact]
+      public void WhenNull_ThenConvertsToNone()
+      {
+         string s = null;
+         Option<string> opt = s;
+         Assert.Equal(None, opt);
+      }
+
+      [Fact]
+      public void WhenNotNull_ThenConvertsToSome()
+      {
+         string s = "Hello";
+         Option<string> opt = s;
+         Assert.Equal(Some("Hello"), opt);
+      }
+   }
+
+
    public class Option_Map_Test
    {
       class Apple { }
