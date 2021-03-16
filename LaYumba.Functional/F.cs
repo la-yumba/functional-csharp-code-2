@@ -8,7 +8,7 @@ namespace LaYumba.Functional
 {
    public static partial class F
    {
-      public static Unit Unit() => default(Unit);
+      public static Unit Unit() => default;
 
       // function manipulation 
 
