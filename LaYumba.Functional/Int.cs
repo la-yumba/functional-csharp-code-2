@@ -5,11 +5,8 @@
    public static class Int
    {
       public static Option<int> Parse(string s)
-      {
-         int result;
-         return int.TryParse(s, out result)
+         => int.TryParse(s, out int result)
             ? Some(result) : None;
-      }
 
       public static bool IsOdd(int i) => i % 2 == 1;
 

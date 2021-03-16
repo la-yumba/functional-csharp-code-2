@@ -1,4 +1,7 @@
-﻿namespace Exercises
+﻿// workaround to enable C# 9 syntax
+namespace System.Runtime.CompilerServices { public class IsExternalInit { } }
+
+namespace Exercises
 {
    public class Program
    {

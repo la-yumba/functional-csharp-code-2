@@ -34,7 +34,7 @@ namespace LaYumba.Functional
       public static implicit operator Option<T>(NoneType _) => default;
 
       public static implicit operator Option<T>(T value)
-         => value == null ? None : Some(value);
+         => value is null ? None : Some(value);
 
       public R Match<R>(Func<R> None, Func<T, R> Some)
           => isSome ? Some(value) : None();

@@ -69,21 +69,14 @@ namespace Exercises.Chapter4
       // Assume settings are of type string, numeric or date.) Can this
       // implementation help you to test code that relies on settings in a
       // `.config` file?
-      public class AppConfig
+      public record AppConfig(NameValueCollection Source)
       {
-         NameValueCollection source;
-
          //public AppConfig() : this(ConfigurationManager.AppSettings) { }
 
-         public AppConfig(NameValueCollection source)
-         {
-            this.source = source;
-         }
-
          public Option<T> Get<T>(string key)
-            => source[key] == null
+            => Source[key] == null
                ? None
-               : Some((T)Convert.ChangeType(source[key], typeof(T)));
+               : Some((T)Convert.ChangeType(Source[key], typeof(T)));
 
          public T Get<T>(string key, T defaultValue)
             => Get<T>(key).Match(

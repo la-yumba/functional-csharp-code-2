@@ -38,23 +38,16 @@ namespace Exercises.Chapter4
    // Assume settings are of type string, numeric or date.) Can this
    // implementation help you to test code that relies on settings in a
    // `.config` file?
-   public class AppConfig
+   public record AppConfig(NameValueCollection Source)
    {
-      NameValueCollection source;
-
       //public AppConfig() : this(ConfigurationManager.AppSettings) { }
 
-      public AppConfig(NameValueCollection source)
-      {
-         this.source = source;
-      }
-
-      public Option<T> Get<T>(string name)
+      public Option<T> Get<T>(string key)
       {
          throw new NotImplementedException("your implementation here...");
       }
 
-      public T Get<T>(string name, T defaultValue)
+      public T Get<T>(string key, T defaultValue)
       {
          throw new NotImplementedException("your implementation here...");
       }
