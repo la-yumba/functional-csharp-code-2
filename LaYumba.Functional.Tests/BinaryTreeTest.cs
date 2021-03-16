@@ -5,7 +5,6 @@ namespace LaYumba.Functional.Tests
 {
    using static Tree;
 
-   
    public class BinaryTreeTest
    {
       [Fact]
