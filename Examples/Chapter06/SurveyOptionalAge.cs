@@ -13,7 +13,7 @@ namespace Examples.Bind
          => WriteLine($"Only {ReadAge()}! That's young!");
 
       static Option<Age> ParseAge(string s)
-         => Int.Parse(s).Bind(Age.Of);
+         => Int.Parse(s).Bind(Age.Create);
 
       static Age ReadAge()
          => ParseAge(Prompt("Please enter your age")).Match(

@@ -6,7 +6,7 @@ using static LaYumba.Functional.F;
 using System.Linq;
 using NUnit.Framework;
 
-namespace Boc
+namespace Examples.Chapter11
 {
    static class ConfigurationExt
    {

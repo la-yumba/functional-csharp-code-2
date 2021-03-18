@@ -1,7 +1,7 @@
 ﻿using LaYumba.Functional;
 using static LaYumba.Functional.F;
 using System;
-using Examples.Chapter5;
+using Age = Examples.Chapter5.Age;
 
 namespace Exercises.Chapter8.Solutions
 {
@@ -27,7 +27,7 @@ namespace Exercises.Chapter8.Solutions
 
       // example taken from chapter 3
       static Func<string, Option<Age>> parseAge = s
-         => Int.Parse(s).Bind(Age.Of);
+         => Int.Parse(s).Bind(Age.Create);
 
       // Then change the first one of the functions to return an `Either`.
 
@@ -51,7 +51,7 @@ namespace Exercises.Chapter8.Solutions
              Some: v => func(v).ToOption());
 
       static Func<string, Option<Age>> parseAge2 = s
-         => s.ParseIntVerbose().Bind(Age.Of);
+         => s.ParseIntVerbose().Bind(Age.Create);
 
 
       // 3. Write a function `Safely` of type ((() → R), (Exception → L)) → Either<L, R> that will
