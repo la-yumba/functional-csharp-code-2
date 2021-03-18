@@ -1,50 +1,55 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Specialized;
+//using System.Configuration;
 using LaYumba.Functional;
 
-namespace Exercises.Chapter6
+namespace Exercises.Chapter5
 {
-   static class Exercises
+   public static class Exercises
    {
-      // 1 Implement Map for ISet<T> and IDictionary<K, T>. (Tip: start by writing down
-      // the signature in arrow notation.)
+      // 1 Write a generic function that takes a string and parses it as a value of an enum. It
+      // should be usable as follows:
 
-      // 2 Implement Map for Option and IEnumerable in terms of Bind and Return.
+      // Enum.Parse<DayOfWeek>("Friday") // => Some(DayOfWeek.Friday)
+      // Enum.Parse<DayOfWeek>("Freeday") // => None
 
-      // 3 Use Bind and an Option-returning Lookup function (such as the one we defined
-      // in chapter 3) to implement GetWorkPermit, shown below. 
+      // 2 Write a Lookup function that will take an IEnumerable and a predicate, and
+      // return the first element in the IEnumerable that matches the predicate, or None
+      // if no matching element is found. Write its signature in arrow notation:
 
-      // Then enrich the implementation so that `GetWorkPermit`
-      // returns `None` if the work permit has expired.
+      // bool isOdd(int i) => i % 2 == 1;
+      // new List<int>().Lookup(isOdd) // => None
+      // new List<int> { 1 }.Lookup(isOdd) // => Some(1)
 
-      static Option<WorkPermit> GetWorkPermit(Dictionary<string, Employee> people, string employeeId)
-      {
-         throw new NotImplementedException();
-      }
-
-      // 4 Use Bind to implement AverageYearsWorkedAtTheCompany, shown below (only
-      // employees who have left should be included).
-
-      static double AverageYearsWorkedAtTheCompany(List<Employee> employees)
-      {
-         // your implementation here...
-         throw new NotImplementedException();
-      }
+      // 3 Write a type Email that wraps an underlying string, enforcing that it’s in a valid
+      // format. Ensure that you include the following:
+      // - A smart constructor
+      // - Implicit conversion to string, so that it can easily be used with the typical API
+      // for sending emails
+      
+      // 4 Take a look at the extension methods defined on IEnumerable inSystem.LINQ.Enumerable.
+      // Which ones could potentially return nothing, or throw some
+      // kind of not-found exception, and would therefore be good candidates for
+      // returning an Option<T> instead?
    }
 
-   public struct WorkPermit
+   // 5.  Write implementations for the methods in the `AppConfig` class
+   // below. (For both methods, a reasonable one-line method body is possible.
+   // Assume settings are of type string, numeric or date.) Can this
+   // implementation help you to test code that relies on settings in a
+   // `.config` file?
+   public record AppConfig(NameValueCollection Source)
    {
-      public string Number { get; set; }
-      public DateTime Expiry { get; set; }
-   }
+      //public AppConfig() : this(ConfigurationManager.AppSettings) { }
 
-   public class Employee
-   {
-      public string Id { get; set; }
-      public Option<WorkPermit> WorkPermit { get; set; }
+      public Option<T> Get<T>(string key)
+      {
+         throw new NotImplementedException("your implementation here...");
+      }
 
-      public DateTime JoinedOn { get; }
-      public Option<DateTime> LeftOn { get; }
+      public T Get<T>(string key, T defaultValue)
+      {
+         throw new NotImplementedException("your implementation here...");
+      }
    }
 }

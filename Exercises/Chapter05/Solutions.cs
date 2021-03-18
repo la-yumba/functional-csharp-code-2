@@ -1,82 +1,87 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Specialized;
+//using System.Configuration;
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
+using System.Text.RegularExpressions;
 
-namespace Exercises.Chapter6.Solutions
+namespace Exercises.Chapter5
 {
    using static F;
 
-   static class Solutions
+   public static class Solutions
    {
-      // 1 Implement Map for ISet<T> and IDictionary<K, T>. (Tip: start by writing down
-      // the signature in arrow notation.)
+      // 1 Write a generic function that takes a string and parses it as a value of an enum. It
+      // should be usable as follows:
 
-      // Map : ISet<T> -> (T -> R) -> ISet<R>
-      static ISet<R> Map<T, R>(this ISet<T> ts, Func<T, R> f)
+      // Enum.Parse<DayOfWeek>("Friday") // => Some(DayOfWeek.Friday)
+      // Enum.Parse<DayOfWeek>("Freeday") // => None
+
+      // solution: see LaYumba.Functional.Enum.Parse<T>
+
+
+      // 2 Write a Lookup function that will take an IEnumerable and a predicate, and
+      // return the first element in the IEnumerable that matches the predicate, or None
+      // if no matching element is found. Write its signature in arrow notation:
+
+      // bool isOdd(int i) => i % 2 == 1;
+      // new List<int>().Lookup(isOdd) // => None
+      // new List<int> { 1 }.Lookup(isOdd) // => Some(1)
+
+      // Lookup : IEnumerable<T> -> (T -> bool) -> Option<T>
+      public static Option<T> Lookup<T>(this IEnumerable<T> ts, Func<T, bool> pred)
       {
-         var rs = new HashSet<R>();
-         foreach (var t in ts)
-            rs.Add(f(t));
-         return rs;
+         foreach (T t in ts) if (pred(t)) return Some(t);
+         return None;
       }
 
-      // Map : IDictionary<K, T> -> (T -> R) -> IDictionary<K, R>
-      static IDictionary<K, R> Map<K, T, R>
-         (this IDictionary<K, T> dict, Func<T, R> f)
+      // 3 Write a type Email that wraps an underlying string, enforcing that it’s in a valid
+      // format. Ensure that you include the following:
+      // - A smart constructor
+      // - Implicit conversion to string, so that it can easily be used with the typical API
+      // for sending emails
+
+      public class Email
       {
-         var rs = new Dictionary<K, R>();
-         foreach (var pair in dict)
-            rs[pair.Key] = f(pair.Value);
-         return rs;
+         static readonly Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+
+         private string Value { get; }
+
+         private Email(string value) => Value = value;
+
+         public static Option<Email> Create(string s)
+            => regex.IsMatch(s) 
+               ? Some(new Email(s)) 
+               : None;
+
+         public static implicit operator string(Email e)
+            => e.Value;
       }
+      
+      // 4 Take a look at the extension methods defined on IEnumerable inSystem.LINQ.Enumerable.
+      // Which ones could potentially return nothing, or throw some
+      // kind of not-found exception, and would therefore be good candidates for
+      // returning an Option<T> instead?
 
+      // 5.  Write implementations for the methods in the `AppConfig` class
+      // below. (For both methods, a reasonable one-line method body is possible.
+      // Assume settings are of type string, numeric or date.) Can this
+      // implementation help you to test code that relies on settings in a
+      // `.config` file?
+      public record AppConfig(NameValueCollection Source)
+      {
+         //public AppConfig() : this(ConfigurationManager.AppSettings) { }
 
-      // 2 Implement Map for Option and IEnumerable in terms of Bind and Return.
+         public Option<T> Get<T>(string key)
+            => Source[key] == null
+               ? None
+               : Some((T)Convert.ChangeType(Source[key], typeof(T)));
 
-      public static Option<R> Map<T, R>(this Option<T> opt, Func<T, R> f)
-         => opt.Bind(t => Some(f(t)));
-
-      public static IEnumerable<R> Map<T, R>(this IEnumerable<T> ts, Func<T, R> f)
-         => ts.Bind(t => List(f(t)));
-
-
-      // 3 Use Bind and an Option-returning Lookup function (such as the one we defined
-      // in chapter 3) to implement GetWorkPermit, shown below. 
-
-      static Option<WorkPermit> GetWorkPermit(Dictionary<string, Employee> employees, string employeeId)
-         => employees.Lookup(employeeId).Bind(e => e.WorkPermit);
-
-
-      // Then enrich the implementation so that `GetWorkPermit`
-      // returns `None` if the work permit has expired.
-
-      static Option<WorkPermit> GetValidWorkPermit(Dictionary<string, Employee> employees, string employeeId)
-         => employees
-            .Lookup(employeeId)
-            .Bind(e => e.WorkPermit)
-            .Where(HasExpired.Negate());
-
-      static Func<WorkPermit, bool> HasExpired => permit => permit.Expiry < DateTime.Now.Date;
-
-
-      // 4 Use Bind to implement AverageYearsWorkedAtTheCompany, shown below (only
-      // employees who have left should be included).
-
-      static double AverageYearsWorkedAtTheCompany(List<Employee> employees)
-         => employees
-            .Bind(e => e.LeftOn.Map(leftOn => YearsBetween(e.JoinedOn, leftOn)))
-            .Average();
-
-      // a more elegant solution, which will become clear in Chapter 9
-      static double AverageYearsWorkedAtTheCompany_LINQ(List<Employee> employees)
-         => (from e in employees
-             from leftOn in e.LeftOn
-             select YearsBetween(e.JoinedOn, leftOn)
-            ).Average();
-
-      static double YearsBetween(DateTime start, DateTime end)
-         => (end - start).Days / 365d;
+         public T Get<T>(string key, T defaultValue)
+            => Get<T>(key).Match(
+               () => defaultValue,
+               (value) => value);
+      }
    }
 }
