@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Examples.Purity
+namespace Examples.Chapter3
 {
    using static Console;
 

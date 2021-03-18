@@ -5,7 +5,7 @@ using static LaYumba.Functional.F;
 using Examples.Chapter5;
 using static System.Console;
 
-namespace Examples.Bind
+namespace Examples.Chapter6
 {
    public static class AskForValidAgeAndPrintFlatteringMessage
    {
