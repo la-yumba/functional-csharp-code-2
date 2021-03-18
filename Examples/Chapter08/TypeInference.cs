@@ -6,7 +6,7 @@ using Name = System.String;
 using Greeting = System.String;
 using PersonalizedGreeting = System.String;
 
-namespace Examples.Chapter8
+namespace Examples.Chapter9
 {
    public class TypeInference_Method
    {

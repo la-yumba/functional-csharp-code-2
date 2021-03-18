@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Examples.Chapter11.Data.Account
+namespace Examples.Chapter12.Data.Account
 {
    public class Transaction
    {

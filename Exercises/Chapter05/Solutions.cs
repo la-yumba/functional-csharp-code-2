@@ -4,7 +4,7 @@ using System.Linq;
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
 
-namespace Exercises.Chapter5.Solutions
+namespace Exercises.Chapter6.Solutions
 {
    using static F;
 

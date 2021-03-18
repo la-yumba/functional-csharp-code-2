@@ -6,7 +6,7 @@ namespace Boc.Domain
    { Requested, Active, Frozen, Dormant, Closed }
 }
 
-namespace Boc.Chapter11.Domain
+namespace Boc.Chapter12.Domain
 {
       public sealed class AccountState
    {

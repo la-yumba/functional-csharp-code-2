@@ -3,7 +3,7 @@ using LaYumba.Functional;
 using Boc.Domain;
 using Examples.Chapter03.Boc.InjectInterface;
 
-namespace Boc.Chapter8.OOP
+namespace Boc.Chapter9.OOP
 {
    public class DateNotPastValidator : IValidator<MakeTransfer>
    {

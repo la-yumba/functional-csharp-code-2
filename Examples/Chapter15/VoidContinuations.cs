@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using static System.Console;
 using LaYumba.Functional;
 
-namespace Examples.Chapter15
+namespace Examples.Chapter16
 {
    public static class VoidContinuations
    {

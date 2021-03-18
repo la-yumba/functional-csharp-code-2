@@ -2,12 +2,12 @@
 using static LaYumba.Functional.F;
 using System;
 using System.Threading.Tasks;
-using Boc.Chapter11.Domain;
+using Boc.Chapter12.Domain;
 using Boc.Domain.Events;
 using Unit = System.ValueTuple;
 using System.Collections.Immutable;
 
-namespace Boc.Chapter16
+namespace Boc.Chapter17
 {
    using AccountsCache = ImmutableDictionary<Guid, AccountProcess>;
 

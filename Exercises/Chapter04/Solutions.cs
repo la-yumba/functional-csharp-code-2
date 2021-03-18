@@ -6,7 +6,7 @@ using LaYumba.Functional;
 using static LaYumba.Functional.F;
 using System.Text.RegularExpressions;
 
-namespace Exercises.Chapter4
+namespace Exercises.Chapter5
 {
    using static F;
 

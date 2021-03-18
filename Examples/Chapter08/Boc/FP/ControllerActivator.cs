@@ -9,9 +9,9 @@ using Boc.Commands;
 using LaYumba.Functional;
 using System.Collections.Generic;
 using Examples;
-using Boc.Chapter8.FunctionsEverywhere;
+using Boc.Chapter9.FunctionsEverywhere;
 
-namespace Boc.Chapter8.Delegate
+namespace Boc.Chapter9.Delegate
 {
    public class ControllerActivator : IControllerActivator
    {

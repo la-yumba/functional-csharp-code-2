@@ -2,7 +2,7 @@
 using System.Linq;
 using LaYumba.Functional;
 
-namespace Examples.Chapter9.Linq
+namespace Examples.Chapter10.Linq
 {
    using static Console;
    using static F;

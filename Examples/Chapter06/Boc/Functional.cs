@@ -5,10 +5,10 @@ using static LaYumba.Functional.F;
 using Boc.Commands;
 using Boc.Services;
 
-namespace Boc.Chapter6
+namespace Boc.Chapter7
 {
    // top-level workflow
-   [ApiController, Route("Chapter6/transfer")]
+   [ApiController, Route("Chapter7/transfer")]
    public class Chapter5_TransfersController : ControllerBase
    {
       IValidator<MakeTransfer> validator;

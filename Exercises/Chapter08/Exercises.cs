@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using System;
 
-namespace Exercises.Chapter8
+namespace Exercises.Chapter9
 {
    static class Exercises
    {

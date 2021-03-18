@@ -4,7 +4,7 @@ using System.Linq;
 using LaYumba.Functional;
 using NUnit.Framework;
 
-namespace Examples.Chapter4
+namespace Examples.Chapter5
 {
    using static F;
    

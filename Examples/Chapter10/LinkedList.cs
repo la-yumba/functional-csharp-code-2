@@ -2,7 +2,7 @@
 using static LaYumba.Functional.Data.LinkedList.LinkedList;
 using static System.Console;
 
-namespace Examples.Chapter11
+namespace Examples.Chapter12
 {
    static class ImmutableList_Example
    {

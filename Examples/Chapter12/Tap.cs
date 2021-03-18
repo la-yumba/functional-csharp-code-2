@@ -1,7 +1,7 @@
 ﻿using System;
 using LaYumba.Functional;
 
-namespace Examples.Chapter12
+namespace Examples.Chapter13
 {
    class Tap_Example
    {

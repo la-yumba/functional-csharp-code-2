@@ -3,7 +3,7 @@ using LaYumba.Functional;
 using System.Text.RegularExpressions;
 using Boc.Domain;
 
-namespace Boc.Chapter8.OOP
+namespace Boc.Chapter9.OOP
 {
    public class IbanValidator : IValidator<MakeTransfer>
    {

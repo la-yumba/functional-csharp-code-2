@@ -2,7 +2,7 @@
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
 
-namespace Examples.Chapter8
+namespace Examples.Chapter9
 {
    class TypeInference_Map
    {

@@ -2,7 +2,7 @@
 using System;
 using Unit = System.ValueTuple;
 
-namespace Examples.Chapter6
+namespace Examples.Chapter7
 {
    class CookFavouriteDish
    {

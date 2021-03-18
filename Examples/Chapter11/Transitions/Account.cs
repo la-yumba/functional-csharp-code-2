@@ -4,9 +4,9 @@ using Boc.Domain.Events;
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
 using System;
-using Boc.Chapter11.Domain;
+using Boc.Chapter12.Domain;
 
-namespace Boc.Chapter11.Transitions
+namespace Boc.Chapter12.Transitions
 {
    public static class Account
    {

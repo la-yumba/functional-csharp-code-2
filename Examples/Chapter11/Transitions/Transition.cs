@@ -3,7 +3,7 @@ using LaYumba.Functional;
 using static LaYumba.Functional.F;
 using System;
 
-namespace Boc.Chapter11
+namespace Boc.Chapter12
 {
    public delegate Validation<(T, St)> Transition<St, T>(St state);
 

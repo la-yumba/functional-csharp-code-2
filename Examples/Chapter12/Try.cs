@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
-namespace Examples.Chapter12
+namespace Examples.Chapter13
 {
    public class TryTests
    {

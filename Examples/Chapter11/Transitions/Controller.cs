@@ -4,10 +4,10 @@ using System;
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
 using Boc.Domain.Events;
-using AccountState = Boc.Chapter11.Domain.AccountState;
+using AccountState = Boc.Chapter12.Domain.AccountState;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Boc.Chapter11.Transitions
+namespace Boc.Chapter12.Transitions
 {
    namespace WithValidation
    {

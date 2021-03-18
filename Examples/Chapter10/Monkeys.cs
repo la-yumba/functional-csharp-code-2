@@ -1,7 +1,7 @@
 ﻿using LaYumba.Functional;
 using System;
 
-namespace Examples.Chapter11.Data
+namespace Examples.Chapter12.Data
 {
    enum Ripeness { Green, Yellow, Brown }
 

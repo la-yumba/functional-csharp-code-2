@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Boc.Domain;
 
-namespace Examples.Chapter11.Data.Account.Mutable
+namespace Examples.Chapter12.Data.Account.Mutable
 {
    public class AccountState
    {

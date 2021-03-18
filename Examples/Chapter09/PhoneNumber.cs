@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Examples.Chapter8
+namespace Examples.Chapter9
 {
    using static F;
 

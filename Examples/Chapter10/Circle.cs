@@ -1,6 +1,6 @@
 ﻿using static System.Math;
 
-namespace Examples.Chapter11.Data
+namespace Examples.Chapter12.Data
 {
    struct Circle
    {

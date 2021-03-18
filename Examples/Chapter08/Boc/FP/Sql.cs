@@ -3,7 +3,7 @@ using LaYumba.Functional;
 using Boc.Commands;
 using Unit = System.ValueTuple;
 
-namespace Boc.Chapter8
+namespace Boc.Chapter9
 {
    using static F;
    using Examples;

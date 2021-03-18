@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using System.Linq;
 
-namespace Boc.Chapter8
+namespace Boc.Chapter9
 {   
    using static ValidationStrategies;
    

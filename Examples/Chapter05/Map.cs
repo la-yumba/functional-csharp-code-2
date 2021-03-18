@@ -3,7 +3,7 @@ using LaYumba.Functional;
 using static System.Console;
 using String = LaYumba.Functional.String;
 
-namespace Examples.Chapter5
+namespace Examples.Chapter6
 {
    using System.Collections.Generic;
    using System.Linq;

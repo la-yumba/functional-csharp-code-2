@@ -8,7 +8,7 @@ using static LaYumba.Functional.F;
 using NUnit.Framework;
 using Unit = System.ValueTuple;
 
-namespace Boc.Chapter8
+namespace Boc.Chapter9
 {
    public delegate Validation<T> Validator<T>(T t);
 

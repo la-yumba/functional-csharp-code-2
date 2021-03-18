@@ -1,9 +1,9 @@
 ﻿using LaYumba.Functional;
 using static LaYumba.Functional.F;
 using System;
-using Examples.Chapter4;
+using Examples.Chapter5;
 
-namespace Exercises.Chapter7.Solutions
+namespace Exercises.Chapter8.Solutions
 {
    static class Exercises
    {

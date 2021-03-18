@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LaYumba.Functional;
 
-namespace Exercises.Chapter5
+namespace Exercises.Chapter6
 {
    static class Exercises
    {

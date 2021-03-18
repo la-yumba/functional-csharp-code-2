@@ -1,6 +1,6 @@
 ﻿using LaYumba.Functional;
 
-namespace Exercises.Chapter5
+namespace Exercises.Chapter6
 {
    public class Person
    {

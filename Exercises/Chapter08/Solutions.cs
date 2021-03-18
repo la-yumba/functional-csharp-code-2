@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using System;
 
-namespace Exercises.Chapter8.Solutions
+namespace Exercises.Chapter9.Solutions
 {
    static class Solutions
    {

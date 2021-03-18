@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using static System.Console;
 
-namespace Examples.Chapter4.Option
+namespace Examples.Chapter5.Option
 {
    class DishonestFunctions
    {
