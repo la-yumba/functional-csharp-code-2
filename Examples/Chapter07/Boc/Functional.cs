@@ -38,19 +38,19 @@ namespace Boc.Chapter7
 
    // domain model
 
-   public class AccountState
-   {
-      public decimal Balance { get; }
-      public AccountState(decimal balance) { Balance = balance; }
-   }
+   public record AccountState(decimal Balance);
 
    public static class Account
    {
       public static Option<AccountState> Debit
-         (this AccountState acc, decimal amount)
-         => (acc.Balance < amount)
+         (this AccountState current, decimal amount)
+         => (current.Balance < amount)
             ? None
-            : Some(new AccountState(acc.Balance - amount));
+            : Some(new AccountState
+               (
+                  Balance : current.Balance - amount
+               )
+            );
    }
    
 

@@ -5,70 +5,46 @@ namespace Boc.Domain
 {
    public static class Errors
    {
-      public static InsufficientBalanceError InsufficientBalance
+      public static Error InsufficientBalance
          => new InsufficientBalanceError();
 
-      public static InvalidBicError InvalidBic
+      public static Error InvalidBic
          => new InvalidBicError();
 
-      public static CannotActivateClosedAccountError CannotActivateClosedAccount
+      public static Error CannotActivateClosedAccount
          => new CannotActivateClosedAccountError();
 
-      public static TransferDateIsPastError TransferDateIsPast 
+      public static Error TransferDateIsPast 
          => new TransferDateIsPastError();
 
-      public static AccountNotActiveError AccountNotActive
+      public static Error AccountNotActive
          => new AccountNotActiveError();
 
-      public static UnexpectedError UnexpectedError
+      public static Error UnexpectedError
          => new UnexpectedError();
 
       public static Error UnknownAccountId(Guid id)
-         => new UnknownAccountId(id);
+         => new UnknownAccountIdError(id);
    }
 
-   public sealed class UnknownAccountId : Error
-   {
-      Guid Id { get; }
-      public UnknownAccountId(Guid id) { Id = id; }
+   public sealed record UnknownAccountIdError(Guid Id)
+      : Error($"No account with id {Id} was found");
 
-      public override string Message
-         => $"No account with id {Id} was found";
-   }
+   public sealed record UnexpectedError()
+      : Error("An unexpected error has occurred");
 
-   public sealed class UnexpectedError : Error
-   {
-      public override string Message { get; }
-         = "An unexpected error has occurred";
-   }
+   public sealed record AccountNotActiveError()
+      : Error("The account is not active; the requested operation cannot be completed");
 
-   public sealed class AccountNotActiveError : Error
-   {
-      public override string Message { get; }
-         = "The account is not active; the requested operation cannot be completed";
-   }
+   public sealed record InvalidBicError()
+      : Error("The beneficiary's BIC/SWIFT code is invalid");
 
-   public sealed class InvalidBicError : Error
-   {
-      public override string Message { get; }
-         = "The beneficiary's BIC/SWIFT code is invalid";
-   }
+   public sealed record InsufficientBalanceError()
+      : Error("Insufficient funds to fulfil the requested operation");
 
-   public sealed class InsufficientBalanceError : Error
-   {
-      public override string Message { get; }
-         = "Insufficient funds to fulfil the requested operation";
-   }
+   public sealed record CannotActivateClosedAccountError()
+      : Error("Cannot activate an account that has been closed");
 
-   public sealed class CannotActivateClosedAccountError : Error
-   {
-      public override string Message { get; }
-         = "Cannot activate an account that has been closed";
-   }
-
-   public sealed class TransferDateIsPastError : Error
-   {
-      public override string Message { get; }
-         = "Transfer date cannot be in the past";
-   }
+   public sealed record TransferDateIsPastError()
+      : Error("Transfer date cannot be in the past");
 }

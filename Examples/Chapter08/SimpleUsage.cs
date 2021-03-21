@@ -25,9 +25,11 @@ partial class Either_Example
 
    Either<Error, int> Run(double x, double y)
       => Calc(x, y)
-         .Map(
-            left: msg => Error(msg),
-            right: d => d)
+         .Map
+         (
+            Left: msg => Error(msg),
+            Right: d => d
+         )
          .Bind(ToIntIfWhole);
       
    Either<Error, int> ToIntIfWhole(double d)

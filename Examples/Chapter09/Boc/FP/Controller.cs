@@ -47,16 +47,14 @@ namespace Boc.Chapter9
 
       public class Tests
       {
-         readonly MakeTransfer makeTransfer = new(default, default, default, default, default, default, default);
-
          [Test]
          public void WhenValid_AndSaveSucceeds_ThenResponseIsOk()
          {
             var controller = new MakeTransferController_FunctionDependencies(
-               validate: cmd => Valid(cmd),
-               save: cmd => Exceptional(Unit()));
+               validate: transfer => Valid(transfer),
+               save: _ => Exceptional(Unit()));
 
-            var result = controller.MakeTransfer(makeTransfer);
+            var result = controller.MakeTransfer(MakeTransfer.Dummy);
 
             Assert.AreEqual(typeof(OkResult), result.GetType());
          }

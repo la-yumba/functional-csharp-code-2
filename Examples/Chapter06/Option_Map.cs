@@ -1,43 +1,46 @@
-﻿using LaYumba.Functional;
+﻿using System;
+using static System.Console;
 
-namespace Examples.Chapter2
+using LaYumba.Functional;
+using static LaYumba.Functional.F;
+
+using NUnit.Framework;
+
+using Age = Examples.Chapter5.Age;
+
+namespace Examples
 {
-   using static F;
-   using System;
-   using static System.Console;
+   public enum Gender { Female, Male };
+}
 
-   class Option_Match_Example
-   {
-      internal static void _main()
-      {
-         string _ = null, john = "John";
-
-         Greet(john); // prints: hello, John
-         Greet(_); // prints: sorry, who?
-
-         ReadKey();
-      }
-
-      static void Greet(string name)
-         => WriteLine(GreetingFor(name));
-
-      static string GreetingFor(string name)
-         => Some(name).Match(
-            Some: n => $"hello, {n}",
-            None: () => "sorry, who?");
-   }
-
+namespace Examples.Chapter6
+{
    class Option_Map_Example
    {
-      internal static void _main()
+      [Test]
+      internal static void BasicExample()
       {
          Func<string, string> greet = name => $"hello, {name}";
-         string _ = null, john = "John";
 
-         Some(john).Map(greet); // => Some("hello, John")
-         Some(_).Map(greet); // => None
+         Option<string> empty = None;
+         Option<string> optJohn = Some("John");
+
+         Assert.AreEqual(None, empty.Map(greet));
+         Assert.AreEqual(Some("hello, John"), optJohn.Map(greet));
       }
+
+      Option<Risk> RiskOf(Subject subject)
+         => subject.Age.Map(CalculateRiskProfile);
+
+      public static Risk CalculateRiskProfile(Age age)
+         => (age < 60) ? Risk.Low : Risk.Medium;
    }
+
+   record Subject
+   (
+      Option<Age> Age
+      // many more fields...
+   );
 
    class Person
    {
@@ -60,7 +63,7 @@ namespace Examples.Chapter2
             , armin = new Person { Name = "Armin" };
 
          grace.Relationship = new Relationship {
-            Type = "going out", Partner = dimitry };
+            Type = "going out with", Partner = dimitry };
 
          WriteLine(grace.RelationshipStatus());
          // prints: Grace is going out with Dimitry
@@ -73,7 +76,7 @@ namespace Examples.Chapter2
 
       static string RelationshipStatus(this Person p)
          => p.Relationship.Match(
-            Some: r => $"{p.Name} is {r.Type} with {r.Partner.Name}",
+            Some: r => $"{p.Name} is {r.Type} {r.Partner.Name}",
             None: () => $"{p.Name} is single");
    }
 }

@@ -67,8 +67,8 @@ namespace LaYumba.Functional.Tests
 
    public class Option_Map_Test
    {
-      class Apple { }
-      class ApplePie { public ApplePie(Apple apple) { } }
+      record Apple();
+      record ApplePie(Apple Apple);
 
       Func<Apple, ApplePie> makePie = apple => new ApplePie(apple);
 

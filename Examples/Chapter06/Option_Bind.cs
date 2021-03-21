@@ -9,7 +9,7 @@ namespace Examples.Chapter6
 {
    public static class AskForValidAgeAndPrintFlatteringMessage
    {
-      public static void _main()
+      public static void Run()
          => WriteLine($"Only {ReadAge()}! That's young!");
 
       static Option<Age> ParseAge(string s)
@@ -29,16 +29,11 @@ namespace Examples.Chapter6
 
    class SurveyOptionalAge
    {
-      class Person
+      static IEnumerable<Subject> Population => new[]
       {
-         public Option<int> Age { get; set; }
-      }
-
-      static IEnumerable<Person> Population => new[]
-      {
-         new Person { Age = Some(33) },
-         new Person { }, // this person did not disclose her age
-         new Person { Age = Some(37) },
+         new Subject(Age.Create(33)),
+         new Subject(None), // this person did not disclose her age
+         new Subject(Age.Create(37)),
       };
 
       internal static void _main()
@@ -49,7 +44,7 @@ namespace Examples.Chapter6
          var statedAges = Population.Bind(p => p.Age);
          // => [33, 37]
 
-         var averageAge = statedAges.Average();
+         var averageAge = statedAges.Average(a => a.Value);
          // => 35
       }
    }

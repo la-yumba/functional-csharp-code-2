@@ -5,7 +5,7 @@ namespace LaYumba.Functional
 {
    public static partial class F
    {
-      public static Exceptional<T> Exceptional<T>(T value) => new Exceptional<T>(value);
+      public static Exceptional<T> Exceptional<T>(T t) => new (t);
    }
 
    public struct Exceptional<T>
@@ -18,19 +18,18 @@ namespace LaYumba.Functional
 
       internal Exceptional(Exception ex)
       {
-         if (ex == null) throw new ArgumentNullException(nameof(ex));
-         Ex = ex;
-         Value = default(T);
+         Ex = ex ?? throw new ArgumentNullException(nameof(ex));
+         Value = default;
       }
 
-      internal Exceptional(T right)
+      internal Exceptional(T value)
       {
-         Value = right;
-         Ex = null;
+         Value = value ?? throw new ArgumentNullException(nameof(value));
+         Ex = default;
       }
 
-      public static implicit operator Exceptional<T>(Exception left) => new Exceptional<T>(left);
-      public static implicit operator Exceptional<T>(T right) => new Exceptional<T>(right);
+      public static implicit operator Exceptional<T>(Exception ex) => new (ex);
+      public static implicit operator Exceptional<T>(T t) => new (t);
 
       public TR Match<TR>(Func<Exception, TR> Exception, Func<T, TR> Success)
          => this.Exception ? Exception(Ex) : Success(Value);

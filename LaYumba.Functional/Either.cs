@@ -85,10 +85,12 @@ namespace LaYumba.Functional
             r => Right(f(r)));
 
       public static Either<LL, RR> Map<L, LL, R, RR>
-         (this Either<L, R> @this, Func<L, LL> left, Func<R, RR> right)
-         => @this.Match<Either<LL, RR>>(
-            l => Left(left(l)),
-            r => Right(right(r)));
+         (this Either<L, R> @this, Func<L, LL> Left, Func<R, RR> Right)
+         => @this.Match<Either<LL, RR>>
+            (
+               l => F.Left(Left(l)),
+               r => F.Right(Right(r))
+            );
 
       public static Either<L, Unit> ForEach<L, R>
          (this Either<L, R> @this, Action<R> act)

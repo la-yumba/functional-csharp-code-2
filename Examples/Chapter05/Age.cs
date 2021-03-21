@@ -6,7 +6,7 @@ namespace Examples.Chapter5
 
    public struct Age
    {
-      private int Value { get; }
+      public int Value { get; }
 
       // smart constructor
       public static Option<Age> Create(int age)

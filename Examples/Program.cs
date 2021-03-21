@@ -23,6 +23,7 @@ namespace Examples
          var cliExamples = new Dictionary<string, Action>
          {
             ["HOFs"] = Chapter2.HOFs.Run,
+            ["OptionBind"] = Chapter6.AskForValidAgeAndPrintFlatteringMessage.Run,
             ["Greetings"] = Chapter9.Greetings.Run,
             ["Timer"] = Chapter16.CreatingObservables.Timer.Run,
             ["Subjects"] = Chapter16.CreatingObservables.Subjects.Run,

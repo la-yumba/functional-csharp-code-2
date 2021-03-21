@@ -1,10 +1,13 @@
 ﻿using System;
 
+namespace Examples
+{
+   public enum Risk { Low, Medium, High }
+}
+
 namespace Examples.Chapter4
 {
-   enum Risk { Low, Medium, High }
-
-   public static class CalculateRisk
+   public static class RiskCalculator
    {
       // dynamic type (anything goes)
       // e.g.: CalculateRiskProfile_Dynamic("hello");
@@ -26,7 +29,7 @@ namespace Examples.Chapter4
       }
 
       // dedicated type
-      static Risk CalculateRiskProfile(Age age)
+      public static Risk CalculateRiskProfile(Age age)
          => (age < 60) ? Risk.Low : Risk.Medium;
    }
 

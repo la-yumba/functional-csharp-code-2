@@ -1,15 +1,10 @@
 namespace Examples
 {
-   public class ConnectionString
+   public record ConnectionString(string Value)
    {
-      string Value { get; }
-      public ConnectionString(string value) { Value = value; }
-
       public static implicit operator string(ConnectionString c)
          => c.Value;
       public static implicit operator ConnectionString(string s)
-         => new ConnectionString(s);
-
-      public override string ToString() => Value;
+         => new (s);
    }
 }
