@@ -113,7 +113,7 @@ namespace Examples.Chapter9
       public override string ToString() => Value;
    }
 
-   class PhoneNumber
+   record PhoneNumber
    {
       public enum NumberType { Mobile, Home, Office }
 

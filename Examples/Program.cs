@@ -10,6 +10,7 @@ using LaYumba.Functional;
 
 using Boc.Services;
 using Boc.Commands;
+using System.Threading.Tasks;
 
 // workaround to enable C# 9 syntax
 namespace System.Runtime.CompilerServices { public class IsExternalInit { } }
@@ -18,7 +19,7 @@ namespace Examples
 {
    public class Program
    {
-      public static void Main(string[] args)
+      public async static Task Main(string[] args)
       {
          var cliExamples = new Dictionary<string, Action>
          {
@@ -42,7 +43,9 @@ namespace Examples
                   Some: (main) => main()
                );
 
-         else StartWebApi();
+         else
+            await Boc.Chapter9.Program.Run();
+            //StartWebApi();
       }
 
       static void StartWebApi()

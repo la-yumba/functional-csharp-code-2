@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <StartupObject>Examples.Program</StartupObject>
@@ -18,7 +17,8 @@
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
     <PackageReference Include="System.Reactive.Core" Version="5.0.0" />
-
+    
+    <PackageReference Include="FeatherHttp" Version="0.1.82-alpha.g7c8518a220" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="NUnit" Version="3.13.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
@@ -27,9 +27,4 @@
     <ProjectReference Include="..\LaYumba.Functional\LaYumba.Functional.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Chapter02\" />
-    <Folder Include="Chapter02\DbLogger\" />
-    <Folder Include="Chapter05\" />
-  </ItemGroup>
 </Project>

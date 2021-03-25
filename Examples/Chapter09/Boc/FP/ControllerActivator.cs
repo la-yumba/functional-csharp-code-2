@@ -1,17 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging;
-//using Microsoft.AspNetCore.Mvc.Internal;
 using System;
 using Microsoft.Extensions.Configuration;
-using System.Linq;
 using Boc.Commands;
 using LaYumba.Functional;
-using System.Collections.Generic;
 using Examples;
-using Boc.Chapter9.FunctionsEverywhere;
 
-namespace Boc.Chapter9.Delegate
+namespace Boc.Chapter9
 {
    public class ControllerActivator : IControllerActivator
    {
