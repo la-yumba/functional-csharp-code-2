@@ -17,14 +17,11 @@ namespace Examples.Chapter9
             , sqlById = $"{select} WHERE ID = @Id"
             , sqlByName = $"{select} WHERE LASTNAME = @LastName";
 
-         // queryEmployees : (SqlTemplate, object) → IEnumerable<Employee>
-         var queryEmployees = conn.Query<Employee>();
-
          // queryById : object → IEnumerable<Employee>
-         var queryById = queryEmployees.Apply(sqlById);
+         var queryById = conn.Retrieve<Employee>(sqlById);
 
          // queryByLastName : object → IEnumerable<Employee>
-         var queryByLastName = queryEmployees.Apply(sqlByName);
+         var queryByLastName = conn.Retrieve<Employee>(sqlByName);
 
          // LookupEmployee : Guid → Option<Employee>
          Option<Employee> LookupEmployee(Guid id)

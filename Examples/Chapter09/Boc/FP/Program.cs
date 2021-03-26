@@ -57,12 +57,9 @@ namespace Boc.Chapter9
          ConnectionString connString = config.GetSection("ConnectionString").Value;
          SqlTemplate InsertTransferSql = "INSERT ...";
 
-         var save = Sql.TryExecute
-            .Apply(connString)
-            .Apply(InsertTransferSql);
+         var save = connString.TryExecute(InsertTransferSql);
 
-         var validate = Validation
-            .DateNotPast(clock: () => DateTime.UtcNow);
+         var validate = Validation.DateNotPast(clock: () => DateTime.UtcNow);
 
          return HandleSaveTransfer(validate, save);
       }
