@@ -3,31 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
-namespace Examples.Purity.ListFormatter.Parallel.Naive
+namespace Examples.Chapter3.ListFormatter.Parallel.Naive
 {
    class ListFormatter
    {
       int counter;
 
-      Numbered<T> ToNumberedValue<T>(T t) => new Numbered<T>(t, ++counter);
+      Numbered<T> ToNumberedValue<T>(T t) => new (t, ++counter);
 
       // possible fix, using lock
       // Numbered<T> ToNumberedValue<T>(T t) => new Numbered<T>(t, Interlocked.Increment(ref counter));
 
       string Render(Numbered<string> s) => $"{s.Number}. {s.Value}";
 
-      public List<string> Format(IEnumerable<string> list)
-         => list.AsParallel()
+      string PrependCounter(string s) => $"{++counter}. {s}";
+
+      public List<string> Format(List<string> list)
+         => list
+            .AsParallel()
             .Select(StringExt.ToSentenceCase)
-            .Select(ToNumberedValue)
-            .OrderBy(n => n.Number)
-            .Select(Render)
+            .Select(PrependCounter)
             .ToList();
 
-      public void Main()
+      public static void Run()
       {
-         var size = 100000;
-         var shoppingList = Enumerable.Range(1, size).Select(i => $"item{i}");
+         var size = 1000000;
+         var shoppingList = Enumerable.Range(1, size).Select(i => $"item{i}").ToList();
 
          new ListFormatter()
             .Format(shoppingList)
@@ -35,7 +36,6 @@ namespace Examples.Purity.ListFormatter.Parallel.Naive
 
          Console.Read();
       }
-
    }
 
    
@@ -44,7 +44,7 @@ namespace Examples.Purity.ListFormatter.Parallel.Naive
       [Test]
       public void ItWorksOnSingletonList()
       {
-         var input = new[] { "coffee beans" };
+         var input = new List<string>() { "coffee beans" };
          var output = new ListFormatter().Format(input);
          Assert.That("1. Coffee beans" == output[0]);
       }
@@ -58,9 +58,9 @@ namespace Examples.Purity.ListFormatter.Parallel.Naive
       public void ItWorksOnAVeryLongList()
       {
          var size = 100000;
-         var input = Enumerable.Range(1, size).Select(i => $"item{i}");
+         var input = Enumerable.Range(1, size).Select(i => $"item {i}").ToList();
          var output = new ListFormatter().Format(input);
-         Assert.AreEqual("100000. Item100000", output[size - 1]);
+         Assert.AreEqual("100000. Item 100000", output[size - 1]);
       }
    }
 }

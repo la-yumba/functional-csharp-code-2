@@ -3,7 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using static System.Console;
 
-namespace Examples.Purity.ListFormatter.Static
+namespace Examples.Chapter3.ListFormatter.Static
 {
    public static class ListFormatter
    {

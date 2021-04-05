@@ -1,8 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
-namespace Examples.Purity.ListFormatter.Parallel.WithRange
+namespace Examples.Chapter3.ListFormatter.Parallel.WithRange
 {
    using static ParallelEnumerable;
 

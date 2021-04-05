@@ -4,7 +4,7 @@ using LaYumba.Functional;
 using NUnit.Framework;
 using static System.Console;
 
-namespace Examples.Purity.ListFormatter.Parallel.InfiniteSequence
+namespace Examples.Chapter3.ListFormatter.Parallel.InfiniteSequence
 {
    static class ListFormatter
    {

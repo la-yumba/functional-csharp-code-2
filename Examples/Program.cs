@@ -24,6 +24,7 @@ namespace Examples
          var cliExamples = new Dictionary<string, Action>
          {
             ["HOFs"] = Chapter2.HOFs.Run,
+            ["NaivePar"] = Chapter3.ListFormatter.Parallel.Naive.ListFormatter.Run,
             ["OptionBind"] = Chapter6.AskForValidAgeAndPrintFlatteringMessage.Run,
             ["Greetings"] = Chapter9.Greetings.Run,
             ["Timer"] = Chapter16.CreatingObservables.Timer.Run,

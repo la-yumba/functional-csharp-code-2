@@ -1,4 +1,4 @@
-namespace Examples.Purity
+﻿namespace Examples.Chapter3
 {
    public static class StringExt
    {

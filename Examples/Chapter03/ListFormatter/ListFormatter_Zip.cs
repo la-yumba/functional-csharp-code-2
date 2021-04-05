@@ -1,7 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Examples.Purity.ListFormatter.WithZip
+namespace Examples.Chapter3.ListFormatter.WithZip
 {
    using static Enumerable;
 
