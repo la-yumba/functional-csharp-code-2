@@ -18,7 +18,7 @@ namespace Examples.Chapter6
    class Option_Map_Example
    {
       [Test]
-      internal static void BasicExample()
+      public static void BasicExample()
       {
          Func<string, string> greet = name => $"hello, {name}";
 
