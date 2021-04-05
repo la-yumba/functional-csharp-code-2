@@ -42,14 +42,8 @@ and you should get `5.0` or greater
 ```
 $ git clone git@github.com:la-yumba/functional-csharp-code-2.git
 $ cd functional-csharp-code-2
-$ dotnet restore
+$ dotnet build
 ```
-
-If `restore` fails, try 
-
-````
-$ dotnet restore -s "https://api.nuget.org/v3/index.json"
-````
 
 ### Running the tests
 
