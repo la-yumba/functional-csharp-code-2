@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Boc.Domain;
 
-namespace Examples.Chapter12.Data.Account.Mutable
+namespace Examples.AppendixA.ByConvention
 {
    public class AccountState
    {
@@ -26,7 +26,7 @@ namespace Examples.Chapter12.Data.Account.Mutable
 
    class Usage
    {
-      void _main()
+      void Run()
       {
          var account = new AccountState
          {

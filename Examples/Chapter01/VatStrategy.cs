@@ -1,11 +1,11 @@
 ﻿using System;
 namespace Examples.Chapter01
 {
-   record Product(string Name, double Price, bool IsFood);
+   record Product(string Name, decimal Price, bool IsFood);
 
    record Order(Product Product, int Quantity)
    {
-      public double NetPrice => Product.Price * Quantity;
+      public decimal NetPrice => Product.Price * Quantity;
    }
 
    record Address(string Country);
@@ -13,7 +13,7 @@ namespace Examples.Chapter01
 
    public static class VatStrategy
    {
-      static double Vat(Address address, Order order)
+      static decimal Vat(Address address, Order order)
          => address switch
          {
             UsAddress(var state) => Vat(RateByState(state), order),
@@ -21,27 +21,27 @@ namespace Examples.Chapter01
             Address(var country) => Vat(RateByCountry(country), order),
          };
 
-      static double RateByCountry(string country)
+      static decimal RateByCountry(string country)
          => country switch
          {
-            "it" => 0.22,
-            "jp" => 0.08,
+            "it" => 0.22m,
+            "jp" => 0.08m,
             _ => throw new ArgumentException($"Missing rate for {country}")
          };
 
-      static double Vat(double rate, Order order)
+      static decimal Vat(decimal rate, Order order)
          => order.NetPrice * rate;
 
-      static double RateByState(string state)
+      static decimal RateByState(string state)
          => state switch
          {
-            "ca" => 0.1,
-            "ma" => 0.0625,
-            "ny" => 0.085,
+            "ca" => 0.1m,
+            "ma" => 0.0625m,
+            "ny" => 0.085m,
             _ => throw new ArgumentException($"Missing rate for {state}")
          };
 
-      static double DeVat(Order order)
-         => order.NetPrice * (order.Product.IsFood ? 0.08 : 0.2);
+      static decimal DeVat(Order order)
+         => order.NetPrice * (order.Product.IsFood ? 0.08m : 0.2m);
    }
 }

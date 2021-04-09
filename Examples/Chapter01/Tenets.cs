@@ -9,16 +9,17 @@ namespace Examples.Chapter1
    using static Enumerable;
    using static Console;
 
-   class Tenets
+   class FunctionsAsFirstClassValues
    {
-      static void Run()
+      [Test]
+      public static void Run()
       {
-         var ints = new List<int> { 1, 2, 3, 4, 5 };
+         static int triple(int x) => x * 3;
+         var range = Range(1, 3);
+         var triples = range.Select(triple);
 
-         foreach (var i in ints)
-            WriteLine(i);
-
-         ints.ForEach(WriteLine);
+         Assert.AreEqual(new List<int>() { 3, 6, 9 }
+            , triples);
       }
    }
 
@@ -42,24 +43,22 @@ namespace Examples.Chapter1
          Assert.AreEqual(new[] { 1, 5, 7 }, original);
       }
 
+      static readonly List<int> nums = Range(-10000, 20001).Reverse().ToList();
+
       public static void WithListItBreaks()
       {
-         var nums = Range(-10000, 20001).Reverse().ToList();
-
-         Action task1 = () => WriteLine(nums.Sum());
-         Action task2 = () => { nums.Sort(); WriteLine(nums.Sum()); };
+         void task1() => WriteLine(nums.Sum());
+         void task2() { nums.Sort(); WriteLine(nums.Sum()); }
 
          Parallel.Invoke(task1, task2);
       }
 
       public static void WithIEnumerableItWorks()
       {
-         var nums = Range(-10000, 20001).Reverse();
-
          Action task1 = () => WriteLine(nums.Sum());
-         Action task2 = () => { nums.OrderBy(x => x); WriteLine(nums.Sum()); };
+         Action task3 = () => WriteLine(nums.OrderBy(x => x).Sum());
 
-         Parallel.Invoke(task1, task2);
+         Parallel.Invoke(task1, task3);
       }
    }
 }

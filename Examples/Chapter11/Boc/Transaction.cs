@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Examples.Chapter12.Data.Account
+namespace Boc.Domain
 {
-   public class Transaction
-   {
-      public decimal Amount { get; }
-      public string Description { get; }
-      public DateTime Date { get; }
-   }
+   public record Transaction
+   (
+      decimal Amount,
+      string Description,
+      DateTime Date
+   );
 }

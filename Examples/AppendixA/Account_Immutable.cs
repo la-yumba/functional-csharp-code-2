@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Immutable;
 using Boc.Domain;
 
-namespace Examples.Chapter12.Data.Account.Immutable
+namespace Examples.AppendixA.Immutable
 {
    public sealed class AccountState
    {

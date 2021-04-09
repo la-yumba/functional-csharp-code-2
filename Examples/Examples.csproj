@@ -23,5 +23,4 @@
     <ProjectReference Include="..\LaYumba.Functional.Data\LaYumba.Functional.Data.csproj" />
     <ProjectReference Include="..\LaYumba.Functional\LaYumba.Functional.csproj" />
   </ItemGroup>
-
 </Project>
