@@ -2,45 +2,20 @@
 
 namespace LaYumba.Functional.Data.BinaryTree
 {
-   public abstract class Tree<T> : IEquatable<Tree<T>>
-   {
-      public abstract R Match<R>(Func<T, R> Leaf, Func<Tree<T>, Tree<T>, R> Branch);
+   public abstract record Tree<T>;
+   internal record Leaf<T>(T Value) : Tree<T>;
+   internal record Branch<T>(Tree<T> Left, Tree<T> Right) : Tree<T>;
 
-      public bool Equals(Tree<T> other) => this.ToString() == other.ToString(); // hack
-      public override bool Equals(object obj) => Equals((Tree<T>)obj);
-   }
-
-   internal class Branch<T> : Tree<T>
-   {
-      public Tree<T> Left { get; }
-      public Tree<T> Right { get; }
-
-      public Branch(Tree<T> Left, Tree<T> Right)
-      {
-         this.Left = Left;
-         this.Right = Right;
-      }
-
-      public override string ToString() => $"Branch({Left}, {Right})";
-
-      public override R Match<R>(Func<T, R> Leaf
-         , Func<Tree<T>, Tree<T>, R> Branch)
-         => Branch(Left, Right);
-   }
-
-   internal class Leaf<T> : Tree<T>
-   {
-      public T Value { get; }
-      public Leaf(T Value) { this.Value = Value; }
-      public override string ToString() => Value.ToString();
-
-      public override R Match<R>(Func<T, R> Leaf
-         , Func<Tree<T>, Tree<T>, R> Branch)
-         => Leaf(Value);
-   }
-            
    public static class Tree
    {
+      public static R Match<T, R>(this Tree<T> tree, Func<T, R> Leaf, Func<Tree<T>, Tree<T>, R> Branch)
+         => tree switch
+         {
+            Leaf<T>(T val) => Leaf(val),
+            Branch<T>(var l, var r) => Branch(l, r),
+            _ => throw new ArgumentException("{tree} is not a valid tree")
+         };
+
       public static Tree<T> Leaf<T>(T Value) => new Leaf<T>(Value);
 
       public static Tree<T> Branch<T>(Tree<T> Left, Tree<T> Right)

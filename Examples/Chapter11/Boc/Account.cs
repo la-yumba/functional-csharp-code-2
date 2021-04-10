@@ -16,46 +16,20 @@ namespace Examples.Chapter11
    );
 
    public record AccountState
+   (
+      CurrencyCode Currency,
+      AccountStatus Status = AccountStatus.Requested,
+      decimal AllowedOverdraft = 0m,
+      IEnumerable<Transaction> TransactionHistory = null
+   )
    {
-      public CurrencyCode Currency { get; }
-      public AccountStatus Status { get; init; } = AccountStatus.Requested;
-      public decimal AllowedOverdraft { get; init; } = 0m;
+      // use a read-only property to disallow "updating" the currency of an account
+      public CurrencyCode Currency { get; } = Currency;
 
-      private readonly IEnumerable<Transaction> transactions = Enumerable.Empty<Transaction>();
-      public IEnumerable<Transaction> TransactionHistory
-      {
-         get => transactions;
-         init { transactions = value?.ToImmutableList() ?? Enumerable.Empty<Transaction>(); }
-      }
-
-      //public IEnumerable<Transaction> TransactionHistory { get; init; }
-      // = Enumerable.Empty<Transaction>();
-
-      public AccountState(CurrencyCode Currency)
-         => this.Currency = Currency;
-   }
-
-   public record AccountState_WithCtor
-   {
-      public CurrencyCode Currency { get; }
-      public AccountStatus Status { get; init; } 
-      public decimal AllowedOverdraft { get; init; }
+      // use a property initializer to use an empty list rather than null
       public IEnumerable<Transaction> TransactionHistory { get; init; }
-
-      public AccountState_WithCtor
-      (
-         CurrencyCode Currency,
-         AccountStatus Status = AccountStatus.Requested,
-         decimal AllowedOverdraft = 0m,
-         IEnumerable<Transaction> TransactionHistory = null
-      )
-      {
-         (this.Currency, this.Status, this.AllowedOverdraft)
-            = (Currency, Status, AllowedOverdraft);
-
-         this.TransactionHistory = TransactionHistory?.ToImmutableList()
+         = TransactionHistory?.ToImmutableList()
             ?? Enumerable.Empty<Transaction>();
-      }
    }
 
    public static class Account
@@ -70,9 +44,12 @@ namespace Examples.Chapter11
          => original with { Status = AccountStatus.Active };
    }
 
-
    public static class Usage
    {
+      [Test]
+      public static void WhenInitializedWithNull_ThenHasEmptyList()
+         => Assert.AreEqual(0, new AccountState("EUR").TransactionHistory.Count());
+
       [Test]
       public static void WithOnlyChangesTheSpecifiedFields()
       {
@@ -88,13 +65,14 @@ namespace Examples.Chapter11
       public static void GivenRecordImmutable_WhenMutateList_ThenRecordIsNotMutated()
       {
          var mutable = new List<Transaction>();
-         var account = new AccountState("EUR")
-         {
-            TransactionHistory = mutable
-         };
+         var account = new AccountState
+         (
+            Currency: "EUR",
+            TransactionHistory: mutable
+         );
          mutable.Add(new(-1000, "Create trouble", DateTime.Now));
 
-         Assert.AreEqual(1, mutable.Count());
+         Assert.AreEqual(1, mutable.Count);
          Assert.AreEqual(0, account.TransactionHistory.Count());
       }
    }
