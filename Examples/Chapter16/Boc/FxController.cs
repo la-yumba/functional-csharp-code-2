@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using LaYumba.Functional;
 using Boc.Domain;
 
-namespace Examples.Chapter15
+namespace Examples.Chapter16
 {
    public class FxController : ControllerBase
    {

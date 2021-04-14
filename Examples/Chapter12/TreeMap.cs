@@ -1,7 +1,7 @@
 ﻿using System;
 using LaYumba.Functional.Data.BinaryTree;
 
-namespace Examples
+namespace Examples.Chapter12
 {
    using static Tree;
 

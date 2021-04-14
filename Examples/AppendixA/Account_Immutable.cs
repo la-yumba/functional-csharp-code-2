@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Collections.Immutable;
 using Boc.Domain;
@@ -49,6 +50,13 @@ namespace Examples.AppendixA.Immutable
                AllowedOverdraft: AllowedOverdraft ?? this.AllowedOverdraft,
                Transactions: this.TransactionHistory
             );
+   }
+
+   public class Transaction
+   {
+      public decimal Amount { get; private set; }
+      public string Description { get; private set; }
+      public DateTime Date { get; private set; }
    }
 
    static class Usage

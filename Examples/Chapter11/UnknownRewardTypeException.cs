@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Examples.Chapter12.Data
+namespace Examples.Chapter13.Data
 {
    internal class UnknownRewardTypeException : Exception
    {

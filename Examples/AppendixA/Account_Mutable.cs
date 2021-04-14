@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Boc.Domain;
 
 namespace Examples.AppendixA.ByConvention
@@ -23,6 +24,14 @@ namespace Examples.AppendixA.ByConvention
             TransactionHistory = this.TransactionHistory
          };
    }
+
+   public class Transaction
+   {
+      public decimal Amount { get; private set; }
+      public string Description { get; private set; }
+      public DateTime Date { get; private set; }
+   }
+
 
    class Usage
    {

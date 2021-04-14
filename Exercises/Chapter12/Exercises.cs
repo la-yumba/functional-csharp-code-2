@@ -8,7 +8,7 @@ using static LaYumba.Functional.Data.LinkedList.LinkedList;
 using LaYumba.Functional.Data.BinaryTree;
 using static LaYumba.Functional.Data.BinaryTree.Tree;
 
-namespace Exercises.Chapter11
+namespace Exercises.Chapter12
 {
    static class Exercises
    {

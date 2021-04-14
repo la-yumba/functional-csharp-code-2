@@ -4,7 +4,7 @@ using static System.Console;
 using System.Threading.Tasks;
 using LaYumba.Functional;
 
-namespace Examples.Chapter15
+namespace Examples.Chapter16
 {
    using static F;
 

@@ -1,4 +1,4 @@
-﻿using Boc.Chapter12.Domain;
+﻿using Boc.Chapter13.Domain;
 using NUnit.Framework;
 using System;
 using LaYumba.Functional;
@@ -7,7 +7,7 @@ using Boc.Commands;
 using Microsoft.AspNetCore.Mvc;
 using Boc.Domain;
 
-namespace Boc.Chapter17
+namespace Boc.Chapter18
 {
    public class Tests
    {

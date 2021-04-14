@@ -2,7 +2,7 @@
 using LaYumba.Functional;
 using Unit = System.ValueTuple;
 
-namespace Examples.Chapter13.Cache
+namespace Examples.Chapter14.Cache
 {
    using static Console;
    using static F;

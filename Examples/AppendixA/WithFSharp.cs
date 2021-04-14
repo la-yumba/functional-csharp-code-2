@@ -7,7 +7,7 @@
 //using Boc.Domain.FSharp;
 //using AccountStatus = Boc.Domain.FSharp.AccountStatus;
 
-//namespace Examples.Chapter12.Data.Account
+//namespace Examples.Chapter13.Data.Account
 //{
 //   public static class WithFSharp
 //   {
