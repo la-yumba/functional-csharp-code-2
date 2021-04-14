@@ -15,6 +15,13 @@ namespace Examples.Chapter11
       IEnumerable<Transaction> TransactionHistory = null
    );
 
+   public record Transaction
+   (
+      decimal Amount,
+      string Description,
+      DateTime Date
+   );
+
    public record AccountState
    (
       CurrencyCode Currency,
@@ -42,6 +49,13 @@ namespace Examples.Chapter11
 
       public static AccountState Activate(this AccountState original)
          => original with { Status = AccountStatus.Active };
+
+      public static AccountState RedFlag(this AccountState original)
+         => original with
+         {
+            Status = AccountStatus.Frozen,
+            AllowedOverdraft = 0m
+         };
    }
 
    public static class Usage
