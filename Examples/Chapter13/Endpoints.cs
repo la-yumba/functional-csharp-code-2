@@ -1,23 +1,32 @@
 ﻿using Boc.Commands;
+using Boc.Domain;
+using Boc.Domain.Events;
+
 using System;
+using Microsoft.AspNetCore.Builder;
+
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
-using Boc.Domain.Events;
+
 using AccountState = Boc.Chapter13.Domain.AccountState;
 using Boc.Chapter13.Domain;
-using Microsoft.AspNetCore.Mvc;
-using Boc.Domain;
+
+using Examples.FunctionalApi;
+using static Examples.FunctionalApi.ActionResultFactory;
 
 namespace Boc.Chapter13
 {
-   namespace Unsafe
+   namespace Api.Unsafe
    {
-      public class Chapter10_Transfers_NoValidation : ControllerBase
+      public static class Program
       {
-         Func<Guid, AccountState> getAccount;
-         Action<Event> saveAndPublish;
-
-         public IActionResult MakeTransfer([FromBody] MakeTransfer cmd)
+         public static WebApplication ConfigureMakeTransferEndpoint
+         (
+            WebApplication app,
+            Func<Guid, AccountState> getAccount,
+            Action<Event> saveAndPublish
+         )
+         => app.MapPost("/Transfer/Make", (MakeTransfer cmd) =>
          {
             var account = getAccount(cmd.DebitedAccountId);
 
@@ -27,9 +36,10 @@ namespace Boc.Chapter13
             saveAndPublish(evt);
 
             // returns information to the user about the new state
-            return Ok(new { Balance = newState.Balance });
-         }
+            return Ok(new { newState.Balance });
+         });
       }
+
 
       // unsafe version
       public static class Account
@@ -67,19 +77,25 @@ namespace Boc.Chapter13
 
    namespace WithValidation
    {
-      public class Chapter10_Transfers_WithValidation : ControllerBase
-      {
-         Func<MakeTransfer, Validation<MakeTransfer>> validate;
-         Func<Guid, AccountState> getAccount;
-         Action<Event> saveAndPublish;
 
-         public IActionResult MakeTransfer([FromBody] MakeTransfer cmd)
-            => validate(cmd)
-               .Bind(t => getAccount(t.DebitedAccountId).Debit(t))
-               .Do(result => saveAndPublish(result.Item1))
-               .Match<IActionResult>(
+      public static class Program
+      {
+         public static WebApplication ConfigureMakeTransferEndpoint
+         (
+            WebApplication app,
+            Func<MakeTransfer, Validation<MakeTransfer>> validate,
+            Func<Guid, Option<AccountState>> getAccount,
+            Action<Event> saveAndPublish
+         )
+         => app.MapPost("/Transfer/Make", (MakeTransfer transfer)
+            => validate(transfer)
+               .Bind(t => getAccount(t.DebitedAccountId)
+                  .ToValidation($"No account found for {t.DebitedAccountId}"))
+               .Bind(acc => acc.Debit(transfer))
+               .Do(result => saveAndPublish(result.Event))
+               .Match(
                   Invalid: errs => BadRequest(new { Errors = errs }),
-                  Valid: result => Ok(new { Balance = result.Item2.Balance }));         
+                  Valid: result => Ok(new { result.NewState.Balance })));
       }
    }
 }

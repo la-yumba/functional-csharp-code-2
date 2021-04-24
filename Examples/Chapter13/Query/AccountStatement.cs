@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Boc.Chapter13.Query
 {
-   public class Transaction
+   public record Transaction
    {
       public DateTime Date { get; }
       public decimal DebitedAmount { get; }
@@ -16,20 +16,20 @@ namespace Boc.Chapter13.Query
 
       public Transaction(DebitedTransfer e)
       {
-         this.DebitedAmount = e.DebitedAmount;
+         DebitedAmount = e.DebitedAmount;
          Description = $"Transfer to {e.Bic}/{e.Iban}; Ref: {e.Reference}";
          Date = e.Timestamp.Date;
       }
 
       public Transaction(DepositedCash e)
       {
-         this.CreditedAmount = e.Amount;
+         CreditedAmount = e.Amount;
          Description = $"Deposit at {e.BranchId}";
          Date = e.Timestamp.Date;
       }
    }
 
-   public class AccountStatement
+   public record AccountStatement
    {
       public int Month { get; }
       public int Year { get; }
@@ -59,21 +59,19 @@ namespace Boc.Chapter13.Query
       }
 
       Option<Transaction> CreateTransaction(Event evt)
-         => new Pattern<Option<Transaction>>
+         => evt switch
          {
-            (DepositedCash e) => new Transaction(e),
-            (DebitedTransfer e) => new Transaction(e),
-         }
-         .Default(None)
-         .Match(evt);
+            DepositedCash e => new Transaction(e),
+            DebitedTransfer e => new Transaction(e),
+            _ => None
+         };
 
       decimal BalanceReducer(decimal bal, Event evt)
-         => new Pattern<decimal>
+         => evt switch
          {
-            (DepositedCash e) => bal + e.Amount,
-            (DebitedTransfer e) => bal - e.DebitedAmount,
-         }
-         .Default(bal)
-         .Match(evt);
+            DepositedCash e => bal + e.Amount,
+            DebitedTransfer e => bal - e.DebitedAmount,
+            _ => bal
+         };
    }
 }

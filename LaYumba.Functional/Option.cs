@@ -177,10 +177,14 @@ namespace LaYumba.Functional
             () => right(), 
             (_) => left);
 
+      public static Validation<T> ToValidation<T>(this Option<T> opt, Error error)
+         => opt.Match(
+            () => Invalid(error),
+            (t) => Valid(t));
 
       public static Validation<T> ToValidation<T>(this Option<T> opt, Func<Error> error)
          => opt.Match(
-            () => Invalid(error()), 
+            () => Invalid(error()),
             (t) => Valid(t));
 
       // LINQ

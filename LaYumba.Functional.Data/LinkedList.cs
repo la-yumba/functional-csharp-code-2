@@ -16,14 +16,11 @@ namespace LaYumba.Functional.Data.LinkedList
       readonly List<T> tail;
 
       // the empty list
-      internal List() { isEmpty = true; }
+      internal List() => isEmpty = true; 
 
       // the non empty list
       internal List(T head, List<T> tail)
-      {
-         this.head = head;
-         this.tail = tail;
-      }
+         => (this.head, this.tail) = (head, tail);
 
       public R Match<R>(Func<R> Empty, Func<T, List<T>, R> Cons)
          => isEmpty ? Empty() : Cons(head, tail);
@@ -57,7 +54,7 @@ namespace LaYumba.Functional.Data.LinkedList
    public static class LinkedList
    {
       // factory functions
-      public static List<T> List<T>(T h, List<T> t) => new List<T>(h, t);
+      public static List<T> List<T>(T h, List<T> t) => new(h, t);
 
       public static List<T> List<T>(params T[] items)
          => items.Reverse().Aggregate(new List<T>()

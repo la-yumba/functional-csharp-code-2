@@ -41,6 +41,9 @@ namespace Examples.Chapter11
 
    public static class Account
    {
+      public static AccountState Create(CurrencyCode ccy)
+         => new(ccy);
+
       public static AccountState Add(this AccountState original, Transaction transaction)
          => original with
          {
@@ -60,6 +63,19 @@ namespace Examples.Chapter11
 
    public static class Usage
    {
+      public static void AccountUsage()
+      {
+         var onDayOne = Account.Create("USD");
+         var onDayTwo = Account.Activate(onDayOne);
+         //var onDayTwo = onDayOne.Activate();
+         var onDayThree = onDayTwo.Add(new(50, "", DateTime.Now));
+      }
+
+      static AccountState OpeningOffer()
+         => Account.Create("USD")
+            .Activate()
+            .Add(new(50, "New customer offer", DateTime.Now));
+
       [Test]
       public static void WhenInitializedWithNull_ThenHasEmptyList()
          => Assert.AreEqual(0, new AccountState("EUR").TransactionHistory.Count());

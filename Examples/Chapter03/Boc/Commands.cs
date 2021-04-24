@@ -1,4 +1,5 @@
 ﻿using System;
+using Boc.Domain.Events;
 
 namespace Boc.Commands
 {
@@ -23,6 +24,17 @@ namespace Boc.Commands
       // useful for testing, when you don't need all the properties to be populated
       internal static MakeTransfer Dummy
          => new(default, default, default, default, default, default, default);
+
+      public DebitedTransfer ToEvent() => new
+      (
+         Beneficiary: this.Beneficiary,
+         Bic: this.Bic,
+         DebitedAmount: this.Amount,
+         EntityId: this.DebitedAccountId,
+         Iban: this.Iban,
+         Reference: this.Reference,
+         Timestamp: this.Timestamp
+      );
    }
 
    public static class CommandExt

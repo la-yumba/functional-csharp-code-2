@@ -2,43 +2,62 @@
 
 namespace Boc.Domain.Events
 {
-   public class Event
-   {
-      public Guid EntityId { get; set; }
-      public DateTime Timestamp { get; set; }
-   }
+   public abstract record Event
+   (
+      Guid EntityId,
+      DateTime Timestamp
+   );
 
-   public class CreatedAccount : Event
-   {
-      public CurrencyCode Currency { get; set; }
-   }
+   public record CreatedAccount
+   (
+      Guid EntityId,
+      DateTime Timestamp,
+      CurrencyCode Currency
+   )
+   : Event(EntityId, Timestamp);
 
-   public class AlteredOverdraft : Event
-   {
-      public decimal By { get; set; }
-   }
+   public record AlteredOverdraft
+   (
+      Guid EntityId,
+      DateTime Timestamp,
+      decimal By
+   )
+   : Event(EntityId, Timestamp);
 
-   public class FrozeAccount : Event { }
+   public record FrozeAccount
+   (
+      Guid EntityId,
+      DateTime Timestamp
+   )
+   : Event(EntityId, Timestamp);
+   
+   public record DepositedCash
+   (
+      Guid EntityId,
+      DateTime Timestamp,
+      decimal Amount,
+      Guid BranchId
+   )
+   : Event(EntityId, Timestamp);
 
-   public class DepositedCash : Event
-   {
-      public decimal Amount { get; set; }
-      public Guid BranchId { get; set; }
-   }
+   public record DebitedTransfer
+   (
+      Guid EntityId,
+      DateTime Timestamp,
+      string Beneficiary,
+      string Iban,
+      string Bic,
+      decimal DebitedAmount,
+      string Reference
+   )
+   : Event(EntityId, Timestamp);
 
-   public class DebitedTransfer : Event
-   {
-      public string Beneficiary { get; set; }
-      public string Iban { get; set; }
-      public string Bic { get; set; }
-
-      public decimal DebitedAmount { get; set; }
-      public string Reference { get; set; }
-   }
-
-   class DebitedFee : Event
-   {
-      public decimal Amount { get; }
-      public string Description { get; }
-   }
+   public record DebitedFee
+   (
+      Guid EntityId,
+      DateTime Timestamp,
+      decimal Amount,
+      string Description
+   )
+   : Event(EntityId, Timestamp);
 }

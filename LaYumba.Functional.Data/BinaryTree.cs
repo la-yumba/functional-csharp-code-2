@@ -31,6 +31,20 @@ namespace LaYumba.Functional.Data.BinaryTree
                )
          );
 
+      public static int Count<T>(this Tree<T> @this)
+         => @this.Match
+            (
+               Leaf: _ => 1,
+               Branch: (l, r) => l.Count() + r.Count()
+            );
+
+      public static int Depth<T>(this Tree<T> @this)
+         => @this.Match
+            (
+               Leaf: _ => 0,
+               Branch: (l, r) => 1 + Math.Max(l.Depth(), r.Depth())
+            );
+
       public static Tree<T> Insert<T>(this Tree<T> @this, T value)
          => @this.Match(
             Leaf: t => Branch(Leaf(t), Leaf(value)),

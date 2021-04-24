@@ -72,6 +72,14 @@ namespace Examples.Chapter13.Data
          }
       }
 
+      string Describe_WithSwitchExpression(Reward reward)
+         => reward switch
+            {
+                Banana banana => $"It's a {banana.Ripeness} banana",
+                Peanut _ => "It's a peanut",
+                _ => "It's a reward I don't know or care about",
+            };
+
       string DescribeChoiceOf(Reward reward)
          => reward.Match(
             Peanut: () => "It's a peanut",
@@ -96,7 +104,7 @@ namespace Examples.Chapter13.Data
          {
             return "It's a peanut";
          }
-         else throw new UnknownRewardTypeException();
+         else throw new ArgumentException();
       }
    }
 }

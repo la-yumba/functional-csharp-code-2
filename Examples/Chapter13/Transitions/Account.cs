@@ -63,13 +63,13 @@ namespace Boc.Chapter13.Transitions
                Status: AccountStatus.Active
             );
 
-      public static AccountState Apply(this AccountState @this, Event evt)
-         => new Pattern<AccountState>
+      public static AccountState Apply(this AccountState acc, Event evt)
+         => evt switch
          {
-            (DepositedCash e) => @this.Credit(e.Amount),
-            (DebitedTransfer e) => @this.Debit(e.DebitedAmount),
-            (FrozeAccount e) => @this.WithStatus(AccountStatus.Frozen),
-         }
-         .Match(evt);
+            DepositedCash e => acc with { Balance = acc.Balance + e.Amount },
+            DebitedTransfer e => acc with { Balance = acc.Balance - e.DebitedAmount },
+            FrozeAccount => acc with { Status = AccountStatus.Frozen },
+            _ => throw new InvalidOperationException()
+         };
    }
 }

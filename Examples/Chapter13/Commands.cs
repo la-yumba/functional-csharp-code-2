@@ -12,12 +12,12 @@ namespace Boc.Commands
    )
       : Command(Timestamp)
    {
-      public CreatedAccount ToEvent() => new CreatedAccount
-      {
-         EntityId = this.AccountId,
-         Timestamp = this.Timestamp,
-         Currency = this.Currency,
-      };
+      public CreatedAccount ToEvent() => new
+      (
+         EntityId: this.AccountId,
+         Timestamp: this.Timestamp,
+         Currency: this.Currency
+      );
    }
 
    public record AcknowledgeCashDeposit
@@ -29,13 +29,13 @@ namespace Boc.Commands
    )
       : Command(Timestamp)
    {
-      public DepositedCash ToEvent() => new DepositedCash
-      {
-         EntityId = this.AccountId,
-         Timestamp = this.Timestamp,
-         Amount = this.Amount,
-         BranchId = this.BranchId,
-      };
+      public DepositedCash ToEvent() => new 
+      (
+         EntityId: this.AccountId,
+         Timestamp: this.Timestamp,
+         Amount: this.Amount,
+         BranchId: this.BranchId
+      );
    }
 
    public record SetOverdraft
@@ -46,12 +46,12 @@ namespace Boc.Commands
    )
       : Command(Timestamp)
    {
-      public AlteredOverdraft ToEvent(decimal by) => new AlteredOverdraft
-      {
-         EntityId = this.AccountId,
-         Timestamp = this.Timestamp,
-         By = by,
-      };
+      public AlteredOverdraft ToEvent(decimal by) => new
+      (
+         EntityId: this.AccountId,
+         Timestamp: this.Timestamp,
+         By: by
+      );
    }
 
    public record FreezeAccount
@@ -61,10 +61,10 @@ namespace Boc.Commands
    )
       : Command(Timestamp)
    {
-      public FrozeAccount ToEvent() => new FrozeAccount
-      {
-         EntityId = this.AccountId,
-         Timestamp = this.Timestamp,
-      };
+      public FrozeAccount ToEvent() => new
+      (
+         EntityId: this.AccountId,
+         Timestamp: this.Timestamp
+      );
    }
 }

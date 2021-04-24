@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Boc.Chapter13.Domain
+namespace Boc.AppendixA.EventSourcing.Domain
 {
    public static class Account
    {
@@ -49,20 +49,14 @@ namespace Boc.Chapter13.Domain
                Status: AccountStatus.Active
             );
 
-      public static AccountState Apply(this AccountState acc, Event evt)
-         => evt switch
+      public static AccountState Apply(this AccountState @this, Event evt)
+         => new Pattern<AccountState>
          {
-            DepositedCash e
-               => acc with { Balance = acc.Balance + e.Amount },
-
-            DebitedTransfer e
-               => acc with { Balance = acc.Balance - e.DebitedAmount },
-
-            FrozeAccount
-               => acc with { Status = AccountStatus.Frozen },
-
-            _ => throw new InvalidOperationException()
-         };
+            (DepositedCash e) => @this.Credit(e.Amount),
+            (DebitedTransfer e) => @this.Debit(e.DebitedAmount),
+            (FrozeAccount e) => @this.WithStatus(AccountStatus.Frozen),
+         }
+         .Match(evt);
 
       // hydrate
 

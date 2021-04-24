@@ -1,45 +1,23 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Boc.Commands;
 using Microsoft.Extensions.Configuration;
-using Examples;
-using LaYumba.Functional;
-using static LaYumba.Functional.F;
-using System;
-using Unit = System.ValueTuple;
-using System.Collections.Generic;
+
+using Boc.Commands;
 using Boc.Domain;
+
+using LaYumba.Functional;
+using Unit = System.ValueTuple;
+
+using Examples;
+using Examples.FunctionalApi;
+using static Examples.FunctionalApi.ActionResultFactory;
 
 namespace Boc.Chapter9
 {
-   using static ActionResultFactory;
-
    public static class Program
    {
-      public static WebApplication MapPost<T>
-         (this WebApplication app, string route, Func<T, ActionResult> handle)
-      {
-         app.MapPost(route, async http =>
-         {
-            T t = await http.Request.ReadFromJsonAsync<T>();
-
-            ActionResult result = handle(t);
-
-            http.Response.StatusCode = result.StatusCode;
-
-            switch (result)
-            {
-               case OkObjectResult r:
-                  { await http.Response.WriteAsJsonAsync(r.Value); break; }
-               case BadRequestObjectResult r:
-                  { await http.Response.WriteAsJsonAsync(r.Errors); break; }
-            };
-         });
-
-         return app;
-      }
-
       public async static Task Run()
       {
          var app = WebApplication.Create();
@@ -77,19 +55,5 @@ namespace Boc.Chapter9
                   Success: _ => Ok()
                )
             );
-   }
-
-   public abstract record ActionResult(int StatusCode);
-   sealed record OkResult() : ActionResult(StatusCodes.Status200OK);
-   sealed record OkObjectResult(object Value) : ActionResult(StatusCodes.Status200OK);
-   sealed record BadRequestObjectResult(object Errors) : ActionResult(StatusCodes.Status400BadRequest);
-   sealed record InternalServerError(object Error) : ActionResult(StatusCodes.Status500InternalServerError);
-
-   static class ActionResultFactory
-   {
-      public static ActionResult Ok() => new OkResult();
-      public static ActionResult Ok(object value) => new OkObjectResult(value);
-      public static ActionResult BadRequest(object error) => new BadRequestObjectResult(error);
-      public static ActionResult InternalServerError(object value) => new InternalServerError(value);
    }
 }
