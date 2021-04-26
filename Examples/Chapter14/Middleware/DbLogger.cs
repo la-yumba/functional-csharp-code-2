@@ -6,11 +6,10 @@ using System.Data.SqlClient;
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
 using Examples.Chapter2.DbLogger;
-using Examples;
 using Microsoft.Extensions.Logging;
 using Unit = System.ValueTuple;
 
-namespace Playground.WithLINQ.DbLogger
+namespace Examples.Chapter14
 {
    public class LogMessage { }
 
@@ -82,28 +81,5 @@ namespace Playground.WithLINQ.DbLogger
          select conn.Query<LogMessage>(@"SELECT * 
             FROM [Logs] WHERE [Timestamp] > @since", new { since = since })
       ).Run();
-   }
-
-   public class Orders
-   {
-      ConnectionString connString;
-
-      Middleware<SqlConnection> Connect
-         => f => ConnectionHelper.Connect(connString, f);
-
-      Middleware<SqlTransaction> Transact(SqlConnection conn)
-         => f => ConnectionHelper.Transact(conn, f);
-
-      public void DeleteOrder(Guid id) =>
-         DeleteOrder(new { Id = id }).Run();
-
-      SqlTemplate deleteLines = "DELETE OrderLines WHERE OrderId = @Id";
-      SqlTemplate deleteOrder = "DELETE Orders WHERE OrderId = @Id";
-
-      Middleware<int> DeleteOrder(object param) =>
-         from conn in Connect
-         from tran in Transact(conn)
-         select conn.Execute(deleteLines, param, tran)
-              + conn.Execute(deleteOrder, param, tran);
    }
 }

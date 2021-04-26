@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
-using LaYumba.Functional;
+
 using static LaYumba.Functional.F;
-using NUnit.Framework;
 using Unit = System.ValueTuple;
 
-namespace Playground.WithLINQ.DbLogger
+using NUnit.Framework;
+
+namespace Examples.Chapter14
 {
    public delegate dynamic Middleware<T>(Func<T, dynamic> cont);
 
