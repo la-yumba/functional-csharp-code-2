@@ -10,11 +10,9 @@ namespace Examples.Chapter2.DbLogger
       public static R Connect<R>
          (string connString, Func<SqlConnection, R> func)
       {
-         using (var conn = new SqlConnection(connString))
-         {
-            conn.Open();
-            return func(conn);
-         }
+         using var conn = new SqlConnection(connString);
+         conn.Open();
+         return func(conn);
       }
 
       public static R Transact<R>

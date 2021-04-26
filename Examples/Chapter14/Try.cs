@@ -31,6 +31,10 @@ namespace Examples.Chapter14
          return new Uri(deserialized.Uri);
       }
 
+      Try<Uri> ExtractUri_Ugly(string json)
+         => Parse<Website>(json)
+            .Bind(website => CreateUri(website.Uri));
+
       Try<Uri> CreateUri(string uri) => () => new Uri(uri);
 
       Try<T> Parse<T>(string s) => () => JsonSerializer.Deserialize<T>(s);
