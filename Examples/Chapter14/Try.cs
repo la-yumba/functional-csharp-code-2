@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Text.Json;
+
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+
 using NUnit.Framework;
 
 namespace Examples.Chapter14
@@ -15,27 +16,45 @@ namespace Examples.Chapter14
          catch (Exception ex) { return ex; }
       }
 
+      record Website(string Name, string Uri);
+
+      public static void Run()
+      {
+         var json = @"{""Name"":""Github"",
+            ""Uri"":""http://github.com""}";
+         Console.WriteLine(ExtractUri_Simple(json));
+      }
+
+      public static Uri ExtractUri_Simple(string json)
+      {
+         var deserialized = JsonSerializer.Deserialize<Website>(json);
+         return new Uri(deserialized.Uri);
+      }
+
       Try<Uri> CreateUri(string uri) => () => new Uri(uri);
 
-      Try<JObject> Parse(string s) => () => JObject.Parse(s);
+      Try<T> Parse<T>(string s) => () => JsonSerializer.Deserialize<T>(s);
 
       Try<Uri> ExtractUri(string json) =>
-         from jObj in Parse(json)
-         let uriStr = (string)jObj["Uri"]
-         from uri in Try(() => new Uri(uriStr))
+         from website in Parse<Website>(json)
+         from uri in CreateUri(website.Uri)
          select uri;
 
-      [TestCase(@"{'Uri': 'http://github.com'}", "Ok")]
-      [TestCase("{'Uri': 'rubbish'}", "Invalid URI")]
-      [TestCase("{}", "Value cannot be null")]
-      [TestCase("blah!", "Unexpected character encountered")]
-      public void SuccessfulTry(string json, string expected)
-         => Assert.IsTrue(
-            ExtractUri(json)
-               .Run()
-               .Match(
-                  ex => ex.Message, 
-                  _ => "Ok")
-               .StartsWith(expected));
+      [TestCase(@"{""Name"":""Github"", ""Uri"":""http://github.com""}"
+         , ExpectedResult = "Ok")]
+      [TestCase(@"{""Name"":""Github"", ""Uri"":""rubbish""}"
+         , ExpectedResult = "Invalid URI")]
+      [TestCase("{}"
+         , ExpectedResult = "Value cannot be null")]
+      [TestCase("blah!"
+         , ExpectedResult = "'b' is an invalid start of a value")]
+      public string SuccessfulTry(string json)
+         => ExtractUri(json)
+            .Run()
+            .Match
+            (
+               ex => ex.Message.Split(new char[] { '.', ':' })[0],
+               _ => "Ok"
+            );
    }
 }
