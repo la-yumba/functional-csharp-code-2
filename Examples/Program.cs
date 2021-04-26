@@ -23,12 +23,17 @@ namespace Examples
       {
          var cliExamples = new Dictionary<string, Action>
          {
-            ["HOFs"] = Chapter2.HOFs.Run,
-            ["NaivePar"] = Chapter3.ListFormatter.Parallel.Naive.ListFormatter.Run,
             ["ParallelSortUnsafe"] = Chapter1.MutationShouldBeAvoided.WithListItBreaks,
             ["ParallelSortSafe"] = Chapter1.MutationShouldBeAvoided.WithIEnumerableItWorks,
+            ["HOFs"] = Chapter2.HOFs.Run,
+            ["NaivePar"] = Chapter3.ListFormatter.Parallel.Naive.ListFormatter.Run,
             ["OptionBind"] = Chapter6.AskForValidAgeAndPrintFlatteringMessage.Run,
             ["Greetings"] = Chapter9.Greetings.Run,
+
+            ["CurrencyLookup_Stateless"] = Chapter15.CurrencyLookup_Stateless.Run,
+            ["CurrencyLookup_StatefulUnsafe"] = Chapter15.CurrencyLookup_StatefulUnsafe.Run,
+            ["CurrencyLookup_StatefulSafe"] = Chapter15.CurrencyLookup_StatefulSafe.Run,
+
             ["Timer"] = Chapter17.CreatingObservables.Timer.Run,
             ["Subjects"] = Chapter17.CreatingObservables.Subjects.Run,
             ["Create"] = Chapter17.CreatingObservables.Create.Run,

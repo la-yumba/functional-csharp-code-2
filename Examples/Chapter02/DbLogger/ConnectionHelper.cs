@@ -18,12 +18,11 @@ namespace Examples.Chapter2.DbLogger
       public static R Transact<R>
          (SqlConnection conn, Func<SqlTransaction, R> f)
       {
-         R r = default(R);
-         using (var tran = conn.BeginTransaction())
-         {
-            r = f(tran);
-            tran.Commit();
-         }
+         using var tran = conn.BeginTransaction();
+         
+         R r = f(tran);
+         tran.Commit();
+         
          return r;
       }
    }

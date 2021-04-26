@@ -1,17 +1,21 @@
 ﻿using System;
+using static System.Console;
 using System.Collections.Immutable;
 using System.Net.Http;
-using static System.Console;
+using System.Text.Json;
+
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
 
-namespace StatefulComputations
+using CurrencyCode = Boc.Domain.CurrencyCode;
+
+namespace Examples.Chapter15
 {
    using Rates = ImmutableDictionary<string, decimal>;
 
-   public class CurrencyLookup_Stateless
+   public static class CurrencyLookup_Stateless
    {
-      public static void _main()
+      public static void Run()
       {
          WriteLine("Enter a currency pair like 'EURUSD', or 'q' to quit");
          for (string input; (input = ReadLine().ToUpper()) != "Q";)
@@ -19,9 +23,9 @@ namespace StatefulComputations
       }
    }
 
-   public class CurrencyLookup
+   public class CurrencyLookup_StatefulUnsafe
    {
-      public static void _main()
+      public static void Run()
       {
          WriteLine("Enter a currency pair like 'EURUSD', or 'q' to quit");
          MainRec(Rates.Empty);
@@ -61,7 +65,7 @@ namespace StatefulComputations
       }
    }
 
-   public class CurrencyLookup_MoreTestable
+   public class CurrencyLookup_Testable
    {
       public static void _main()
       {
@@ -90,9 +94,9 @@ namespace StatefulComputations
       }
    }
 
-   public class CurrencyLookup_ErrorHandling
+   public class CurrencyLookup_StatefulSafe
    {
-      public static void _main()
+      public static void Run()
          => MainRec("Enter a currency pair like 'EURUSD', or 'q' to quit"
             , Rates.Empty);
 
@@ -120,12 +124,25 @@ namespace StatefulComputations
 
    static class FxApi
    {
+      record Response
+      (
+         CurrencyCode CurrencyCode,
+         Rates Rates
+      );
+
       public static decimal GetRate(string ccyPair)
       {
          WriteLine($"fetching rate...");
-         var uri = $"http://finance.yahoo.com/d/quotes.csv?f=l1&s={ccyPair}=X";
+
+         var (baseCcy, quoteCcy) = ccyPair.Partition(3);
+         var uri = $"https://api.ratesapi.io/api/latest?base={baseCcy}";
          var request = new HttpClient().GetStringAsync(uri);
-         return decimal.Parse(request.Result.Trim());
+
+         var opts = new JsonSerializerOptions
+            { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+         var response = JsonSerializer.Deserialize<Response>(request.Result, opts);
+
+         return response.Rates[quoteCcy];
       }
 
       public static Try<decimal> TryGetRate(string ccyPair)
