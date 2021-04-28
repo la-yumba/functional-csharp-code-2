@@ -1,17 +1,16 @@
 ﻿using System;
 using static System.Console;
-using System.Collections.Immutable;
 using System.Net.Http;
 using System.Text.Json;
 
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
 
+using Rates = System.Collections.Immutable.ImmutableDictionary<string, decimal>;
 using CurrencyCode = Boc.Domain.CurrencyCode;
 
 namespace Examples.Chapter15
 {
-   using Rates = ImmutableDictionary<string, decimal>;
 
    public static class CurrencyLookup_Stateless
    {
@@ -134,7 +133,7 @@ namespace Examples.Chapter15
       {
          WriteLine($"fetching rate...");
 
-         var (baseCcy, quoteCcy) = ccyPair.Partition(3);
+         var (baseCcy, quoteCcy) = ccyPair.SplitAt(3);
          var uri = $"https://api.ratesapi.io/api/latest?base={baseCcy}";
          var request = new HttpClient().GetStringAsync(uri);
 

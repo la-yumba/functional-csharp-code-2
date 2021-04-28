@@ -34,14 +34,14 @@ namespace Examples
             ["CurrencyLookup_StatefulUnsafe"] = Chapter15.CurrencyLookup_StatefulUnsafe.Run,
             ["CurrencyLookup_StatefulSafe"] = Chapter15.CurrencyLookup_StatefulSafe.Run,
 
-            ["Timer"] = Chapter17.CreatingObservables.Timer.Run,
-            ["Subjects"] = Chapter17.CreatingObservables.Subjects.Run,
-            ["Create"] = Chapter17.CreatingObservables.Create.Run,
-            ["Generate"] = Chapter17.CreatingObservables.Generate.Run,
-            ["CurrencyLookup_Unsafe"] = Chapter17.CurrencyLookup_Unsafe.Run,
-            ["CurrencyLookup_Safe"] = Chapter17.CurrencyLookup_Safe.Run,
-            ["VoidContinuations"] = Chapter17.VoidContinuations.Run,
-            ["KeySequences"] = Chapter17.KeySequences.Run,
+            ["Timer"] = Chapter18.CreatingObservables.Timer.Run,
+            ["Subjects"] = Chapter18.CreatingObservables.Subjects.Run,
+            ["Create"] = Chapter18.CreatingObservables.Create.Run,
+            ["Generate"] = Chapter18.CreatingObservables.Generate.Run,
+            ["CurrencyLookup_Unsafe"] = Chapter18.CurrencyLookup_Unsafe.Run,
+            ["CurrencyLookup_Safe"] = Chapter18.CurrencyLookup_Safe.Run,
+            ["VoidContinuations"] = Chapter18.VoidContinuations.Run,
+            ["KeySequences"] = Chapter18.KeySequences.Run,
          };
 
          if (args.Length > 0)

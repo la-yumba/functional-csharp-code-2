@@ -2,7 +2,7 @@
 using static System.Console;
 using System.Reactive.Linq;
 
-namespace Examples.Chapter17
+namespace Examples.Chapter18
 {
    public static class ObservableExt
    {

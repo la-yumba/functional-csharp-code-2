@@ -1,7 +1,15 @@
-﻿using System.Net.Http;
-using static System.Console;
+﻿using static System.Console;
+using System.IO;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
+
 using LaYumba.Functional;
+using static LaYumba.Functional.F;
+
+using Rates = System.Collections.Immutable.ImmutableDictionary<string, decimal>;
+using CurrencyCode = Boc.Domain.CurrencyCode;
+using Decimal = LaYumba.Functional.Decimal;
 
 namespace Examples.Chapter16
 {
@@ -19,20 +27,61 @@ namespace Examples.Chapter16
       }
    }
 
-   static class FxApi_1
+   static class FxApi_Blocking
    {
-      public static async Task<decimal> GetRate(string ccyPair)
+      static string UriFor(CurrencyCode baseCcy)
+         => $"https://api.ratesapi.io/api/latest?base={baseCcy}";
+
+      record Response(CurrencyCode Base, Rates Rates);
+
+      static JsonSerializerOptions opts = new()
+         { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+
+      public static decimal GetRate(string ccyPair)
       {
          WriteLine($"fetching rate...");
-         var s = await new HttpClient().GetStringAsync(QueryFor(ccyPair));
-         return decimal.Parse(s.Trim());
+
+         var (baseCcy, quoteCcy) = ccyPair.SplitAt(3);
+         var uri = $"https://api.ratesapi.io/api/latest?base={baseCcy}";
+         Task<string> request = new HttpClient().GetStringAsync(uri);
+
+         string body = request.Result;
+         var response = JsonSerializer.Deserialize<Response>(body, opts);
+
+         return response.Rates[quoteCcy];
       }
 
-      static string QueryFor(string ccyPair)
-         => $"http://finance.yahoo.com/d/quotes.csv?f=l1&s={ccyPair}=X";
+      public static async Task<decimal> GetRateAsync(string ccyPair)
+      {
+         WriteLine($"fetching rate...");
+
+         var (baseCcy, quoteCcy) = ccyPair.SplitAt(3);
+         var uri = $"https://api.ratesapi.io/api/latest?base={baseCcy}";
+
+         Task<string> request = new HttpClient().GetStringAsync(uri);
+         string body = await request;
+
+         var response = JsonSerializer.Deserialize<Response>(body, opts);
+         return response.Rates[quoteCcy];
+      }
+
+      public static Task<decimal> GetRateAsync_WithLinq1(string ccyPair)
+         => GetRateAsync(ccyPair.SplitAt(3));
+
+      public static Task<decimal> GetRateAsync((CurrencyCode Base, CurrencyCode Quote) pair)
+         => from body in new HttpClient().GetStringAsync(UriFor(pair.Base))
+            let response = JsonSerializer.Deserialize<Response>(body, opts)
+            select response.Rates[pair.Quote];
+
+      public static Task<decimal> GetRateAsync_WithStream
+         ((CurrencyCode Base, CurrencyCode Quote) pair)
+         => from stream in new HttpClient().GetStreamAsync(UriFor(pair.Base))
+            from response in JsonSerializer.DeserializeAsync<Response>(stream, opts)
+            select response.Rates[pair.Quote];
+   
    }
 
-   static class FxApi_2
+   static class FxApi_Async
    {
       public static Task<decimal> GetRate(string ccyPair) =>
          from s in new HttpClient().GetStringAsync(QueryFor(ccyPair))
@@ -42,15 +91,12 @@ namespace Examples.Chapter16
          => $"http://finance.yahoo.com/d/quotes.csv?f=l1&s={ccyPair}=X";
    }
 
-
-
    static class FxApi
    {
       public static Task<decimal> GetRate(string ccyPair) =>
          CurrencyLayer.GetRate(ccyPair)
             .OrElse(() => Yahoo.GetRate(ccyPair));
    }
-
 
    public static class Yahoo
    {

@@ -7,7 +7,7 @@ using Boc.Domain.Events;
 using Unit = System.ValueTuple;
 using System.Collections.Immutable;
 
-namespace Boc.Chapter18
+namespace Boc.Chapter19
 {
    using AccountsCache = ImmutableDictionary<Guid, AccountProcess>;
 

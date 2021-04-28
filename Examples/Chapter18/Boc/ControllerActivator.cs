@@ -9,7 +9,7 @@ using Boc.Chapter13.Domain;
 using Unit = System.ValueTuple;
 using Boc.Domain.Events;
 
-namespace Boc.Chapter18
+namespace Boc.Chapter19
 {
    public class ControllerActivator : IControllerActivator
    {

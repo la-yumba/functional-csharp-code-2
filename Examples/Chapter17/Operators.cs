@@ -6,7 +6,7 @@ using System.Reactive.Subjects;
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
 
-namespace Examples.Chapter17
+namespace Examples.Chapter18
 {
    static class KeySequences
    {

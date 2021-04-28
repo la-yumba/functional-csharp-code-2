@@ -7,7 +7,7 @@ using Boc.Chapter13.Domain;
 using Boc.Domain.Events;
 using Unit = System.ValueTuple;
 
-namespace Boc.Chapter18
+namespace Boc.Chapter19
 {
    using Result = Validation<(Event Event, AccountState NewState)>;
 
