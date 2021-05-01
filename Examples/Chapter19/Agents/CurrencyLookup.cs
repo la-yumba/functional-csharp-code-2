@@ -55,7 +55,7 @@ namespace Examples.Agents
          => Agent.Start<Option<decimal>, string>(None, async (optRate, recipient) =>
          {
             decimal rate = await optRate.Map(Async)
-               .GetOrElse(() => Yahoo.GetRate(ccyPair));
+               .GetOrElse(() => RatesApi.GetRateAsync(ccyPair));
 
             sendResponse.Tell(new FxRateResponse
             {

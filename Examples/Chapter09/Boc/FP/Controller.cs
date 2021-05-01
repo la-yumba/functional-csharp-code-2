@@ -7,10 +7,13 @@ using static LaYumba.Functional.F;
 using NUnit.Framework;
 using Unit = System.ValueTuple;
 
-namespace Boc.Chapter9
+namespace Boc
 {
    public delegate Validation<T> Validator<T>(T t);
+}
 
+namespace Boc.Chapter9
+{
    public static class Validation
    {
       public static Validator<MakeTransfer> DateNotPast(Func<DateTime> clock)

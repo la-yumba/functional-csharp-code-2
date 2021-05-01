@@ -1,11 +1,12 @@
 ﻿using LaYumba.Functional;
 using static LaYumba.Functional.F;
-using System.Collections.Generic;
 using NUnit.Framework;
 using System.Linq;
 
-namespace Boc.Chapter9
-{   
+using Boc.Chapter9;
+
+namespace Boc.Chapter17
+{
    using static ValidationStrategies;
    
    public static partial class ValidationStrategies
@@ -40,6 +41,9 @@ namespace Boc.Chapter9
 
       public class HarvestErrors_WithTraverse_Test
       {
+         static readonly Validator<int> Success = i => Valid(i);
+         static readonly Validator<int> Failure = _ => Error("Invalid");
+
          [Test]
          public void WhenAllValidatorsSucceed_ThenSucceed() => Assert.AreEqual(
             actual: HarvestErrorsTr(Success, Success)(1),
