@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Builder;
 
@@ -14,6 +16,29 @@ namespace Examples.FunctionalApi
             T t = await http.Request.ReadFromJsonAsync<T>();
 
             ActionResult result = handle(t);
+
+            http.Response.StatusCode = result.StatusCode;
+
+            switch (result)
+            {
+               case OkObjectResult r:
+                  { await http.Response.WriteAsJsonAsync(r.Value); break; }
+               case BadRequestObjectResult r:
+                  { await http.Response.WriteAsJsonAsync(r.Errors); break; }
+            };
+         });
+
+         return app;
+      }
+
+      public static WebApplication MapPost<T>
+        (this WebApplication app, string route, Func<T, Task<ActionResult>> handle)
+      {
+         app.MapPost(route, async http =>
+         {
+            T t = await http.Request.ReadFromJsonAsync<T>();
+
+            ActionResult result = await handle(t);
 
             http.Response.StatusCode = result.StatusCode;
 
