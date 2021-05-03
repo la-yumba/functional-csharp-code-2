@@ -147,6 +147,14 @@ namespace LaYumba.Functional
          return project(t, r);
       }
 
+      public static async Task<RR> SelectMany<T, R, RR>
+         (this Task<T> task, Func<T, ValueTask<R>> bind, Func<T, R, RR> project)
+      {
+         T t = await task;
+         R r = await bind(t);
+         return project(t, r);
+      }
+
       public static async Task<RR> SelectMany<R, RR>
          (this Task task, Func<Unit, Task<R>> bind, Func<Unit, R, RR> project)
       {
@@ -154,6 +162,9 @@ namespace LaYumba.Functional
          R r = await bind(Unit());
          return project(Unit(), r);
       }
+
+      public static async Task<R> SelectMany<T, R>(this Task<T> task, Func<T, Task<R>> f)
+         => await f(await task.ConfigureAwait(false)).ConfigureAwait(false);
 
       public static async Task<R> Select<T, R>(this Task<T> task, Func<T, R> f)
          => f(await task);
@@ -188,11 +199,5 @@ namespace LaYumba.Functional
              inner.Where(u => EqualityComparer<K>.Default.Equals(
                  outerKeySelector(t), innerKeySelector(u))));
       }
-
-      //public static async Task<T> Cast<T>(this Task source)
-      //{
-      //   await source;
-      //   return (T)((dynamic)source).Result;
-      //}
    }
 }

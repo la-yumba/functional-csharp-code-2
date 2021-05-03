@@ -28,33 +28,27 @@ namespace Boc.Chapter17
          Func<Event, Task> saveAndPublish
       )
       {
-         Task<Validation<AccountState>> getAccountVal(Guid id)
-            => getAccount(id)
+         Func<Guid, Task<Validation<AccountState>>> getAccountVal
+            = id => getAccount(id)
                .Map(opt => opt.ToValidation(Errors.UnknownAccountId(id)));
 
-         async Task<Unit> saveAndPublishU(Event e)
+         Func<Event, Task<Unit>> saveAndPublishF
+            = async e =>
+            {
+               await saveAndPublish(e);
+               return Unit();
+            };
+
+         return app.MapPost("/Transfer/Make", (MakeTransfer transfer) =>
          {
-            await saveAndPublish(e);
-            return Unit();
-         }
+             Task<Validation<AccountState>> outcome =
+                from tr in Async(validate(transfer))
+                from acc in getAccountVal(tr.DebitedAccountId)
+                from result in Async(Account.Debit(acc, tr))
+                from _ in saveAndPublish.ToFunc()(result.Event).Map(Valid)
+                select result.NewState;
 
-         return app.MapPost("/Transfer/Make", async (MakeTransfer transfer) =>
-         {
-            Task<Validation<AccountState>> outcome =
-               from tr in Async(validate(transfer))
-               from acc in getAccountVal(tr.DebitedAccountId)
-               from result in Async(Account.Debit(acc, tr))
-               from _ in saveAndPublishU(result.Event).Map(Valid)
-               select result.NewState;
-
-            //Task<Validation<AccountState>> a = validate(command)
-            //   .Traverse(cmd => getAccount(cmd.DebitedAccountId)
-            //      .Bind(acc => Account.Debit(acc, cmd)
-            //         .Traverse(result => saveAndPublish(result.Event)
-            //            .Map(_ => result.NewState))))
-            //   .Map(vva => vva.Bind(va => va)); // flatten the nested validation inside the task
-
-            return await outcome.Map(
+             return outcome.Map(
                Faulted: ex => InternalServerError(Errors.UnexpectedError),
                Completed: val => val.Match(
                   Invalid: errs => BadRequest(new { Errors = errs }),
@@ -63,6 +57,7 @@ namespace Boc.Chapter17
       }
    }
 
+   // same code, but using asp.net ...
    public class TransferNowController : ControllerBase
    {
       Func<MakeTransfer, Validation<MakeTransfer>> validate;
