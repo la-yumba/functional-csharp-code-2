@@ -17,26 +17,27 @@ namespace Boc.Chapter19
 
       public AccountRegistry_Naive(Func<Guid, Task<Option<AccountState>>> loadAccount
          , Func<Event, Task<Unit>> saveAndPublish)
-      {
-         agent = Agent.Start(AccountsCache.Empty
-            , async (AccountsCache cache, Guid id) =>
+         => agent = Agent.Start
+         (
+            initialState: AccountsCache.Empty,
+            process: async (AccountsCache cache, Guid id) =>
             {
-               AccountProcess account;
-               if (cache.TryGetValue(id, out account))
+               if (cache.TryGetValue(id, out AccountProcess account))
                   return (cache, Some(account));
 
                var optAccount = await loadAccount(id);
 
                return optAccount.Map(accState =>
                {
-                  var process = new AccountProcess(accState, saveAndPublish);
+                  AccountProcess process = new(accState, saveAndPublish);
                   return (cache.Add(id, process), Some(process));
                })
-               .GetOrElse(() => (cache, (Option<AccountProcess>)None));
-            });
-      }
-
-      public Task<Option<AccountProcess>> Lookup(Guid id) => agent.Tell(id);
+               .GetOrElse(() => (cache, None));
+            }
+         );
+      
+      public Task<Option<AccountProcess>> Lookup(Guid id)
+         => agent.Tell(id);
    }
 
    public class AccountRegistry
@@ -44,24 +45,26 @@ namespace Boc.Chapter19
       Agent<Msg, Option<AccountProcess>> agent;
       Func<Guid, Task<Option<AccountState>>> loadAccount;
 
-      class Msg { public Guid Id { get; set; } }
-      class LookupMsg : Msg { }
-      class RegisterMsg : Msg
-      {
-         public AccountState AccountState { get; set; }
-      }
+      abstract record Msg(Guid Id);
+      record LookupMsg(Guid Id) : Msg(Id);
+      record RegisterMsg(Guid Id, AccountState AccountState) : Msg(Id);
 
-      public AccountRegistry(Func<Guid, Task<Option<AccountState>>> loadAccount
-         , Func<Event, Task<Unit>> saveAndPublish)
+      public AccountRegistry
+      (
+         Func<Guid, Task<Option<AccountState>>> loadAccount,
+         Func<Event, Task<Unit>> saveAndPublish
+      )
       {
          this.loadAccount = loadAccount;
 
-         this.agent = Agent.Start(AccountsCache.Empty, (AccountsCache cache, Msg msg) =>
-            new Pattern<(AccountsCache, Option<AccountProcess>)>
+         this.agent = Agent.Start
+         (
+            initialState: AccountsCache.Empty,
+            process: (AccountsCache cache, Msg msg) => msg switch
             {
-               (LookupMsg m) => (cache, cache.Lookup(m.Id)),
+               LookupMsg m => (cache, cache.Lookup(m.Id)),
 
-               (RegisterMsg m) => cache.Lookup(m.Id).Match(
+               RegisterMsg m => cache.Lookup(m.Id).Match(
                   Some: acc => (cache, Some(acc)),
                   None: () =>
                   {
@@ -69,19 +72,15 @@ namespace Boc.Chapter19
                      return (cache.Add(m.Id, account), Some(account));
                   })
             }
-            .Match(msg));
+         );
       }
 
       public Task<Option<AccountProcess>> Lookup(Guid id)
          => agent
-         .Tell(new LookupMsg { Id = id })
+         .Tell(new LookupMsg(id))
          .OrElse(() => 
             from state in loadAccount(id) // loading the state is done in the calling thread
-            from account in agent.Tell(new RegisterMsg
-            {
-               Id = id,
-               AccountState = state
-            })
+            from account in agent.Tell(new RegisterMsg(id, state))
             select account);
    }
 }

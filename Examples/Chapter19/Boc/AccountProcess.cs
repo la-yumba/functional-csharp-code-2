@@ -16,24 +16,21 @@ namespace Boc.Chapter19
       Agent<Command, Result> agent;
 
       public AccountProcess(AccountState initialState, Func<Event, Task<Unit>> saveAndPublish)
-      {
-         agent = Agent.Start(initialState
+         => agent = Agent.Start(initialState
             , async (AccountState state, Command cmd) =>
             {
-               Result result = new Pattern
+               Result result = cmd switch
                {
-                  (MakeTransfer transfer) => state.Debit(transfer),
-                  (FreezeAccount freeze) => state.Freeze(freeze),
-               }
-               .Match(cmd);
+                  MakeTransfer transfer => state.Debit(transfer),
+                  FreezeAccount freeze => state.Freeze(freeze),
+               };
 
                await result.Traverse(tpl => saveAndPublish(tpl.Event)); // persist within block, so that the agent doesn't process new messages in a non-persisted state
 
                var newState = result.Map(tpl => tpl.NewState).GetOrElse(state);
                return (newState, result);
             });
-      }
-
+      
       public Task<Result> Handle(Command cmd) => agent.Tell(cmd);
    }
 }

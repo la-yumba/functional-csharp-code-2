@@ -14,18 +14,18 @@ namespace Examples.Agents
 
    public static class CurrencyLookup
    {
-      class FxRateRequest
-      {
-         public string CcyPair { get; set; }
-         public string Sender { get; set; } // the sender, to which the response should be sent
-      }
+      record FxRateRequest
+      (
+         string CcyPair,
+         string Sender // the sender, to which the response should be sent
+      );
 
-      class FxRateResponse
-      {
-         public string CcyPair { get; set; }
-         public decimal Rate { get; set; }
-         public string Recipient { get; set; }
-      }
+      record FxRateResponse
+      (
+         string CcyPair,
+         decimal Rate,
+         string Recipient
+      );
 
       public static void SetUp(MessageBroker broker)
       {
@@ -52,20 +52,24 @@ namespace Examples.Agents
 
       static Agent<string> StartAgentFor
          (string ccyPair, Agent<FxRateResponse> sendResponse)
-         => Agent.Start<Option<decimal>, string>(None, async (optRate, recipient) =>
-         {
-            decimal rate = await optRate.Map(Async)
-               .GetOrElse(() => RatesApi.GetRateAsync(ccyPair));
-
-            sendResponse.Tell(new FxRateResponse
+         => Agent.Start<Option<decimal>, string>
+         (
+            initialState: None,
+            process: async (optRate, recipient) =>
             {
-               CcyPair = ccyPair,
-               Rate = rate,
-               Recipient = recipient,
-            });
+               decimal rate = await optRate.Map(Async)
+                  .GetOrElse(() => RatesApi.GetRateAsync(ccyPair));
 
-            return Some(rate);
-         });
+               sendResponse.Tell(new FxRateResponse
+               (
+                  CcyPair: ccyPair,
+                  Rate: rate,
+                  Recipient: recipient
+               ));
+
+               return Some(rate);
+            }
+         );
 
 
       // test methods

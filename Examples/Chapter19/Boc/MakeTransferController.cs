@@ -1,14 +1,53 @@
-﻿using Boc.Commands;
+﻿using System;
+using System.Threading.Tasks;
+
+using Boc.Domain;
+using Boc.Commands;
+using Boc.Chapter13.Domain;
+using Boc.Domain.Events;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Builder;
+
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
-using System;
-using System.Threading.Tasks;
-using Boc.Chapter13.Domain;
-using Microsoft.AspNetCore.Mvc;
-using Boc.Domain;
+
+using Examples.FunctionalApi;
+using static Examples.FunctionalApi.ActionResultFactory;
 
 namespace Boc.Chapter19
 {
+   public static class Program
+   {
+      public static WebApplication ConfigureMakeTransferEndpoint
+      (
+         WebApplication app,
+         Validator<MakeTransfer> validate,
+         Func<Guid, Task<Option<AccountProcess>>> getAccount
+      )
+      {
+         Func<Guid, Task<Validation<AccountProcess>>> getAccountVal
+            = id => getAccount(id)
+               .Map(opt => opt.ToValidation(Errors.UnknownAccountId(id)));
+
+         return app.MapPost("/Transfer/Make", (MakeTransfer transfer) =>
+         {
+            Task<Validation<AccountState>> outcome =
+               from cmd in Async(validate(transfer))
+               from acc in getAccountVal(cmd.DebitedAccountId)
+               from result in acc.Handle(cmd)
+               select result.NewState;
+
+            return outcome.Map(
+              Faulted: ex => InternalServerError(Errors.UnexpectedError),
+              Completed: val => val.Match(
+                 Invalid: errs => BadRequest(new { Errors = errs }),
+                 Valid: newState => Ok(new { Balance = newState.Balance })));
+         });
+      }
+   }
+
+   // same code, but using asp.net controller
    public class MakeTransferController : ControllerBase
    {
       public MakeTransferController(Func<Guid, Task<Option<AccountProcess>>> getAccount

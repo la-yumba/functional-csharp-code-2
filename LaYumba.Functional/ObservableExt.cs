@@ -13,7 +13,7 @@ namespace LaYumba.Functional
       // and returns a stream of results for the completed tasks, 
       // and a stream of exceptions
       public static (IObservable<R> Completed, IObservable<Exception> Faulted) 
-      Safely<T, R>(this IObservable<T> ts, Func<T, Task<R>> f)
+         Safely<T, R>(this IObservable<T> ts, Func<T, Task<R>> f)
          => ts
             .SelectMany(t =>
                Observable.FromAsync(() =>
@@ -23,19 +23,23 @@ namespace LaYumba.Functional
             .Partition();
 
       public static (IObservable<T> Successes, IObservable<Exception> Exceptions) 
-      Partition<T>(this IObservable<Exceptional<T>> excTs)
+         Partition<T>(this IObservable<Exceptional<T>> excTs)
       {
          bool IsSuccess(Exceptional<T> ex) 
             => ex.Match(_ => false, _ => true);
 
          T ValueOrDefault(Exceptional<T> ex)
-            => ex.Match(exc => default(T), t => t);
+            => ex.Match(_ => default, t => t);
 
          Exception ExceptionOrDefault(Exceptional<T> ex)
-            => ex.Match(exc => exc, _ => default(Exception));
-         
-         return (excTs.Where(IsSuccess).Select(ValueOrDefault)
-            , excTs.Where(e => !IsSuccess(e)).Select(ExceptionOrDefault));
+            => ex.Match(exc => exc, _ => default);
+
+         var (ts, errs) = excTs.Partition(IsSuccess);
+         return
+         (
+            Successes: ts.Select(ValueOrDefault),
+            Exceptions: errs.Select(ExceptionOrDefault)
+         );
       }
 
       public static (IObservable<T> Passed, IObservable<T> Failed) Partition<T>

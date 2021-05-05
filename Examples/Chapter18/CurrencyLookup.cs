@@ -9,6 +9,8 @@ using System.Collections.Immutable;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
+using RatesApi = Examples.Chapter16.RatesApi;
+
 namespace Examples.Chapter18
 {
    using static F;
@@ -22,12 +24,12 @@ namespace Examples.Chapter18
 
          // var rates =
          //    from pair in inputs
-         //    from rate in Observable.FromAsync(() => Yahoo.GetRate(pair))
+         //    from rate in Observable.FromAsync(() => RatesApi.GetRateAsync(pair))
          //    select rate;
 
          var rates =
             from pair in inputs
-            from rate in Yahoo.GetRate(pair)
+            from rate in RatesApi.GetRateAsync(pair)
             select rate;
 
          var outputs = from r in rates select r.ToString();
@@ -46,7 +48,7 @@ namespace Examples.Chapter18
       {
          var inputs = new Subject<string>();
 
-         var (rates, errors) = inputs.Safely(Yahoo.GetRate);
+         var (rates, errors) = inputs.Safely(RatesApi.GetRateAsync);
 
          var outputs = rates
             .Select(Decimal.ToString)
@@ -95,7 +97,7 @@ namespace Examples.Chapter18
 
          var remoteLookups = misses.SelectMany(pair =>
             Observable.FromAsync(() =>
-               Yahoo.GetRate(pair).Map(
+               RatesApi.GetRateAsync(pair).Map(
                   ex => ex,
                   rate => Exceptional((Pair: pair, Rate: rate)))));
 
@@ -116,7 +118,7 @@ namespace Examples.Chapter18
          var lookups = inputs.Scan(accumulator
             , (tpl, pair) => tpl.Cache.ContainsKey(pair)
                ? (tpl.Cache, tpl.Cache[pair].ToString())
-               : Yahoo.GetRate(pair)
+               : RatesApi.GetRateAsync(pair)
                   .Map(rate => (tpl.Cache.Add(pair, rate), rate.ToString()))
                   .Recover(ex => (tpl.Cache, ex.Message))
                   .Result);
@@ -133,7 +135,7 @@ namespace Examples.Chapter18
          //      else
          //      {
          //         WriteLine("fetching remotely...");
-         //         return Yahoo.GetRate(pair)
+         //         return RatesApi.GetRateAsync(pair)
          //            .Map(rate => (tpl.Item1.Add(pair, rate), rate.ToString()))
          //            .Recover(ex => (tpl.Item1, ex.Message))
          //            .Result;
@@ -147,15 +149,5 @@ namespace Examples.Chapter18
             for (string input; (input = ReadLine().ToUpper()) != "Q";)
                inputs.OnNext(input);
       }
-   }
-
-   public static class Yahoo
-   {
-      public static Task<decimal> GetRate(string ccyPair) =>
-         from body in new HttpClient().GetStringAsync(QueryFor(ccyPair))
-         select decimal.Parse(body.Trim());
-
-      static string QueryFor(string ccyPair)
-         => $"http://finance.yahoo.com/d/quotes.csv?f=l1&s={ccyPair}=X";
    }
 }
