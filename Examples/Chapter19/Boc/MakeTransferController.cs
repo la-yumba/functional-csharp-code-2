@@ -23,11 +23,11 @@ namespace Boc.Chapter19
       (
          WebApplication app,
          Validator<MakeTransfer> validate,
-         Func<Guid, Task<Option<AccountProcess>>> getAccount
+         AccountRegistry accounts
       )
       {
          Func<Guid, Task<Validation<AccountProcess>>> getAccountVal
-            = id => getAccount(id)
+            = id => accounts.Lookup(id)
                .Map(opt => opt.ToValidation(Errors.UnknownAccountId(id)));
 
          return app.MapPost("/Transfer/Make", (MakeTransfer transfer) =>

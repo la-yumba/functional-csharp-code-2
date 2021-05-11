@@ -4,35 +4,46 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Builder;
 
+using LaYumba.Functional;
+
 namespace Examples.FunctionalApi
 {
    public static class Extensions
    {
       public static WebApplication MapPost<T>
-         (this WebApplication app, string route, Func<T, ActionResult> handle)
-      {
-         app.MapPost(route, async http =>
-         {
-            T t = await http.Request.ReadFromJsonAsync<T>();
+      (
+         this WebApplication app,
+         string route,
+         Func<T, ActionResult> handle
+      )
+      => app.MapPost(route, handle.Map(Task.FromResult));
 
-            ActionResult result = handle(t);
+      //{
+      //   app.MapPost(route, async http =>
+      //   {
+      //      T t = await http.Request.ReadFromJsonAsync<T>();
 
-            http.Response.StatusCode = result.StatusCode;
+      //      ActionResult result = handle(t);
 
-            switch (result)
-            {
-               case OkObjectResult r:
-                  { await http.Response.WriteAsJsonAsync(r.Value); break; }
-               case BadRequestObjectResult r:
-                  { await http.Response.WriteAsJsonAsync(r.Errors); break; }
-            };
-         });
+      //      http.Response.StatusCode = result.StatusCode;
 
-         return app;
-      }
+      //      await http.Response.WriteAsJsonAsync(result switch
+      //      {
+      //         OkObjectResult r => r.Value,
+      //         BadRequestObjectResult r => r.Errors,
+      //         _ => string.Empty
+      //      });
+      //   });
+
+      //   return app;
+      //}
 
       public static WebApplication MapPost<T>
-        (this WebApplication app, string route, Func<T, Task<ActionResult>> handle)
+      (
+         this WebApplication app,
+         string route,
+         Func<T, Task<ActionResult>> handle
+      )
       {
          app.MapPost(route, async http =>
          {
@@ -42,13 +53,12 @@ namespace Examples.FunctionalApi
 
             http.Response.StatusCode = result.StatusCode;
 
-            switch (result)
+            await http.Response.WriteAsJsonAsync(result switch
             {
-               case OkObjectResult r:
-                  { await http.Response.WriteAsJsonAsync(r.Value); break; }
-               case BadRequestObjectResult r:
-                  { await http.Response.WriteAsJsonAsync(r.Errors); break; }
-            };
+               OkObjectResult r => r.Value,
+               BadRequestObjectResult r => r.Errors,
+               _ => string.Empty
+            });
          });
 
          return app;

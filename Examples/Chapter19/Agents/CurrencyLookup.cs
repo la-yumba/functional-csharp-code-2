@@ -83,7 +83,7 @@ namespace Examples.Agents
 
          WriteLine("Enter a currency pair like 'EURUSD' to get a quote, or 'q' to quit");
          for (string input; (input = ReadLine().ToUpper()) != "Q";)
-            rateLookup.Tell(new FxRateRequest { CcyPair = input, Sender = "Sender" });
+            rateLookup.Tell(new FxRateRequest(CcyPair: input, Sender: "Sender"));
       }
 
       public static void TestConcurrencyWorksOk()
@@ -94,7 +94,7 @@ namespace Examples.Agents
          var rateLookup = StartReqProcessor(sendResponse);
 
          Parallel.ForEach(Range(1, 10000)
-            , i => rateLookup.Tell(new FxRateRequest { CcyPair = i % 2 == 0 ? "EURUSD" : "GBPUSD", Sender = "Sender" }));
+            , i => rateLookup.Tell(new FxRateRequest(i % 2 == 0 ? "EURUSD" : "GBPUSD", "Sender")));
          Task.Delay(10000).Wait();
       }
    }

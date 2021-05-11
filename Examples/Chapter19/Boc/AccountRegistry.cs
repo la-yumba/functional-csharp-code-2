@@ -64,13 +64,15 @@ namespace Boc.Chapter19
             {
                LookupMsg m => (cache, cache.Lookup(m.Id)),
 
-               RegisterMsg m => cache.Lookup(m.Id).Match(
+               RegisterMsg m => cache.Lookup(m.Id).Match
+               (
                   Some: acc => (cache, Some(acc)),
                   None: () =>
                   {
                      var account = new AccountProcess(m.AccountState, saveAndPublish);
                      return (cache.Add(m.Id, account), Some(account));
-                  })
+                  }
+               )
             }
          );
       }
