@@ -10,8 +10,6 @@ namespace Examples.Chapter5
       public decimal Earnings { get; set; }
       public Option<int> Age { get; set; }
 
-      public Person() { }
-
       public Person(string firstName, string lastName)
       {
          FirstName = firstName;

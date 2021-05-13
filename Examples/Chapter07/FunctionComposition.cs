@@ -1,8 +1,10 @@
 ﻿using System;
 
-namespace Examples.Chapter5
+namespace Examples.Chapter7
 {
    using static Console;
+
+   record Person(string FirstName, string LastName);
 
    public static class FunctionComposition
    {

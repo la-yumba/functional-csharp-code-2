@@ -1,49 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using LaYumba.Functional;
 using NUnit.Framework;
 
-namespace Examples.Chapter5
+namespace Examples.Chapter7
 {
    using static F;
    
-   public static class PopulationStatistics
+   static class PopulationStatistics
    {
-      public static decimal AverageEarnings(this IEnumerable<Person> population)
+      record Person(decimal Earnings);
+
+      static decimal AverageEarnings(this IEnumerable<Person> population)
          => population
             .Average(p => p.Earnings);
 
-      public static IEnumerable<Person> RichestQuartile(this List<Person> population)
+      static IEnumerable<Person> RichestQuartile(this List<Person> population)
          => population
             .OrderByDescending(p => p.Earnings)
             .Take(population.Count / 4);
 
-      public static decimal AverageEarningsOfRichestQuartile(List<Person> population)
+      static decimal AverageEarningsOfRichestQuartile(List<Person> population)
          => population
             .OrderByDescending(p => p.Earnings)
             .Take(population.Count / 4)
             .Select(p => p.Earnings)
             .Average();
-   }
 
-   
-   public class TestEarnings
-   {
       [TestCase(ExpectedResult = 75000)]
-      public decimal AverageEarningsOfRichestQuartile()
+      public static decimal AverageEarningsOfRichestQuartile()
          => SamplePopulation
             .RichestQuartile()
             .AverageEarnings();
 
       private static List<Person> SamplePopulation
-         => Range(1, 8).Map(i => new Person { Earnings = i * 10000 }).ToList();
+         => Range(1, 8).Map(i => new Person(Earnings: i * 10000)).ToList();
 
       [TestCase(ExpectedResult = 75000)]
-      public decimal AverageEarningsOfRichestQuartile_()
+      public static decimal AverageEarningsOfRichestQuartile_()
       {
          var population = Range(1, 8)
-            .Select(i => new Person { Earnings = i * 10000 })
+            .Select(i => new Person(Earnings: i * 10000))
             .ToList();
 
          return PopulationStatistics
