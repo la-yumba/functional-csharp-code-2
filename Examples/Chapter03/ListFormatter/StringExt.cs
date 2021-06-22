@@ -3,6 +3,8 @@
    public static class StringExt
    {
       public static string ToSentenceCase(this string s)
-         => s.ToUpper()[0] + s.ToLower().Substring(1);
+         => s == string.Empty
+            ? string.Empty
+            : char.ToUpperInvariant(s[0]) + s.ToLower()[1..];
    }
 }

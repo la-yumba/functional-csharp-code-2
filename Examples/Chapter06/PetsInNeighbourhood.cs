@@ -1,44 +1,29 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using LaYumba.Functional;
-using static LaYumba.Functional.F;
+using System;
 
 namespace Examples.Bind
 {
-   class PetsInNeighbourhood
+   class PetsInNeighborhood
    {
+      record Pet(string Name)
+      {
+         public static implicit operator Pet(string s) => new (s);
+      }
+
+      record Neighbor(string Name, IEnumerable<Pet> Pets);
+
       internal static void _main_1()
       {
-         var neighbours = new[]
+         var neighbours = new Neighbor[]
          {
-            new {Name = "John", Pets = new Pet[] {"Fluffy", "Thor"}},
-            new {Name = "Tim", Pets = new Pet[] {}},
-            new {Name = "Carl", Pets = new Pet[] {"Sybil"}},
+            new (Name: "John", Pets: new Pet[] {"Fluffy", "Thor"}),
+            new (Name: "Tim", Pets: Array.Empty<Pet>()),
+            new (Name: "Carl", Pets: new Pet[] {"Sybil"}),
          };
 
          IEnumerable<IEnumerable<Pet>> nested = neighbours.Map(n => n.Pets);
          IEnumerable<Pet> flat = neighbours.Bind(n => n.Pets);
       }
-
-      class Neighbour
-      {
-         public string Name { get; set; }
-         public IEnumerable<Pet> Pets { get; set; } = new Pet[] { };
-      }
    }
-
-   internal class Pet
-   {
-      private readonly string name;
-
-      private Pet(string name)
-      {
-         this.name = name;
-      }
-
-      public static implicit operator Pet(string name) 
-         => new Pet(name);
-   }
-
-
 }

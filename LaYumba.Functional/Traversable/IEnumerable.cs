@@ -9,6 +9,12 @@ namespace LaYumba.Functional
 
    public static class IEnumerableTraversable
    {
+      static IEnumerable<T> Cons<T>(this T t, IEnumerable<T> ts)
+         => List(t).Concat(ts);
+
+      static Func<T, IEnumerable<T>, IEnumerable<T>> Cons<T>()
+         => (t, ts) => t.Cons(ts);
+
       static Func<IEnumerable<T>, T, IEnumerable<T>> Append<T>()
          => (ts, t) => ts.Append(t);
 

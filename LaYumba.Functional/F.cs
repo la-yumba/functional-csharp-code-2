@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using Unit = System.ValueTuple;
 
 namespace LaYumba.Functional
@@ -50,26 +48,6 @@ namespace LaYumba.Functional
       /// </summary>
       public static T Pipe<T>(this T input, Action<T> func) => Tap(func)(input);
 
-      // DATA STRUCTURES
-
-      public static KeyValuePair<K, T> Pair<K, T>(K key, T value)
-         => new KeyValuePair<K, T>(key, value);
-
-      public static IEnumerable<T> List<T>(params T[] items) => items.ToImmutableList();
-
-      public static Func<T, IEnumerable<T>> SingletonList<T>() => (item) => ImmutableList.Create(item);
-
-      public static IEnumerable<T> Cons<T>(this T t, IEnumerable<T> ts)
-         => List(t).Concat(ts);
-
-      public static Func<T, IEnumerable<T>, IEnumerable<T>> Cons<T>()
-         => (t, ts) => t.Cons(ts);
-
-      public static IDictionary<K, T> Map<K, T>(params KeyValuePair<K, T>[] pairs)
-         => pairs.ToImmutableDictionary();
-
-      // misc
-
       // Using
       public static R Using<TDisp, R>(TDisp disposable
          , Func<TDisp, R> func) where TDisp : IDisposable
@@ -84,7 +62,8 @@ namespace LaYumba.Functional
       public static R Using<TDisp, R>(Func<TDisp> createDisposable
          , Func<TDisp, R> func) where TDisp : IDisposable
       {
-         using (var disp = createDisposable()) return func(disp);
+         using var disp = createDisposable();
+         return func(disp);
       }
 
       public static Unit Using<TDisp>(Func<TDisp> createDisposable
@@ -103,5 +82,3 @@ namespace LaYumba.Functional
       }
    }
 }
-
-

@@ -1,9 +1,7 @@
-﻿using Xunit;
+﻿using NUnit.Framework;
 
-namespace LaYumba.Functional.Tests
+namespace Examples.AppendixA.Immutable
 {
-   using static Assert;
-
    class A
    {
       public int B { get; }
@@ -16,20 +14,22 @@ namespace LaYumba.Functional.Tests
    {
       A original = new A(123, "hello");
 
-      [Fact] public void ItChangesTheDesiredProperty()
+      [Test]
+      public void ItChangesTheDesiredProperty()
       {
          var @new = original.With("B", 777);
 
-         Assert.Equal(777, @new.B); // updated
-         Assert.Equal("hello", @new.C); // same as original
+         Assert.AreEqual(777, @new.B); // updated
+         Assert.AreEqual("hello", @new.C); // same as original
       }
 
-      [Fact] public void ItDoesNotChangesTheOriginal()
+      [Test]
+      public void ItDoesNotChangesTheOriginal()
       {
          var @new = original.With("B", 777);
 
-         Assert.Equal(123, original.B);
-         Assert.Equal("hello", original.C);
+         Assert.AreEqual(123, original.B);
+         Assert.AreEqual("hello", original.C);
       }
    }
 
@@ -38,26 +38,26 @@ namespace LaYumba.Functional.Tests
    {
       A original = new A(123, "hello");
 
-      [Fact]
+      [Test]
       public void ItChangesTheDesiredProperty()
       {
          var @new = original.With(a => a.C, "hi");
 
-         Assert.Equal(123, original.B);
-         Assert.Equal("hello", original.C);
+         Assert.AreEqual(123, original.B);
+         Assert.AreEqual("hello", original.C);
 
-         Assert.Equal(123, @new.B);
-         Assert.Equal("hi", @new.C);
+         Assert.AreEqual(123, @new.B);
+         Assert.AreEqual("hi", @new.C);
       }
 
-      [Fact]
+      [Test]
       public void YouCanChainWith()
       {
          var @new = original
             .With(a => a.B, 345)
             .With(a => a.C, "howdy");
 
-         Assert.Equal(345, @new.B);
-         Assert.Equal("howdy", @new.C);      }
+         Assert.AreEqual(345, @new.B);
+         Assert.AreEqual("howdy", @new.C);      }
    }
 }

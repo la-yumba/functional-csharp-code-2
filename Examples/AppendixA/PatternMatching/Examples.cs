@@ -1,7 +1,6 @@
-﻿using LaYumba.Functional;
-using System;
+﻿using System;
 
-namespace Examples.Chapter13.Data
+namespace Examples.AppendixA.PatternMatching
 {
    enum Ripeness { Green, Yellow, Brown }
 

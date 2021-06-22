@@ -23,7 +23,7 @@ namespace Examples
       {
          var cliExamples = new Dictionary<string, Action>
          {
-            ["ParallelSortUnsafe"] = Chapter1.MutationShouldBeAvoided.WithListItBreaks,
+            ["ParallelSortUnsafe"] = Chapter1.MutationShouldBeAvoided.WithArrayItBreaks,
             ["ParallelSortSafe"] = Chapter1.MutationShouldBeAvoided.WithIEnumerableItWorks,
             ["HOFs"] = Chapter2.HOFs.Run,
             ["NaivePar"] = Chapter3.ListFormatter.Parallel.Naive.ListFormatter.Run,

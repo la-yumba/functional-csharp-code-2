@@ -139,7 +139,7 @@ namespace Examples.Chapter9
 
       public static Func<NumberType, CountryCode, Number, PhoneNumber> 
       Create = (type, country, number)
-         => new PhoneNumber(type, country, number);
+         => new(type, country, number);
 
       PhoneNumber(NumberType type, CountryCode country, Number number)
       {

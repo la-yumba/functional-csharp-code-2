@@ -2,7 +2,7 @@
 
 namespace Boc.Api
 {
-   public class ResultDto<T>
+   public record ResultDto<T>
    {
       public bool Succeeded { get; }
       public bool Failed => !Succeeded;
@@ -10,8 +10,8 @@ namespace Boc.Api
       public T Data { get; }
       public Error Error { get; }
 
-      internal ResultDto(T data) { Succeeded = true; Data = data; }
-      internal ResultDto(Error error) { Error = error; }
+      internal ResultDto(T data) => (Succeeded, Data) = (true, data);
+      internal ResultDto(Error error) => Error = error; 
    }
 
    public static class EitherExt

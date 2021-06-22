@@ -6,6 +6,7 @@ using static LaYumba.Functional.F;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Examples.AppendixA.PatternMatching;
 
 namespace Boc.AppendixA.EventSourcing.Domain
 {

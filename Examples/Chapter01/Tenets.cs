@@ -38,17 +38,17 @@ namespace Examples.Chapter1
       [Test]
       public void InPlaceUpdates()
       {
-         var original = new List<int> { 5, 7, 1 };
-         original.Sort();
+         int[] original = { 5, 7, 1 };
+         Array.Sort(original);
          Assert.AreEqual(new[] { 1, 5, 7 }, original);
       }
 
-      static readonly List<int> nums = Range(-10000, 20001).Reverse().ToList();
+      static readonly int[] nums = Range(-10000, 20001).Reverse().ToArray();
 
-      public static void WithListItBreaks()
+      public static void WithArrayItBreaks()
       {
          void task1() => WriteLine(nums.Sum());
-         void task2() { nums.Sort(); WriteLine(nums.Sum()); }
+         void task2() { Array.Sort(nums); WriteLine(nums.Sum()); }
 
          Parallel.Invoke(task1, task2);
       }

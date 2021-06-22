@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace LaYumba.Functional
+namespace Examples.AppendixA.PatternMatching
 {
-   using static F;
+   // this code is reproduced from Version1 of LaYumba.Functional
 
    public class NonExhaustivePattern : Exception { }
 
@@ -18,7 +18,7 @@ namespace LaYumba.Functional
 
       IEnumerator IEnumerable.GetEnumerator() => funcs.GetEnumerator();
 
-      public void Add<T>(Func<T, R> func) 
+      public void Add<T>(Func<T, R> func)
          => funcs.Add((typeof(T), o => func((T)o)));
 
       public Pattern<R> Default(Func<R> func)
@@ -40,7 +40,7 @@ namespace LaYumba.Functional
          {
             matchingDel = funcs.First(InputArgMatchesTypeOf(value)).Item2;
          }
-         catch(InvalidOperationException)
+         catch (InvalidOperationException)
          {
             throw new NonExhaustivePattern();
          }

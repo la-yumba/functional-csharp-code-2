@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Unit = System.ValueTuple;
 
 namespace LaYumba.Functional
 {
-   using System.Threading.Tasks;
    using static F;
 
    public static partial class F
    {
       // wrap the given value into a Some
-      public static Option<T> Some<T>(T value) => new Option<T>(value);
+      public static Option<T> Some<T>([NotNull] T? value) // NotNull: `value` is guaranteed to never be null if the method returns without throwing an exception
+         => new(value ?? throw new ArgumentNullException(nameof(value)));
 
       // the None value
       public static NoneType None => default;
@@ -21,39 +23,49 @@ namespace LaYumba.Functional
 
    public struct Option<T> : IEquatable<NoneType>, IEquatable<Option<T>>
    {
-      readonly T value;
+      readonly T? value;
       readonly bool isSome;
       bool isNone => !isSome;
 
-      internal Option(T value)
-      {
-         this.value = value ?? throw new ArgumentNullException();
-         this.isSome = true;
-      }
+      internal Option(T t) => (isSome, value) = (true, t);
 
       public static implicit operator Option<T>(NoneType _) => default;
 
-      public static implicit operator Option<T>(T value)
-         => value is null ? None : Some(value);
+      public static implicit operator Option<T>(T t)
+         => t is null ? None : new Option<T>(t);
 
       public R Match<R>(Func<R> None, Func<T, R> Some)
-          => isSome ? Some(value) : None();
+         => isSome ? Some(value!) : None();
+
+      //public R Match<R>(Func<R> None, Func<T, R> Some)
+      //    => Get(out T t) ? Some(t) : None();
+      //  bool Get([NotNullWhen(true)] out T t)
+      //{
+      //   t = value;
+      //   return isSome;
+      //}
 
       public IEnumerable<T> AsEnumerable()
       {
-         if (isSome) yield return value;
+         if (isSome) yield return value!;
       }
 
       // equality operators
 
-      public bool Equals(Option<T> other) 
-         => this.isSome == other.isSome 
-         && (this.isNone || this.value.Equals(other.value));
+      public bool Equals(Option<T> other)
+         => this.isSome == other.isSome
+         && (this.isNone || this.value!.Equals(other.value));
 
       public bool Equals(NoneType _) => isNone;
 
       public static bool operator ==(Option<T> @this, Option<T> other) => @this.Equals(other);
       public static bool operator !=(Option<T> @this, Option<T> other) => !(@this == other);
+
+      public override bool Equals(object? other)
+         => other is Option<T> option && this.Equals(option);
+
+      public override int GetHashCode()
+         => isNone ? 0 : value!.GetHashCode();
 
       public override string ToString() => isSome ? $"Some({value})" : "None";
    }

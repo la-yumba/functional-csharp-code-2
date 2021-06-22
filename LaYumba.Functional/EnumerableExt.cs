@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Unit = System.ValueTuple;
 
 namespace LaYumba.Functional
 {
-   using System.Collections.Immutable;
    using static F;
+
+   public static partial class F
+   {
+      public static IEnumerable<T> List<T>(params T[] items) => items.ToImmutableList();
+   }
 
    public static class EnumerableExt
    {

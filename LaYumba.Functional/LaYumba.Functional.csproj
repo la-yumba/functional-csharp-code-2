@@ -2,15 +2,16 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <PackageId>LaYumba.Functional</PackageId>
-    <PackageVersion>0.10.0</PackageVersion>
-    <PackageProjectUrl>https://github.com/la-yumba/functional-csharp-code</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/la-yumba/functional-csharp-code/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageVersion>2.0.0</PackageVersion>
+    <PackageProjectUrl>https://github.com/la-yumba/functional-csharp-code-2</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/la-yumba/functional-csharp-code-2/blob/master/LICENSE</PackageLicenseUrl>
     <Authors>Enrico Buonanno</Authors>
     <Description>A utility library for programming functionally in C#</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Copyright>Copyright 2017 (c) Enrico Buonanno. All rights reserved.</Copyright>
+    <Copyright>Copyright 2021 (c) Enrico Buonanno. All rights reserved.</Copyright>
     <PackageTags>functional programming</PackageTags>
     <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Reactive" Version="5.0.0" />

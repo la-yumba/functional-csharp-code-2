@@ -23,7 +23,7 @@ namespace Examples.Chapter13.Data
       public bool IsLowOnInventory { get; private set; }
       public int Inventory
       {
-         get { return inventory; }
+         get => inventory;
          private set
          {
             inventory = value;

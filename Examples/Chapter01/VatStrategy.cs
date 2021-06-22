@@ -17,8 +17,8 @@ namespace Examples.Chapter01
          => address switch
          {
             UsAddress(var state) => Vat(RateByState(state), order),
-            Address("de") => DeVat(order),
-            Address(var country) => Vat(RateByCountry(country), order),
+            ("de") _ => DeVat(order),
+            (var country) _ => Vat(RateByCountry(country), order),
          };
 
       static decimal RateByCountry(string country)

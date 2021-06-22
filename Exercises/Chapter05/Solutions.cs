@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-//using System.Configuration;
 using LaYumba.Functional;
-using static LaYumba.Functional.F;
 using System.Text.RegularExpressions;
 
 namespace Exercises.Chapter5
@@ -57,31 +54,6 @@ namespace Exercises.Chapter5
 
          public static implicit operator string(Email e)
             => e.Value;
-      }
-      
-      // 4 Take a look at the extension methods defined on IEnumerable inSystem.LINQ.Enumerable.
-      // Which ones could potentially return nothing, or throw some
-      // kind of not-found exception, and would therefore be good candidates for
-      // returning an Option<T> instead?
-
-      // 5.  Write implementations for the methods in the `AppConfig` class
-      // below. (For both methods, a reasonable one-line method body is possible.
-      // Assume settings are of type string, numeric or date.) Can this
-      // implementation help you to test code that relies on settings in a
-      // `.config` file?
-      public record AppConfig(NameValueCollection Source)
-      {
-         //public AppConfig() : this(ConfigurationManager.AppSettings) { }
-
-         public Option<T> Get<T>(string key)
-            => Source[key] == null
-               ? None
-               : Some((T)Convert.ChangeType(Source[key], typeof(T)));
-
-         public T Get<T>(string key, T defaultValue)
-            => Get<T>(key).Match(
-               () => defaultValue,
-               (value) => value);
       }
    }
 }

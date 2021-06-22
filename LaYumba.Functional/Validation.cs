@@ -9,60 +9,50 @@ namespace LaYumba.Functional
 
    public static partial class F
    {
-      public static Validation<T> Valid<T>(T value) => new Validation<T>(value);
+      public static Validation<T> Valid<T>(T value)
+         => new(value ?? throw new ArgumentNullException(nameof(value)));
 
       // create a Validation in the Invalid state
-      public static Validation.Invalid Invalid(params Error[] errors) => new Validation.Invalid(errors);
-      public static Validation<R> Invalid<R>(params Error[] errors) => new Validation.Invalid(errors);
-      public static Validation.Invalid Invalid(IEnumerable<Error> errors) => new Validation.Invalid(errors);
-      public static Validation<R> Invalid<R>(IEnumerable<Error> errors) => new Validation.Invalid(errors);
+      public static Validation.Invalid Invalid(params Error[] errors) => new(errors);
+      public static Validation<T> Invalid<T>(params Error[] errors) => new Validation.Invalid(errors);
+      public static Validation.Invalid Invalid(IEnumerable<Error> errors) => new(errors);
+      public static Validation<T> Invalid<T>(IEnumerable<Error> errors) => new Validation.Invalid(errors);
    }
 
    public struct Validation<T>
    {
       internal IEnumerable<Error> Errors { get; }
-      internal T Value { get; }
+      internal T? Value { get; }
 
       public bool IsValid { get; }
 
-      // the Return function for Validation
-      public static Func<T, Validation<T>> Return = t => Valid(t);
-
       public static Validation<T> Fail(IEnumerable<Error> errors)
-         => new Validation<T>(errors);
+         => new(errors);
 
       public static Validation<T> Fail(params Error[] errors)
-         => new Validation<T>(errors.AsEnumerable());
+         => new(errors.AsEnumerable());
 
       private Validation(IEnumerable<Error> errors)
-      {
-         IsValid = false;
-         Errors = errors;
-         Value = default(T);
-      }
+         => (IsValid, Errors, Value) = (false, errors, default);
 
-      internal Validation(T right)
-      {
-         IsValid = true;
-         Value = right;
-         Errors = Enumerable.Empty<Error>();
-      }
+      internal Validation(T t)
+         => (IsValid, Errors, Value) = (true, Enumerable.Empty<Error>(), t);
 
-      public static implicit operator Validation<T>(Error error) 
-         => new Validation<T>(new [] { error });
-      public static implicit operator Validation<T>(Validation.Invalid left) 
+      public static implicit operator Validation<T>(Error error)
+         => new Validation<T>(new[] { error });
+      public static implicit operator Validation<T>(Validation.Invalid left)
          => new Validation<T>(left.Errors);
       public static implicit operator Validation<T>(T right) => Valid(right);
 
-      public TR Match<TR>(Func<IEnumerable<Error>, TR> Invalid, Func<T, TR> Valid)
-         => IsValid ? Valid(this.Value) : Invalid(this.Errors);
+      public R Match<R>(Func<IEnumerable<Error>, R> Invalid, Func<T, R> Valid)
+         => IsValid ? Valid(this.Value!) : Invalid(this.Errors);
 
       public Unit Match(Action<IEnumerable<Error>> Invalid, Action<T> Valid)
          => Match(Invalid.ToFunc(), Valid.ToFunc());
 
       public IEnumerator<T> AsEnumerable()
       {
-         if (IsValid) yield return Value;
+         if (IsValid) yield return Value!;
       }
 
       public override string ToString()
@@ -70,7 +60,17 @@ namespace LaYumba.Functional
             ? $"Valid({Value})"
             : $"Invalid([{string.Join(", ", Errors)}])";
 
-      public override bool Equals(object obj) => this.ToString() == obj.ToString(); // hack
+      public override bool Equals(object? obj)
+         => obj is Validation<T> other
+            && this.IsValid == other.IsValid
+            && (IsValid && this.Value!.Equals(other.Value)
+               || this.ToString() == other.ToString());
+
+      public override int GetHashCode() => Match
+      (
+         Invalid: errs => errs.GetHashCode(),
+         Valid: t => t!.GetHashCode()
+      );
    }
 
    public static class Validation
@@ -133,11 +133,13 @@ namespace LaYumba.Functional
          (this Validation<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, R>> @this, Validation<T1> arg)
          => Apply(@this.Map(F.CurryFirst), arg);
 
-      public static Validation<RR> Map<R, RR>
-         (this Validation<R> @this, Func<R, RR> f)
-         => @this.IsValid
-            ? Valid(f(@this.Value))
-            : Invalid(@this.Errors);
+      public static Validation<R> Map<T, R>
+         (this Validation<T> @this, Func<T, R> f)
+         => @this.Match
+         (
+            Valid: t => Valid(f(t)),
+            Invalid: errs => Invalid(errs)
+         );
 
       public static Validation<Func<T2, R>> Map<T1, T2, R>(this Validation<T1> @this
          , Func<T1, T2, R> func)

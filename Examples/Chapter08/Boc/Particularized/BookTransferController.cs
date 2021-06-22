@@ -42,27 +42,23 @@ namespace Boc.ValidImpl
 
       static readonly Regex regex = new Regex("^[A-Z]{6}[A-Z1-9]{5}$");
 
-      Validation<MakeTransfer> ValidateBic(MakeTransfer cmd)
-      {
-         if (!regex.IsMatch(cmd.Bic.ToUpper()))
-            return Errors.InvalidBic;
-         return cmd;
-      }
+      Validation<MakeTransfer> ValidateBic(MakeTransfer transfer)
+         => regex.IsMatch(transfer.Bic.ToUpper())
+            ? transfer
+            : Errors.InvalidBic;
 
       // date validation
 
       DateTime now;
-      
-      Validation<MakeTransfer> ValidateDate(MakeTransfer cmd)
-      {
-         if (cmd.Date.Date <= now.Date)
-            return Errors.TransferDateIsPast;
-         return cmd;
-      }
 
-      // persistence
+      Validation<MakeTransfer> ValidateDate(MakeTransfer transfer)
+         => transfer.Date.Date > now.Date
+            ? transfer
+            : Errors.TransferDateIsPast;
 
-      string connString;
+        // persistence
+
+        string connString;
 
       Exceptional<Unit> Save(MakeTransfer transfer)
       {

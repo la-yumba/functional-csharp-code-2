@@ -28,7 +28,7 @@ namespace LaYumba.Functional.Tests
       }
 
       private static void AreEquivalent(Func<int, string> a, Func<int, string> b)
-         => Assert.Equal(true, Enumerable.Range(1000, 1010)
+         => Assert.True(Enumerable.Range(1000, 1010)
             .Map(i => a(i) == b(i))
             .All(eq => eq));
    }
