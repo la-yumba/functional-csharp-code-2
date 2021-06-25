@@ -28,24 +28,30 @@ namespace LaYumba.Functional
          bool IsSuccess(Exceptional<T> ex) 
             => ex.Match(_ => false, _ => true);
 
-         T ValueOrDefault(Exceptional<T> ex)
-            => ex.Match(_ => default, t => t);
+         T ExtractValue(Exceptional<T> ex)
+            => ex.Match(_ => throw new InvalidOperationException(), t => t);
 
-         Exception ExceptionOrDefault(Exceptional<T> ex)
-            => ex.Match(exc => exc, _ => default);
+         Exception ExtractException(Exceptional<T> ex)
+            => ex.Match(exc => exc, _ => throw new InvalidOperationException());
 
          var (ts, errs) = excTs.Partition(IsSuccess);
          return
          (
-            Successes: ts.Select(ValueOrDefault),
-            Exceptions: errs.Select(ExceptionOrDefault)
+            Successes: ts.Select(ExtractValue),
+            Exceptions: errs.Select(ExtractException)
          );
       }
 
       public static (IObservable<T> Passed, IObservable<T> Failed) Partition<T>
-         (this IObservable<T> source, Func<T, bool> predicate)
-         => (Passed: (from t in source where predicate(t) select t)
-            , Failed: (from t in source where !predicate(t) select t));
+      (
+         this IObservable<T> source,
+         Func<T, bool> predicate
+      )
+      =>
+      (
+         Passed: from t in source where predicate(t) select t,
+         Failed: from t in source where !predicate(t) select t
+      );
 
       public static (IObservable<RTrue> Passed, IObservable<RFalse> Failed) Partition<T, RTrue, RFalse>
          (this IObservable<T> source

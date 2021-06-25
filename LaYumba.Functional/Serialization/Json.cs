@@ -43,26 +43,24 @@ namespace LaYumba.Functional.Serialization.Json
           => typeToConvert.IsGenericType
           && typeToConvert.GetGenericTypeDefinition() == typeof(Option<>);
 
-      public override JsonConverter CreateConverter(
-          Type type,
-          JsonSerializerOptions options)
+      public override JsonConverter? CreateConverter
+      (
+         Type type,
+         JsonSerializerOptions options
+      )
+      => Activator.CreateInstance
+      (
+         typeof(OptionConverterInner<>)
+            .MakeGenericType(new Type[] { type.GetGenericArguments()[0] }),
+         BindingFlags.Instance | BindingFlags.Public,
+         binder: null,
+         args: new object[] { options },
+         culture: null
+      ) as JsonConverter;
+
+      private class OptionConverterInner<T> : JsonConverter<Option<T>>
       {
-         Type valueType = type.GetGenericArguments()[0];
-
-         JsonConverter converter = (JsonConverter)Activator.CreateInstance(
-             typeof(OptionConverterInner<>).MakeGenericType(new Type[] { valueType }),
-             BindingFlags.Instance | BindingFlags.Public,
-             binder: null,
-             args: new object[] { options },
-             culture: null);
-
-         return converter;
-      }
-
-      private class OptionConverterInner<TValue> :
-          JsonConverter<Option<TValue>>
-      {
-         private readonly JsonConverter<TValue> _valueConverter;
+         private readonly JsonConverter<T> _valueConverter;
          private readonly Type _valueType;
 
          public override bool HandleNull => true;
@@ -70,32 +68,32 @@ namespace LaYumba.Functional.Serialization.Json
          public OptionConverterInner(JsonSerializerOptions options)
          {
             // For performance, use the existing converter if available
-            _valueConverter = (JsonConverter<TValue>)options.GetConverter(typeof(TValue));
+            _valueConverter = (JsonConverter<T>)options.GetConverter(typeof(T));
 
             // Cache the value type
-            _valueType = typeof(TValue);
+            _valueType = typeof(T);
          }
 
-         public override Option<TValue> Read(
+         public override Option<T> Read(
              ref Utf8JsonReader reader,
              Type typeToConvert,
              JsonSerializerOptions options)
          {
+            // deserialize 'null' into a None
             if (reader.TokenType == JsonTokenType.Null)
                return None;
 
-            TValue value;
-            if (_valueConverter != null)
-               value = _valueConverter.Read(ref reader, _valueType, options);
-            else
-               value = JsonSerializer.Deserialize<TValue>(ref reader, options);
+            // deserialize non-null value into a Some
+            T? t = _valueConverter != null
+               ? _valueConverter.Read(ref reader, _valueType, options)
+               : JsonSerializer.Deserialize<T>(ref reader, options);
 
-            return Some(value);
+            return Some(t ?? throw new InvalidOperationException($"'{t}' could not be deserialized into a {typeof(T)}"));
          }
 
          public override void Write(
              Utf8JsonWriter writer,
-             Option<TValue> option,
+             Option<T> option,
              JsonSerializerOptions options)
          {
             option.Match

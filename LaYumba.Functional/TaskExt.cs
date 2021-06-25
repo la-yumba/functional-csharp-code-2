@@ -16,8 +16,8 @@ namespace LaYumba.Functional
    {
       public static async Task<R> Apply<T, R>
          (this Task<Func<T, R>> f, Task<T> arg)
-         //=> (await f)(await arg);
-         => (await f.ConfigureAwait(false))(await arg.ConfigureAwait(false));
+         //=> (await f)(await arg); // simple version, less efficient
+         => (await f.ConfigureAwait(false))(await arg.ConfigureAwait(false)); // ConfigureAwait(false) more efficient, but not for UI-thread apps
 
       public static Task<Func<T2, R>> Apply<T1, T2, R>
          (this Task<Func<T1, T2, R>> f, Task<T1> arg)
@@ -99,7 +99,7 @@ namespace LaYumba.Functional
          (this Task<T> task, Func<Exception, R> Faulted, Func<T, R> Completed)
          => task.ContinueWith(t =>
                t.Status == TaskStatus.Faulted
-                  ? Faulted(t.Exception)
+                  ? Faulted(t.Exception!)
                   : Completed(t.Result));
 
       public static Task<Unit> ForEach<T>(this Task<T> @this, Action<T> continuation)
@@ -126,14 +126,14 @@ namespace LaYumba.Functional
          (this Task<T> task, Func<Exception, T> fallback)
          => task.ContinueWith(t =>
                t.Status == TaskStatus.Faulted
-                  ? fallback(t.Exception)
+                  ? fallback(t.Exception!)
                   : t.Result);
 
       public static Task<T> RecoverWith<T>
          (this Task<T> task, Func<Exception, Task<T>> fallback)
          => task.ContinueWith(t =>
                t.Status == TaskStatus.Faulted
-                  ? fallback(t.Exception)
+                  ? fallback(t.Exception!)
                   : Task.FromResult(t.Result)
          ).Unwrap();
 

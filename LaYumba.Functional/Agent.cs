@@ -109,20 +109,20 @@ namespace LaYumba.Functional
       }
 
       // creates a 2-way agent with an async processing func
-      public TwoWayAgent(State initialState, Func<State, Msg, Task<(State, Reply)>> process)
+      public TwoWayAgent(State initialState, Func<State, Msg, Task<(State State, Reply Reply)>> process)
       {
          state = initialState;
 
-         actionBlock = new ActionBlock<(Msg, TaskCompletionSource<Reply>)>(
-            async t => await process(state, t.Item1)
+         actionBlock = new ActionBlock<(Msg Message, TaskCompletionSource<Reply> Reply)>(
+            async t => await process(state, t.Message)
                .ContinueWith(task =>
                {
                   if (task.Status == TaskStatus.Faulted)
-                     t.Item2.SetException(task.Exception);
+                     t.Reply.SetException(task.Exception!);
                   else
                   {
-                     state = task.Result.Item1;
-                     t.Item2.SetResult(task.Result.Item2);
+                     state = task.Result.State;
+                     t.Reply.SetResult(task.Result.Reply);
                   }
                }));
       }

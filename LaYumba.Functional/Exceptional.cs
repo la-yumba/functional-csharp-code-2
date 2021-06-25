@@ -10,20 +10,22 @@ namespace LaYumba.Functional
 
    public struct Exceptional<T>
    {
-      internal Exception Ex { get; }
-      internal T Value { get; }
+      private Exception? Ex { get; }
+      private T? Value { get; }
       
-      public bool Success => Ex == null;
-      public bool Exception => Ex != null;
+      private bool IsSuccess { get; }
+      private bool IsException => !IsSuccess;
 
       internal Exceptional(Exception ex)
       {
+         IsSuccess = false;
          Ex = ex ?? throw new ArgumentNullException(nameof(ex));
          Value = default;
       }
 
       internal Exceptional(T value)
       {
+         IsSuccess = true;
          Value = value ?? throw new ArgumentNullException(nameof(value));
          Ex = default;
       }
@@ -32,7 +34,7 @@ namespace LaYumba.Functional
       public static implicit operator Exceptional<T>(T t) => new (t);
 
       public TR Match<TR>(Func<Exception, TR> Exception, Func<T, TR> Success)
-         => this.Exception ? Exception(Ex) : Success(Value);
+         => this.IsException ? Exception(Ex!) : Success(Value!);
 
       public Unit Match(Action<Exception> Exception, Action<T> Success)
          => Match(Exception.ToFunc(), Success.ToFunc());
@@ -68,29 +70,50 @@ namespace LaYumba.Functional
 
       // functor
 
-      public static Exceptional<RR> Map<R, RR>(this Exceptional<R> @this
-         , Func<R, RR> func) => @this.Success ? func(@this.Value) : new Exceptional<RR>(@this.Ex);
+      public static Exceptional<RR> Map<R, RR>
+      (
+         this Exceptional<R> @this,
+         Func<R, RR> f
+      )
+      => @this.Match
+      (
+         Exception: ex => new Exceptional<RR>(ex),
+         Success: r => f(r)
+      );
 
       public static Exceptional<Unit> ForEach<R>(this Exceptional<R> @this, Action<R> act)
          => Map(@this, act.ToFunc());
 
-      public static Exceptional<RR> Bind<R, RR>(this Exceptional<R> @this
-         , Func<R, Exceptional<RR>> func)
-          => @this.Success ? func(@this.Value) : new Exceptional<RR>(@this.Ex);
+      public static Exceptional<RR> Bind<R, RR>
+      (
+         this Exceptional<R> @this,
+         Func<R, Exceptional<RR>> f
+      )
+      => @this.Match
+      (
+         Exception: ex => new Exceptional<RR>(ex),
+         Success: r => f(r)
+      );
       
       // LINQ
 
       public static Exceptional<R> Select<T, R>(this Exceptional<T> @this
          , Func<T, R> map) => @this.Map(map);
 
-      public static Exceptional<RR> SelectMany<T, R, RR>(this Exceptional<T> @this
-         , Func<T, Exceptional<R>> bind, Func<T, R, RR> project)
-      {
-         if (@this.Exception) return new Exceptional<RR>(@this.Ex);
-         var bound = bind(@this.Value);
-         return bound.Exception 
-            ? new Exceptional<RR>(bound.Ex) 
-            : project(@this.Value, bound.Value);
-      }
+      public static Exceptional<RR> SelectMany<T, R, RR>
+      (
+         this Exceptional<T> @this,
+         Func<T, Exceptional<R>> bind,
+         Func<T, R, RR> project
+      )
+      => @this.Match
+      (
+         Exception: ex => new Exceptional<RR>(ex),
+         Success: t => bind(t).Match
+         (
+            Exception: ex => new Exceptional<RR>(ex),
+            Success: r => project(t, r)
+         )
+      );
    }
 }
