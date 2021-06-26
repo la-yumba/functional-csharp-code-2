@@ -9,56 +9,58 @@ namespace LaYumba.Functional.Data.LinkedList
 
    // List<T> = Empty | Otherwise(T, List<T>)
 
-   public sealed class List<T>
+   public abstract record List<T>
    {
-      readonly bool isEmpty;
-      readonly T head;
-      readonly List<T> tail;
-
-      // the empty list
-      internal List() => isEmpty = true; 
-
-      // the non empty list
-      internal List(T head, List<T> tail)
-         => (this.head, this.tail) = (head, tail);
-
-      public R Match<R>(Func<R> Empty, Func<T, List<T>, R> Cons)
-         => isEmpty ? Empty() : Cons(head, tail);
-
-      // for convenience
-      public T Head => Match(
-         () => { throw new IndexOutOfRangeException(); },
-         (head, _) => head);
-
-      public List<T> Tail => Match(
-         () => { throw new IndexOutOfRangeException(); },
-         (_, tail) => tail);
-
       // not really required, but hey...
-      public T this[int index] => Match(
+      public T this[int index] => this.Match
+      (
          () => { throw new IndexOutOfRangeException(); },
-         (head, tail) => index == 0 ? head : tail[index - 1]);
-          
-      public IEnumerable<T> AsEnumerable()
-      {
-         if (isEmpty) yield break;
-         yield return head;
-         foreach (T t in tail.AsEnumerable()) yield return t;
-      }
+         (head, tail) => index == 0 ? head : tail[index - 1]
+      );
 
-      public override string ToString() => Match(
-         () => "{ }",
-         (_, __) => $"{{ {string.Join(", ", AsEnumerable().Map(v => v.ToString()))} }}");
+      //public IEnumerable<T> AsEnumerable()
+      //{
+      //   if (isEmpty) yield break;
+      //   yield return head;
+      //   foreach (T t in tail.AsEnumerable()) yield return t;
+      //}
+
+      //public override string ToString() => this.Match(
+      //   () => "{ }",
+      //   (_, __) => $"{{ {string.Join(", ", AsEnumerable().Map(v => v.ToString()))} }}");
    }
+
+   internal sealed record Empty<T> : List<T>;
+   internal sealed record Cons<T>(T Head, List<T> Tail) : List<T>;
 
    public static class LinkedList
    {
       // factory functions
-      public static List<T> List<T>(T h, List<T> t) => new(h, t);
+
+      public static List<T> List<T>() => new Empty<T>();
+
+      public static List<T> List<T>(T h, List<T> t) => new Cons<T>(h, t);
 
       public static List<T> List<T>(params T[] items)
-         => items.Reverse().Aggregate(new List<T>()
+         => items.Reverse().Aggregate(List<T>()
             , (tail, head) => List(head, tail));
+
+      // all common list operations rely on Match
+
+      public static R Match<T, R>
+      (
+         this List<T> list,
+         Func<R> Empty,
+         Func<T, List<T>, R> Cons
+      )
+      => list switch
+      {
+         Empty<T> => Empty(),
+         Cons<T>(var t, var ts) => Cons(t, ts),
+         _ => throw new ArgumentException("List can only be Empty or Cons")
+      };
+
+      // common list operations
 
       public static int Length<T>(this List<T> @this) => @this.Match(
          () => 0,
@@ -66,6 +68,13 @@ namespace LaYumba.Functional.Data.LinkedList
 
       public static List<T> Add<T>(this List<T> @this, T value)
          => List(value, @this);
+
+      public static List<T> Tail<T>(this List<T> list)
+         => list.Match
+         (
+            () => { throw new IndexOutOfRangeException(); },
+            (_, tail) => tail
+         );
 
       public static List<T> Append<T>(this List<T> @this, T value)
          => @this.Match(
@@ -105,6 +114,6 @@ namespace LaYumba.Functional.Data.LinkedList
          (h, t) => List(h, concat(t, r)));
 
       public static List<R> Run<T, R>(this Coyo<List<T>, R> @this) 
-         => @this.Value.Map(t => @this.Func(t));
+         => @this.Value.Map(t => @this.Func(t!));
    }
 }

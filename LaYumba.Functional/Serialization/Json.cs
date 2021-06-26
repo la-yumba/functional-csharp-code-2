@@ -91,22 +91,22 @@ namespace LaYumba.Functional.Serialization.Json
             return Some(t ?? throw new InvalidOperationException($"'{t}' could not be deserialized into a {typeof(T)}"));
          }
 
-         public override void Write(
+         public override void Write
+         (
              Utf8JsonWriter writer,
              Option<T> option,
-             JsonSerializerOptions options)
-         {
-            option.Match
-            (
-                () => writer.WriteNullValue(),
-                (value) =>
-                {
-                   if (_valueConverter != null)
-                      _valueConverter.Write(writer, value, options);
-                   else JsonSerializer.Serialize(writer, value, options);
-                }
-            );
-         }
+             JsonSerializerOptions options
+         )
+         => option.Match
+         (
+            () => writer.WriteNullValue(),
+            (value) =>
+            {
+               if (_valueConverter != null)
+                  _valueConverter.Write(writer, value, options);
+               else JsonSerializer.Serialize(writer, value, options);
+            }
+         );
       }
    }
 }

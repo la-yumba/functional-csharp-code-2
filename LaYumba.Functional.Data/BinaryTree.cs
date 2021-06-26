@@ -65,6 +65,6 @@ namespace LaYumba.Functional.Data.BinaryTree
             });
 
       public static Tree<R> Run<T, R>(this Coyo<Tree<T>, R> @this)
-         => @this.Value.Map(t => @this.Func(t));
+         => @this.Value.Map(t => @this.Func(t!));
    }
 }

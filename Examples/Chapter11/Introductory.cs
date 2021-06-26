@@ -33,6 +33,20 @@ namespace Examples.Chapter13.Data
       }
    }
 
+   static class Product_FunctionalAlternative
+   {
+      record Product(int Inventory);
+
+      static Product RetrieveProduct(Guid id) => throw new NotImplementedException();
+
+      static Product ReplenishInventory(Guid id, int units)
+      {
+         Product original = RetrieveProduct(id);
+         Product updated = new Product(original.Inventory + units);
+         return updated;
+      }
+   }
+
    public class LocalMutationIsOk
    {
       int Sum(int[] ints)

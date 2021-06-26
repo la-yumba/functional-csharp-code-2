@@ -15,7 +15,7 @@ namespace LaYumba.Functional.Data.Bst
       public abstract IEnumerable<T> AsEnumerable();
 
       public bool Equals(Tree<T> other) => this.ToString() == other.ToString(); // hack
-      public override bool Equals(object obj) => Equals((Tree<T>)obj);
+      public override bool Equals(object? obj) => obj is not null && Equals((Tree<T>)obj);
    }
 
    public class Empty<T> : Tree<T> where T : IComparable<T>

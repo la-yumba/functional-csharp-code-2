@@ -18,13 +18,21 @@ namespace Exercises.Chapter12.Solutions
       static List<T> InsertAt<T>(this List<T> @this, int m, T value)
          => m == 0 
             ? List(value, @this) 
-            : List(@this.Head, @this.Tail.InsertAt(m - 1, value));
+            : @this.Match
+               (
+                  () => throw new IndexOutOfRangeException(),
+                  (t, ts) => List(t, ts.InsertAt(m - 1, value))
+               );
 
       // RemoveAt removes the item at the given index
       static List<T> RemoveAt<T>(this List<T> @this, int m)
-         => m == 0 
-            ? @this.Tail 
-            : List(@this.Head, @this.Tail.RemoveAt(m - 1));
+         => @this.Match
+         (
+            () => throw new IndexOutOfRangeException(),
+            (t, ts) => m == 0 
+               ? ts 
+               : List(t, ts.RemoveAt(m - 1))
+         );
 
       // TakeWhile takes a predicate, and traverses the list yielding all items until it find one that fails the predicate
       static List<T> TakeWhile<T>(this List<T> @this, Func<T, bool> pred)

@@ -49,8 +49,8 @@ namespace LaYumba.Functional
       )
       =>
       (
-         Passed: from t in source where predicate(t) select t,
-         Failed: from t in source where !predicate(t) select t
+         Passed: source.Where(predicate),
+         Failed: source.Where(predicate.Negate())
       );
 
       public static (IObservable<RTrue> Passed, IObservable<RFalse> Failed) Partition<T, RTrue, RFalse>

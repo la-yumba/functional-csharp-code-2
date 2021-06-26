@@ -99,17 +99,27 @@ namespace LaYumba.Functional
 
       // LINQ
 
-      public static Either<L, R> Select<L, T, R>(this Either<L, T> @this
-         , Func<T, R> map) => @this.Map(map);
+      public static Either<L, R> Select<L, T, R>
+      (
+         this Either<L, T> @this,
+         Func<T, R> f
+      )
+      => @this.Map(f);
 
-
-      public static Either<L, RR> SelectMany<L, T, R, RR>(this Either<L, T> @this
-         , Func<T, Either<L, R>> bind, Func<T, R, RR> project)
-         => @this.Match(
+      public static Either<L, RR> SelectMany<L, T, R, RR>
+      (
+         this Either<L, T> @this,
+         Func<T, Either<L, R>> bind,
+         Func<T, R, RR> project
+      )
+      => @this.Match
+      (
+         Left: l => Left(l),
+         Right: t => bind(t).Match<Either<L, RR>>
+         (
             Left: l => Left(l),
-            Right: t =>
-               bind(t).Match<Either<L, RR>>(
-                  Left: l => Left(l),
-                  Right: r => project(t, r)));
+            Right: r => project(t, r)
+         )
+      );
    }
 }
