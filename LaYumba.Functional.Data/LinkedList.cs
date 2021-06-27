@@ -9,8 +9,24 @@ namespace LaYumba.Functional.Data.LinkedList
 
    // List<T> = Empty | Otherwise(T, List<T>)
 
+   internal sealed record Empty<T> : List<T>
+   {
+      public override IEnumerable<T> AsEnumerable() => Enumerable.Empty<T>();
+   }
+
+   internal sealed record Cons<T>(T Head, List<T> Tail) : List<T>
+   {
+      public override IEnumerable<T> AsEnumerable()
+      {
+         yield return Head;
+         foreach (T t in Tail.AsEnumerable()) yield return t;
+      }
+   }
+
    public abstract record List<T>
    {
+      public abstract IEnumerable<T> AsEnumerable();
+
       // not really required, but hey...
       public T this[int index] => this.Match
       (
@@ -18,20 +34,9 @@ namespace LaYumba.Functional.Data.LinkedList
          (head, tail) => index == 0 ? head : tail[index - 1]
       );
 
-      //public IEnumerable<T> AsEnumerable()
-      //{
-      //   if (isEmpty) yield break;
-      //   yield return head;
-      //   foreach (T t in tail.AsEnumerable()) yield return t;
-      //}
-
-      //public override string ToString() => this.Match(
-      //   () => "{ }",
-      //   (_, __) => $"{{ {string.Join(", ", AsEnumerable().Map(v => v.ToString()))} }}");
+      public override string ToString()
+         => $"[{string.Join(", ", this.Map(v => v.ToString()).AsEnumerable())}]";
    }
-
-   internal sealed record Empty<T> : List<T>;
-   internal sealed record Cons<T>(T Head, List<T> Tail) : List<T>;
 
    public static class LinkedList
    {
@@ -62,9 +67,11 @@ namespace LaYumba.Functional.Data.LinkedList
 
       // common list operations
 
-      public static int Length<T>(this List<T> @this) => @this.Match(
+      public static int Length<T>(this List<T> @this) => @this.Match
+      (
          () => 0,
-         (t, ts) => 1 + ts.Length());
+         (t, ts) => 1 + ts.Length()
+      );
 
       public static List<T> Add<T>(this List<T> @this, T value)
          => List(value, @this);
@@ -82,9 +89,13 @@ namespace LaYumba.Functional.Data.LinkedList
             (head, tail) => List(head, tail.Append(value)));
 
       public static List<T> InsertAt<T>(this List<T> @this, int m, T value)
-         => m == 0 ? List(value, @this) : @this.Match(
-            () => { throw new IndexOutOfRangeException(); },
-            (head, tail) => List(head, tail.InsertAt(m - 1, value)));
+         => m == 0
+            ? List(value, @this)
+            : @this.Match
+               (
+                  () => { throw new IndexOutOfRangeException(); },
+                  (head, tail) => List(head, tail.InsertAt(m - 1, value))
+               );
 
       public static List<R> Map<T, R>(this List<T> @this, Func<T, R> f)
          => @this.Match(
