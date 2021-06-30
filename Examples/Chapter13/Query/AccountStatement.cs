@@ -8,41 +8,24 @@ using System.Linq;
 namespace Boc.Chapter13.Query
 {
    public record Transaction
-   {
-      public DateTime Date { get; }
-      public decimal DebitedAmount { get; }
-      public decimal CreditedAmount { get; }
-      public string Description { get; }
-
-      public Transaction(DebitedTransfer e)
-      {
-         DebitedAmount = e.DebitedAmount;
-         Description = $"Transfer to {e.Bic}/{e.Iban}; Ref: {e.Reference}";
-         Date = e.Timestamp.Date;
-      }
-
-      public Transaction(DepositedCash e)
-      {
-         CreditedAmount = e.Amount;
-         Description = $"Deposit at {e.BranchId}";
-         Date = e.Timestamp.Date;
-      }
-   }
+   (
+       DateTime Date,
+       string Description,
+       decimal DebitedAmount = 0m,
+       decimal CreditedAmount = 0m
+   );
 
    public record AccountStatement
+   (
+      int Month,
+      int Year,
+      decimal StartingBalance,
+      decimal EndBalance,
+      IEnumerable<Transaction> Transactions
+   )
    {
-      public int Month { get; }
-      public int Year { get; }
-
-      public decimal StartingBalance { get; }
-      public decimal EndBalance { get; }
-      public IEnumerable<Transaction> Transactions { get; }
-
-      public AccountStatement(int month, int year, IEnumerable<Event> events)
+      public static AccountStatement Create(int month, int year, IEnumerable<Event> events)
       {
-         Month = month;
-         Year = year;
-
          var startOfPeriod = new DateTime(year, month, 1);
          var endOfPeriod = startOfPeriod.AddMonths(1);
 
@@ -52,21 +35,42 @@ namespace Boc.Chapter13.Query
             .SkipWhile(e => e.Timestamp < startOfPeriod)
             .TakeWhile(e => endOfPeriod < e.Timestamp);
 
-         StartingBalance = eventsBeforePeriod.Aggregate(0m, BalanceReducer);
-         EndBalance = eventsDuringPeriod.Aggregate(StartingBalance, BalanceReducer);
+         var startingBalance = eventsBeforePeriod.Aggregate(0m, BalanceReducer);
+         var endBalance = eventsDuringPeriod.Aggregate(startingBalance, BalanceReducer);
 
-         Transactions = eventsDuringPeriod.Bind(CreateTransaction);
+         return new
+         (
+            Month: month,
+            Year: year,
+            StartingBalance: startingBalance,
+            EndBalance: endBalance,
+            Transactions: eventsDuringPeriod.Bind(CreateTransaction)
+         );
       }
 
-      Option<Transaction> CreateTransaction(Event evt)
+      static Option<Transaction> CreateTransaction(Event evt)
          => evt switch
          {
-            DepositedCash e => new Transaction(e),
-            DebitedTransfer e => new Transaction(e),
+            DepositedCash e
+               => new Transaction
+                  (
+                     CreditedAmount: e.Amount,
+                     Description: $"Deposit at {e.BranchId}",
+                     Date: e.Timestamp.Date
+                  ),
+
+            DebitedTransfer e
+               => new Transaction
+                  (
+                     DebitedAmount: e.DebitedAmount,
+                     Description: $"Transfer to {e.Bic}/{e.Iban}; Ref: {e.Reference}",
+                     Date: e.Timestamp.Date
+                  ),
+
             _ => None
          };
 
-      decimal BalanceReducer(decimal bal, Event evt)
+      static decimal BalanceReducer(decimal bal, Event evt)
          => evt switch
          {
             DepositedCash e => bal + e.Amount,
