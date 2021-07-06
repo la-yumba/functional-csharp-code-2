@@ -26,6 +26,20 @@ namespace LaYumba.Functional
          foreach (T t in source) yield return t;
       }
 
+      public static (IEnumerable<T> Passed, IEnumerable<T> Failed) Partition<T>
+      (
+         this IEnumerable<T> source,
+         Func<T, bool> predicate
+      )
+      {
+         var grouped = source.GroupBy(predicate);
+         return
+         (
+            Passed: grouped.Where(g => g.Key).FirstOr(Enumerable.Empty<T>()),
+            Failed: grouped.Where(g => !g.Key).FirstOr(Enumerable.Empty<T>())
+         );
+      }
+
       public static Option<T> Find<T>(this IEnumerable<T> source, Func<T, bool> predicate)
          => source.Where(predicate).Head();
 
@@ -69,18 +83,6 @@ namespace LaYumba.Functional
          var enumerator = list.GetEnumerator();
          return enumerator.MoveNext() ? Some(enumerator.Current) : None;
       }
-
-      //public static IEnumerable<R> _Map<T, R>
-      //   (this IEnumerable<T> list, Func<T, R> func)
-      //{
-      //   foreach (var item in list) yield return func(item);
-      //}
-
-      //public static IEnumerable<T> Where<T>(this IEnumerable<T> list
-      //   , Func<T, bool> predicate)
-      //{
-      //   foreach (var item in list) if (predicate(item)) yield return item;
-      //}
 
       public static IEnumerable<Func<T2, R>> Map<T1, T2, R>(this IEnumerable<T1> list
          , Func<T1, T2, R> func)

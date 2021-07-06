@@ -33,18 +33,18 @@ namespace Exercises.Chapter6
       }
    }
 
-   public struct WorkPermit
-   {
-      public string Number { get; set; }
-      public DateTime Expiry { get; set; }
-   }
+   public record Employee
+   (
+      string Id,
+      Option<WorkPermit> WorkPermit,
 
-   public class Employee
-   {
-      public string Id { get; set; }
-      public Option<WorkPermit> WorkPermit { get; set; }
+      DateTime JoinedOn,
+      Option<DateTime> LeftOn
+   );
 
-      public DateTime JoinedOn { get; }
-      public Option<DateTime> LeftOn { get; }
-   }
+   public record WorkPermit
+   (
+      string Number,
+      DateTime Expiry
+   );
 }
