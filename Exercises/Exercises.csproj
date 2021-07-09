@@ -18,4 +18,7 @@
     <ProjectReference Include="..\LaYumba.Functional\LaYumba.Functional.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Chapter10\" />
+  </ItemGroup>
 </Project>

@@ -29,11 +29,9 @@ namespace Boc.Chapter13.Query
          var startOfPeriod = new DateTime(year, month, 1);
          var endOfPeriod = startOfPeriod.AddMonths(1);
 
-         var eventsBeforePeriod = events
-            .TakeWhile(e => e.Timestamp < startOfPeriod);
-         var eventsDuringPeriod = events
-            .SkipWhile(e => e.Timestamp < startOfPeriod)
-            .TakeWhile(e => endOfPeriod < e.Timestamp);
+         var (eventsBeforePeriod, eventsDuringPeriod) = events
+            .TakeWhile(e => endOfPeriod < e.Timestamp)
+            .Partition(e => e.Timestamp <= startOfPeriod);
 
          var startingBalance = eventsBeforePeriod.Aggregate(0m, BalanceReducer);
          var endBalance = eventsDuringPeriod.Aggregate(startingBalance, BalanceReducer);
