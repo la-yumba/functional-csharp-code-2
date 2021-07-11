@@ -35,18 +35,13 @@ namespace LaYumba.Functional
          var grouped = source.GroupBy(predicate);
          return
          (
-            Passed: grouped.Where(g => g.Key).FirstOr(Enumerable.Empty<T>()),
-            Failed: grouped.Where(g => !g.Key).FirstOr(Enumerable.Empty<T>())
+            Passed: grouped.Where(g => g.Key).FirstOrDefault(Enumerable.Empty<T>()),
+            Failed: grouped.Where(g => !g.Key).FirstOrDefault(Enumerable.Empty<T>())
          );
       }
 
       public static Option<T> Find<T>(this IEnumerable<T> source, Func<T, bool> predicate)
          => source.Where(predicate).Head();
-
-      public static T FirstOr<T>(this IEnumerable<T> source, T defaultValue)
-         => source.Head().Match(
-            () => defaultValue, 
-            t => t);
 
       public static IEnumerable<Unit> ForEach<T>
          (this IEnumerable<T> ts, Action<T> action)
