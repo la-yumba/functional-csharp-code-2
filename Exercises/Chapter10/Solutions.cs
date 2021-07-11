@@ -23,8 +23,8 @@ namespace Exercises.Chapter10.Solutions
 
       // 3. Come up with a scenario in which various `Either`-returning
       // operations are chained with `Bind`. (If you’re short of ideas, you can
-      // use the favorite-dish example from <<ch_error>>.) Rewrite the code using a
-      // LINQ expression.
+      // use the favorite-dish example from Examples/Chapter08/CookFavouriteFood.cs.)
+      // Rewrite the code using a LINQ expression.
 
       static Either<Reason, Food> PrepareFavoriteDish
          => from _ in WakeUpEarly()
