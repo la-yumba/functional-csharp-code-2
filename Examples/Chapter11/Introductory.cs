@@ -3,7 +3,7 @@ using static System.Console;
 using System.Threading.Tasks;
 using System;
 
-namespace Examples.Chapter13.Data
+namespace Examples.Chapter11
 {
    class Product
    {
