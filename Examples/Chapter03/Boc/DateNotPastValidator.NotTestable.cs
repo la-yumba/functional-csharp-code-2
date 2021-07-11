@@ -21,7 +21,7 @@ namespace Examples.Chapter03.Boc.NotTestable
          var sut = new DateNotPastValidator();
          var transfer = MakeTransfer.Dummy with
          {
-            Date = new DateTime(2021, 3, 12)
+            Date = new(2021, 3, 12)
          };
 
          var actual = sut.IsValid(transfer);

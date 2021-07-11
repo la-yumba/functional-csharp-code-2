@@ -5,10 +5,7 @@ namespace Examples.Chapter13.Data
    struct Circle
    {
       public Circle(Point center, double radius)
-      {
-         Center = center;
-         Radius = radius;
-      }
+         => (Center, Radius) = (center, radius);
 
       public Point Center { get; }
       public double Radius { get; }
