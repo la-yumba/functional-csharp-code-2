@@ -2,10 +2,15 @@
 
 namespace LaYumba.Functional
 {
+   // The book describes `Func<T>` as a monad over `T`.
+
+   // This is sometimes referred to as "the identity monad", hence here I
+   // define the `Identity<T>` delegate to capture this, and the `Identity`
+   // function which is its Return function, lifting a `T` into an `Identity<T>`
+   // (This is of limited practical interest, hence not discussed in the book itself.)
+
    public static partial class F
    {
-      public static Func<T> Func<T>(Func<T> f) => f;
-
       public static Identity<T> Identity<T>(T value) => () => value;
    }
    
@@ -39,7 +44,7 @@ namespace LaYumba.Functional
 
    public delegate T Identity<T>();
 
-   public static class Identity
+   public static class IdentityExt
    {
       public static Identity<R> Map<T, R>(this Identity<T> @this
          , Func<T, R> func) => () => func(@this());

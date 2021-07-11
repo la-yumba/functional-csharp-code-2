@@ -2,7 +2,6 @@
 using System.Text.Json;
 
 using LaYumba.Functional;
-using static LaYumba.Functional.F;
 
 using NUnit.Framework;
 

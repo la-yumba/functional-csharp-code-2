@@ -2,7 +2,7 @@
 using LaYumba.Functional;
 using Unit = System.ValueTuple;
 
-namespace Examples.Chapter14.Cache
+namespace Examples.Chapter14
 {
    using static Console;
    using static F;
@@ -22,6 +22,8 @@ namespace Examples.Chapter14.Cache
          => cache.Get(id).OrElse(() => db.Get(id));
    }
 
+
+   // an example of using the Identity monad (not discussed in the book, but equivalent to Func<T>)
    static class Identity_Example
    {
       internal static void _main()

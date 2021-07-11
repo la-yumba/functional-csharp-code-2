@@ -33,9 +33,11 @@ namespace LaYumba.Functional
       public static Try<R> Bind<T, R>
          (this Try<T> @try, Func<T, Try<R>> f)
          => ()
-         => @try.Run().Match(
+         => @try.Run().Match
+            (
                Exception: ex => ex,
-               Success: t => f(t).Run());
+               Success: t => f(t).Run()
+            );
       
       // LINQ
 

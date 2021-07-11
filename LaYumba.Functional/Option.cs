@@ -37,18 +37,14 @@ namespace LaYumba.Functional
       public R Match<R>(Func<R> None, Func<T, R> Some)
          => isSome ? Some(value!) : None();
 
-      //public R Match<R>(Func<R> None, Func<T, R> Some)
-      //    => Get(out T t) ? Some(t) : None();
-      //  bool Get([NotNullWhen(true)] out T t)
-      //{
-      //   t = value;
-      //   return isSome;
-      //}
-
       public IEnumerable<T> AsEnumerable()
       {
          if (isSome) yield return value!;
       }
+
+      public static bool operator true(Option<T> @this) => @this.isSome;
+      public static bool operator false(Option<T> @this) => @this.isNone;
+      public static Option<T> operator | (Option<T> l, Option<T> r) => l.isSome ? l : r;
 
       // equality operators
 
