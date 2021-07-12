@@ -11,8 +11,9 @@ using LaYumba.Functional;
 using Unit = System.ValueTuple;
 
 using Examples;
-using Examples.FunctionalApi;
-using static Examples.FunctionalApi.ActionResultFactory;
+
+using Microsoft.AspNetCore.Http;
+using static Microsoft.AspNetCore.Http.Results;
 
 namespace Boc.Chapter9
 {
@@ -21,14 +22,14 @@ namespace Boc.Chapter9
       public async static Task Run()
       {
          var app = WebApplication.Create();
-         Func<MakeTransfer, ActionResult> handleSaveTransfer = ConfigureSaveTransferHandler(app.Configuration);
+         Func<MakeTransfer, IResult> handleSaveTransfer = ConfigureSaveTransferHandler(app.Configuration);
 
          app.MapPost("/Transfer/Future", handleSaveTransfer);
 
          await app.RunAsync();
       }
 
-      static Func<MakeTransfer, ActionResult>
+      static Func<MakeTransfer, IResult>
          ConfigureSaveTransferHandler(IConfiguration config)
       {
          // persistence layer
@@ -42,7 +43,7 @@ namespace Boc.Chapter9
          return HandleSaveTransfer(validate, save);
       }
 
-      static Func<MakeTransfer, ActionResult> HandleSaveTransfer
+      static Func<MakeTransfer, IResult> HandleSaveTransfer
          ( Validator<MakeTransfer> validate
          , Func<MakeTransfer, Exceptional<Unit>> save)
          => transfer
