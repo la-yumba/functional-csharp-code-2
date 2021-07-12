@@ -19,9 +19,9 @@ namespace Boc.Chapter19
 {
    public static class Program
    {
-      public static MinimalActionEndpointConventionBuilder ConfigureMakeTransferEndpoint
+      public static WebApplication ConfigureMakeTransferEndpoint
       (
-         WebApplication app,
+         this WebApplication app,
          Validator<MakeTransfer> validate,
          AccountRegistry accounts
       )
@@ -30,7 +30,7 @@ namespace Boc.Chapter19
             = id => accounts.Lookup(id)
                .Map(opt => opt.ToValidation(Errors.UnknownAccountId(id)));
 
-         return app.MapPost("/Transfer/Make", (Func<MakeTransfer, Task<IResult>>)((MakeTransfer transfer) =>
+         app.MapPost("/Transfer/Make", (Func<MakeTransfer, Task<IResult>>)((MakeTransfer transfer) =>
          {
             Task<Validation<AccountState>> outcome =
                from cmd in Async(validate(transfer))
@@ -44,6 +44,8 @@ namespace Boc.Chapter19
                  Invalid: errs => BadRequest(new { Errors = errs }),
                  Valid: newState => Ok(new { Balance = newState.Balance })));
          }));
+
+         return app;
       }
    }
 

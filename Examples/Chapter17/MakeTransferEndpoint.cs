@@ -20,9 +20,9 @@ namespace Boc.Chapter17
 {
    public static class Program
    {
-      public static MinimalActionEndpointConventionBuilder ConfigureMakeTransferEndpoint
+      public static WebApplication ConfigureMakeTransferEndpoint
       (
-         WebApplication app,
+         this WebApplication app,
          Validator<MakeTransfer> validate,
          Func<Guid, Task<Option<AccountState>>> getAccount,
          Func<Event, Task> saveAndPublish
@@ -39,7 +39,7 @@ namespace Boc.Chapter17
                return Unit();
             };
 
-         return app.MapPost("/Transfer/Make", (Func<MakeTransfer, Task<IResult>>)((MakeTransfer transfer) =>
+         app.MapPost("/Transfer/Make", (Func<MakeTransfer, Task<IResult>>)((MakeTransfer transfer) =>
          {
              Task<Validation<AccountState>> outcome =
                 from tr in Async(validate(transfer))
@@ -54,6 +54,8 @@ namespace Boc.Chapter17
                   Invalid: errs => BadRequest(new { Errors = errs }),
                   Valid: newState => Ok(new { Balance = newState.Balance })));
          }));
+
+         return app;
       }
    }
 
