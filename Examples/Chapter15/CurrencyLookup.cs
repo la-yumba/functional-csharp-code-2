@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using static System.Console;
+
 using System.Net.Http;
 using System.Text.Json;
 
@@ -7,18 +9,20 @@ using LaYumba.Functional;
 using static LaYumba.Functional.F;
 
 using Rates = System.Collections.Immutable.ImmutableDictionary<string, decimal>;
-using CurrencyCode = Boc.Domain.CurrencyCode;
 
 namespace Examples.Chapter15
 {
-
    public static class CurrencyLookup_Stateless
    {
       public static void Run()
       {
          WriteLine("Enter a currency pair like 'EURUSD', or 'q' to quit");
          for (string input; (input = ReadLine().ToUpper()) != "Q";)
-            WriteLine(FxApi.GetRate(input));
+            FxApi.TryGetRate(input).Run().Match
+            (
+               Exception: WriteLine,
+               Success: WriteLine
+            ) ;
       }
    }
 
@@ -123,10 +127,12 @@ namespace Examples.Chapter15
 
    static class FxApi
    {
+      // get your own key if my free trial has expired
+      const string ApiKey = "1a2419e081f5940872d5700f";
+
       record Response
       (
-         CurrencyCode CurrencyCode,
-         Rates Rates
+         decimal ConversionRate
       );
 
       public static decimal GetRate(string ccyPair)
@@ -134,17 +140,23 @@ namespace Examples.Chapter15
          WriteLine($"fetching rate...");
 
          var (baseCcy, quoteCcy) = ccyPair.SplitAt(3);
-         var uri = $"https://api.ratesapi.io/api/latest?base={baseCcy}";
+         var uri = $"https://v6.exchangerate-api.com/v6/{ApiKey}/pair/{baseCcy}/{quoteCcy}";
          var request = new HttpClient().GetStringAsync(uri);
 
-         var opts = new JsonSerializerOptions
-            { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+         var opts = new JsonSerializerOptions { PropertyNamingPolicy = new SnakeCaseNamingPolicy() };// JsonNamingPolicy.CamelCase };
          var response = JsonSerializer.Deserialize<Response>(request.Result, opts);
 
-         return response.Rates[quoteCcy];
+         return response.ConversionRate;
       }
 
       public static Try<decimal> TryGetRate(string ccyPair)
          => () => GetRate(ccyPair);
+   }
+
+   public class SnakeCaseNamingPolicy : JsonNamingPolicy
+   {
+      public override string ConvertName(string name) => ToSnakeCase(name);
+
+      public static string ToSnakeCase(string str) => string.Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToLower();
    }
 }
