@@ -18,11 +18,7 @@ namespace Examples.Chapter15
       {
          WriteLine("Enter a currency pair like 'EURUSD', or 'q' to quit");
          for (string input; (input = ReadLine().ToUpper()) != "Q";)
-            FxApi.TryGetRate(input).Run().Match
-            (
-               Exception: WriteLine,
-               Success: WriteLine
-            ) ;
+            WriteLine(FxApi.GetRate(input));
       }
    }
 
