@@ -1,4 +1,5 @@
 ﻿using static System.Console;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -24,56 +25,63 @@ namespace Examples.Chapter16
 
    static class RatesApi
    {
-      static string UriFor(CurrencyCode baseCcy)
-         => $"https://api.ratesapi.io/api/latest?base={baseCcy}";
-
-      record Response(CurrencyCode Base, Rates Rates);
-
-      static JsonSerializerOptions opts = new()
-      { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+      // get your own key if my free trial has expired
+      const string ApiKey = "1a2419e081f5940872d5700f";
 
       public static decimal GetRate(string ccyPair)
       {
          WriteLine($"fetching rate...");
 
-         var (baseCcy, quoteCcy) = ccyPair.SplitAt(3);
-         var uri = $"https://api.ratesapi.io/api/latest?base={baseCcy}";
-         Task<string> request = new HttpClient().GetStringAsync(uri);
+         Task<string> request = new HttpClient()
+            .GetStringAsync(UriFor(ccyPair));
 
          string body = request.Result;
-         var response = JsonSerializer.Deserialize<Response>(body, opts);
 
-         return response.Rates[quoteCcy];
+         var response = JsonSerializer.Deserialize<Response>(body, opts);
+         return response.ConversionRate;
       }
+
+      static string UriFor(string ccyPair)
+      {
+         var (baseCcy, quoteCcy) = ccyPair.SplitAt(3);
+         return $"https://v6.exchangerate-api.com/v6/{ApiKey}" +
+            $"/pair/{baseCcy}/{quoteCcy}";
+      }
+
+      record Response(decimal ConversionRate);
+
+      static readonly JsonSerializerOptions opts = new()
+      { PropertyNamingPolicy = new SnakeCaseNamingPolicy() };
 
       public static async Task<decimal> GetRateAsync(string ccyPair)
       {
          WriteLine($"fetching rate...");
 
-         var (baseCcy, quoteCcy) = ccyPair.SplitAt(3);
-         var uri = $"https://api.ratesapi.io/api/latest?base={baseCcy}";
+         Task<string> request = new HttpClient()
+            .GetStringAsync(UriFor(ccyPair));
 
-         Task<string> request = new HttpClient().GetStringAsync(uri);
          string body = await request;
 
          var response = JsonSerializer.Deserialize<Response>(body, opts);
-         return response.Rates[quoteCcy];
+         return response.ConversionRate;
       }
 
       public static Task<decimal> GetRateAsync_WithLinq1(string ccyPair)
-         => GetRateAsync(ccyPair.SplitAt(3));
-
-      public static Task<decimal> GetRateAsync((CurrencyCode Base, CurrencyCode Quote) pair)
-         => from body in new HttpClient().GetStringAsync(UriFor(pair.Base))
+         => from body in new HttpClient().GetStringAsync(UriFor(ccyPair))
             let response = JsonSerializer.Deserialize<Response>(body, opts)
-            select response.Rates[pair.Quote];
+            select response.ConversionRate;
 
-      public static Task<decimal> GetRateAsync_WithStream
-         ((CurrencyCode Base, CurrencyCode Quote) pair)
-         => from stream in new HttpClient().GetStreamAsync(UriFor(pair.Base))
+      public static Task<decimal> GetRateAsync_WithStream(string ccyPair)
+         => from stream in new HttpClient().GetStreamAsync(UriFor(ccyPair))
             from response in JsonSerializer.DeserializeAsync<Response>(stream, opts)
-            select response.Rates[pair.Quote];
+            select response.ConversionRate;
+   }
 
+   public class SnakeCaseNamingPolicy : JsonNamingPolicy
+   {
+      public override string ConvertName(string name) => ToSnakeCase(name);
+
+      public static string ToSnakeCase(string str) => string.Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToLower();
    }
 
    static class FxApi

@@ -9,6 +9,7 @@ using LaYumba.Functional;
 using static LaYumba.Functional.F;
 
 using Rates = System.Collections.Immutable.ImmutableDictionary<string, decimal>;
+using System.Threading.Tasks;
 
 namespace Examples.Chapter15
 {
@@ -18,7 +19,7 @@ namespace Examples.Chapter15
       {
          WriteLine("Enter a currency pair like 'EURUSD', or 'q' to quit");
          for (string input; (input = ReadLine().ToUpper()) != "Q";)
-            WriteLine(FxApi.GetRate(input));
+            WriteLine(Chapter16.RatesApi.GetRate(input));
       }
    }
 
@@ -59,7 +60,7 @@ namespace Examples.Chapter15
          if (cache.ContainsKey(ccyPair))
             return (cache[ccyPair], cache);
 
-         var rate = FxApi.GetRate(ccyPair);
+         var rate = Chapter16.RatesApi.GetRate(ccyPair);
          return (rate, cache.Add(ccyPair, rate));
       }
    }
@@ -77,7 +78,7 @@ namespace Examples.Chapter15
          var input = ReadLine().ToUpper();
          if (input == "Q") return;
 
-         var (rate, newState) = GetRate(FxApi.GetRate, input, cache);
+         var (rate, newState) = GetRate(Chapter16.RatesApi.GetRate, input, cache);
          WriteLine(rate);
          MainRec(newState); // recursively calls itself with the new state
       }
@@ -105,7 +106,7 @@ namespace Examples.Chapter15
          var input = ReadLine().ToUpper();
          if (input == "Q") return;
 
-         GetRate(pair => () => FxApi.GetRate(pair), input, cache).Run().Match(
+         GetRate(pair => () => Chapter16.RatesApi.GetRate(pair), input, cache).Run().Match(
             ex => MainRec($"Error: {ex.Message}", cache),
             result => MainRec(result.Quote.ToString(), result.NewState));
       }
@@ -119,40 +120,5 @@ namespace Examples.Chapter15
          else return from rate in getRate(ccyPair)
             select (rate, cache.Add(ccyPair, rate));
       }
-   }
-
-   static class FxApi
-   {
-      // get your own key if my free trial has expired
-      const string ApiKey = "1a2419e081f5940872d5700f";
-
-      record Response
-      (
-         decimal ConversionRate
-      );
-
-      public static decimal GetRate(string ccyPair)
-      {
-         WriteLine($"fetching rate...");
-
-         var (baseCcy, quoteCcy) = ccyPair.SplitAt(3);
-         var uri = $"https://v6.exchangerate-api.com/v6/{ApiKey}/pair/{baseCcy}/{quoteCcy}";
-         var request = new HttpClient().GetStringAsync(uri);
-
-         var opts = new JsonSerializerOptions { PropertyNamingPolicy = new SnakeCaseNamingPolicy() };// JsonNamingPolicy.CamelCase };
-         var response = JsonSerializer.Deserialize<Response>(request.Result, opts);
-
-         return response.ConversionRate;
-      }
-
-      public static Try<decimal> TryGetRate(string ccyPair)
-         => () => GetRate(ccyPair);
-   }
-
-   public class SnakeCaseNamingPolicy : JsonNamingPolicy
-   {
-      public override string ConvertName(string name) => ToSnakeCase(name);
-
-      public static string ToSnakeCase(string str) => string.Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToLower();
    }
 }
