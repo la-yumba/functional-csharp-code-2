@@ -1,16 +1,14 @@
 ﻿using System;
+using LaYumba.Functional;
+using NUnit.Framework;
 using static System.Math;
 
 namespace Examples.Chapter1
 {
    namespace CSharp7
    {
-      class Circle
+      record Circle(double Radius)
       {
-         public Circle(double radius) { Radius = radius; }
-
-         public double Radius { get; }
-
          public (double Circumference, double Area) Stats
             => (Circumference, Area);
 
@@ -24,6 +22,24 @@ namespace Examples.Chapter1
                static double Square(double d) => Pow(d, 2);
                return PI * Square(Radius);
             }
+         }
+      }
+   }
+
+   namespace Tuples
+   {
+      public static class Example
+      {
+         public static (string Base, string Quote)
+            AsPair(this string ccyPair)
+            => ccyPair.SplitAt(3);
+
+         [Test]
+         public static void Test()
+         {
+            var pair = "EURUSD".AsPair();
+            Assert.AreEqual("EUR", pair.Base);
+            Assert.AreEqual("USD", pair.Quote);
          }
       }
    }
