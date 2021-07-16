@@ -76,13 +76,6 @@ namespace Examples.Chapter16
 
    }
 
-   static class FxApi
-   {
-      public static Task<decimal> GetRate(string ccyPair) =>
-         CurrencyLayer.GetRateAsync(ccyPair)
-            .OrElse(() => RatesApi.GetRateAsync(ccyPair));
-   }
-
    /// <summary>
    /// Note that:
    /// 1. you need to get an API key from https://currencylayer.com/ (free, registration required)

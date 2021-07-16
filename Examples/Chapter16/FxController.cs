@@ -1,5 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using static Microsoft.AspNetCore.Http.Results;
+
 using LaYumba.Functional;
 using Boc.Domain;
 
@@ -24,5 +30,24 @@ namespace Examples.Chapter16
             .Map(
                Faulted: ex => StatusCode(500, Errors.UnexpectedError),
                Completed: result => Ok(result) as IActionResult);
+   }
+
+   public static class FxApi
+   {
+      public static void Configure(WebApplication app)
+         => app.MapGet("convert/{amount}/{from}/to/{to}", Handler);
+
+      // by the time we get C# 10, there should be a nicer syntax for this...
+      static Func<decimal, string, string, Task<IResult>> Handler = (amount, from, to)
+         => RatesApi.GetRateAsync(from + to)
+            .OrElse(() => CurrencyLayer.GetRateAsync(from + to))
+            .Map(rate => amount * rate)
+            .Map(
+               Faulted: ex => InternalServerError(Errors.UnexpectedError),
+               Completed: result => Ok(result));
+
+      public static Task<decimal> GetRate(string ccyPair) =>
+         CurrencyLayer.GetRateAsync(ccyPair)
+            .OrElse(() => RatesApi.GetRateAsync(ccyPair));
    }
 }
