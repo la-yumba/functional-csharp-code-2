@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Net.Http;
-using static System.Console;
 using System.Threading.Tasks;
 using LaYumba.Functional;
 
 namespace Examples.Chapter16
 {
-   using static F;
-
    public static class RetryHelper
    {
       public enum RetryStrategy { Exponential, Fixed };
