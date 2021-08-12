@@ -19,7 +19,7 @@ namespace Boc.Chapter19
 {
    public static class Program
    {
-      public static WebApplication ConfigureMakeTransferEndpoint
+      public static void ConfigureMakeTransferEndpoint
       (
          this WebApplication app,
          Validator<MakeTransfer> validate,
@@ -44,8 +44,6 @@ namespace Boc.Chapter19
                  Invalid: errs => BadRequest(new { Errors = errs }),
                  Valid: newState => Ok(new { Balance = newState.Balance })));
          }));
-
-         return app;
       }
    }
 

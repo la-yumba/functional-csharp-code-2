@@ -19,28 +19,24 @@ namespace Boc.Chapter13
    {
       public static class Program
       {
-         public static WebApplication ConfigureMakeTransferEndpoint
+         public static void ConfigureMakeTransferEndpoint
          (
             this WebApplication app,
             Func<Guid, AccountState> getAccount,
             Action<Event> saveAndPublish
          )
+         => app.MapPost("/Transfer/Make", (Func<MakeTransfer, IResult>)((MakeTransfer cmd) =>
          {
-            app.MapPost("/Transfer/Make", (Func<MakeTransfer, IResult>)((MakeTransfer cmd) =>
-            {
-               var account = getAccount(cmd.DebitedAccountId);
+            var account = getAccount(cmd.DebitedAccountId);
 
-               // performs the transfer
-               var (evt, newState) = account.Debit(cmd);
+            // performs the transfer
+            var (evt, newState) = account.Debit(cmd);
 
-               saveAndPublish(evt);
+            saveAndPublish(evt);
 
-               // returns information to the user about the new state
-               return Ok(new { newState.Balance });
-            }));
-
-            return app;
-         }
+            // returns information to the user about the new state
+            return Ok(new { newState.Balance });
+         }));
       }
 
 
@@ -83,26 +79,22 @@ namespace Boc.Chapter13
 
       public static class Program
       {
-         public static WebApplication ConfigureMakeTransferEndpoint
+         public static void ConfigureMakeTransferEndpoint
          (
             this WebApplication app,
             Func<MakeTransfer, Validation<MakeTransfer>> validate,
             Func<Guid, Option<AccountState>> getAccount,
             Action<Event> saveAndPublish
          )
-         {
-            app.MapPost("/Transfer/Make", (Func<MakeTransfer, IResult>)((MakeTransfer transfer)
-               => validate(transfer)
-                  .Bind(t => getAccount(t.DebitedAccountId)
-                     .ToValidation($"No account found for {t.DebitedAccountId}"))
-                  .Bind(acc => acc.Debit(transfer))
-                  .Do(result => saveAndPublish(result.Event))
-                  .Match(
-                     Invalid: errs => BadRequest(new { Errors = errs }),
-                     Valid: result => Ok(new { result.NewState.Balance }))));
-
-            return app;
-         }
+         => app.MapPost("/Transfer/Make", (Func<MakeTransfer, IResult>)((MakeTransfer transfer)
+         => validate(transfer)
+            .Bind(t => getAccount(t.DebitedAccountId)
+               .ToValidation($"No account found for {t.DebitedAccountId}"))
+            .Bind(acc => acc.Debit(transfer))
+            .Do(result => saveAndPublish(result.Event))
+            .Match(
+               Invalid: errs => BadRequest(new { Errors = errs }),
+               Valid: result => Ok(new { result.NewState.Balance }))));
       }
    }
 }
