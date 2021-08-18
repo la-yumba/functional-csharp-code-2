@@ -6,13 +6,12 @@ using System;
 using Microsoft.AspNetCore.Builder;
 
 using LaYumba.Functional;
-using static LaYumba.Functional.F;
 
 using AccountState = Boc.Chapter13.Domain.AccountState;
 using Boc.Chapter13.Domain;
 
-using Examples.FunctionalApi;
-using static Examples.FunctionalApi.ActionResultFactory;
+using Microsoft.AspNetCore.Http;
+using static Microsoft.AspNetCore.Http.Results;
 
 namespace Boc.Chapter13
 {
@@ -20,13 +19,13 @@ namespace Boc.Chapter13
    {
       public static class Program
       {
-         public static WebApplication ConfigureMakeTransferEndpoint
+         public static void ConfigureMakeTransferEndpoint
          (
-            WebApplication app,
+            this WebApplication app,
             Func<Guid, AccountState> getAccount,
             Action<Event> saveAndPublish
          )
-         => app.MapPost("/Transfer/Make", (MakeTransfer cmd) =>
+         => app.MapPost("/Transfer/Make", (Func<MakeTransfer, IResult>)((MakeTransfer cmd) =>
          {
             var account = getAccount(cmd.DebitedAccountId);
 
@@ -37,7 +36,7 @@ namespace Boc.Chapter13
 
             // returns information to the user about the new state
             return Ok(new { newState.Balance });
-         });
+         }));
       }
 
 
@@ -80,22 +79,22 @@ namespace Boc.Chapter13
 
       public static class Program
       {
-         public static WebApplication ConfigureMakeTransferEndpoint
+         public static void ConfigureMakeTransferEndpoint
          (
-            WebApplication app,
+            this WebApplication app,
             Func<MakeTransfer, Validation<MakeTransfer>> validate,
             Func<Guid, Option<AccountState>> getAccount,
             Action<Event> saveAndPublish
          )
-         => app.MapPost("/Transfer/Make", (MakeTransfer transfer)
-            => validate(transfer)
-               .Bind(t => getAccount(t.DebitedAccountId)
-                  .ToValidation($"No account found for {t.DebitedAccountId}"))
-               .Bind(acc => acc.Debit(transfer))
-               .Do(result => saveAndPublish(result.Event))
-               .Match(
-                  Invalid: errs => BadRequest(new { Errors = errs }),
-                  Valid: result => Ok(new { result.NewState.Balance })));
+         => app.MapPost("/Transfer/Make", (Func<MakeTransfer, IResult>)((MakeTransfer transfer)
+         => validate(transfer)
+            .Bind(t => getAccount(t.DebitedAccountId)
+               .ToValidation($"No account found for {t.DebitedAccountId}"))
+            .Bind(acc => acc.Debit(transfer))
+            .Do(result => saveAndPublish(result.Event))
+            .Match(
+               Invalid: errs => BadRequest(new { Errors = errs }),
+               Valid: result => Ok(new { result.NewState.Balance }))));
       }
    }
 }

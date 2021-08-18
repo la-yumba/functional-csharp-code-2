@@ -84,13 +84,6 @@ namespace Examples.Chapter16
       public static string ToSnakeCase(string str) => string.Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToLower();
    }
 
-   static class FxApi
-   {
-      public static Task<decimal> GetRate(string ccyPair) =>
-         CurrencyLayer.GetRateAsync(ccyPair)
-            .OrElse(() => RatesApi.GetRateAsync(ccyPair));
-   }
-
    /// <summary>
    /// Note that:
    /// 1. you need to get an API key from https://currencylayer.com/ (free, registration required)

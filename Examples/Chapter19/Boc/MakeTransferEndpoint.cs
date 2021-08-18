@@ -12,16 +12,16 @@ using Microsoft.AspNetCore.Builder;
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
 
-using Examples.FunctionalApi;
-using static Examples.FunctionalApi.ActionResultFactory;
+using Microsoft.AspNetCore.Http;
+using static Microsoft.AspNetCore.Http.Results;
 
 namespace Boc.Chapter19
 {
    public static class Program
    {
-      public static WebApplication ConfigureMakeTransferEndpoint
+      public static void ConfigureMakeTransferEndpoint
       (
-         WebApplication app,
+         this WebApplication app,
          Validator<MakeTransfer> validate,
          AccountRegistry accounts
       )
@@ -30,7 +30,7 @@ namespace Boc.Chapter19
             = id => accounts.Lookup(id)
                .Map(opt => opt.ToValidation(Errors.UnknownAccountId(id)));
 
-         return app.MapPost("/Transfer/Make", (MakeTransfer transfer) =>
+         app.MapPost("/Transfer/Make", (Func<MakeTransfer, Task<IResult>>)((MakeTransfer transfer) =>
          {
             Task<Validation<AccountState>> outcome =
                from cmd in Async(validate(transfer))
@@ -43,7 +43,7 @@ namespace Boc.Chapter19
               Completed: val => val.Match(
                  Invalid: errs => BadRequest(new { Errors = errs }),
                  Valid: newState => Ok(new { Balance = newState.Balance })));
-         });
+         }));
       }
    }
 

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <PackageId>LaYumba.Functional</PackageId>
     <PackageVersion>2.0.0</PackageVersion>
     <PackageProjectUrl>https://github.com/la-yumba/functional-csharp-code-2</PackageProjectUrl>

@@ -51,9 +51,17 @@ namespace Examples
                   Some: (main) => main()
                );
 
-         else
-            await Boc.Chapter9.Program.Run();
-            //StartWebApi();
+         else // StartWebApi()
+            await StartMinimalApi();
+      }
+
+      async static Task StartMinimalApi()
+      {
+         var app = WebApplication.Create();
+
+         Chapter16.FxApi.Configure(app);
+
+         await app.RunAsync();
       }
 
       static void StartWebApi()
