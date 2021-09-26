@@ -49,7 +49,7 @@ namespace Boc.Chapter17
                 select result.NewState;
 
              return outcome.Map(
-               Faulted: ex => InternalServerError(Errors.UnexpectedError),
+               Faulted: ex => StatusCode(StatusCodes.Status500InternalServerError),
                Completed: val => val.Match(
                   Invalid: errs => BadRequest(new { Errors = errs }),
                   Valid: newState => Ok(new { Balance = newState.Balance })));

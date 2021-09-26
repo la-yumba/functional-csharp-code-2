@@ -4,7 +4,5 @@ namespace Examples
    {
       public override string ToString()
          => $"({Number}, {Value})";
-
-      public static Numbered<T> Create(T Value, int Number) => new(Value, Number);
    }
 }

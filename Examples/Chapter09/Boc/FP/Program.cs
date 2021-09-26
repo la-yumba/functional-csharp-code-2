@@ -52,7 +52,7 @@ namespace Boc.Chapter9
                Invalid: err => BadRequest(err),
                Valid: result => result.Match
                (
-                  Exception: _ => InternalServerError(Errors.UnexpectedError),
+                  Exception: _ => StatusCode(StatusCodes.Status500InternalServerError),
                   Success: _ => Ok()
                )
             );
