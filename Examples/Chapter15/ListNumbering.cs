@@ -23,7 +23,7 @@ namespace Examples.ReaderEx
 
          WriteLine();
          WriteLine("Using Zip");
-         var altNumberedList = list.Zip(Naturals(), Numbered<char>.Create);
+         var altNumberedList = list.Zip(Naturals(), (c, i) => new Numbered<char>(c, i));
          altNumberedList.ForEach(WriteLine);
 
          ReadKey();

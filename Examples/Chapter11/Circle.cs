@@ -2,27 +2,45 @@
 
 namespace Examples.Chapter13.Data
 {
-   struct Circle
+   namespace WithRecords
    {
-      public Circle(Point center, double radius)
-         => (Center, Radius) = (center, radius);
+      readonly record struct Point(double X, double Y);
+      readonly record struct Circle(Point Center, double Radius);
 
-      public Point Center { get; }
-      public double Radius { get; }
-
-      public double Area => PI * Pow(Radius, 2);
+      static class CircleExt
+      {
+         static Circle Scale(this Circle c, double factor)
+            => c with { Radius = c.Radius * factor };
+      }
    }
 
-   struct Point
+   namespace BeforeRecords
    {
-      public double X { get; }
-      public double Y { get; }
-      public Point(double x, double y) { X = x; Y = y; }
-   }
+      struct Circle
+      {
+         public Circle(Point center, double radius)
+            => (Center, Radius) = (center, radius);
 
-   static class CircleExt
-   {
-      static Circle Scale(this Circle @this, double factor)
-         => new Circle(@this.Center, @this.Radius * factor);
+         public Point Center { get; init; }
+         public double Radius { get; init; }
+
+         public double Area => PI * Pow(Radius, 2);
+      }
+
+      struct Point
+      {
+         public double X { get; }
+         public double Y { get; }
+         public Point(double x, double y) { X = x; Y = y; }
+      }
+
+      static class CircleExt
+      {
+         static Circle Scale(this Circle @this, double factor)
+            => new Circle(@this.Center, @this.Radius * factor);
+
+         static Circle Scale_CSharp10(this Circle c, double factor)
+            => c with { Radius = c.Radius * factor };
+      }
    }
 }
