@@ -29,8 +29,8 @@ namespace Boc.Chapter19
 
                return optAccount.Map(accState =>
                {
-                  AccountProcess process = new(accState, saveAndPublish);
-                  return (cache.Add(id, process), Some(process));
+                  AccountProcess account = new(accState, saveAndPublish);
+                  return (cache.Add(id, account), Some(account));
                })
                .GetOrElse(() => (cache, None));
             }
@@ -69,7 +69,7 @@ namespace Boc.Chapter19
                   Some: acc => (cache, Some(acc)),
                   None: () =>
                   {
-                     var account = new AccountProcess(m.AccountState, saveAndPublish);
+                     AccountProcess account = new(m.AccountState, saveAndPublish);
                      return (cache.Add(m.Id, account), Some(account));
                   }
                )

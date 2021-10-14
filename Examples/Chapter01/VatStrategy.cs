@@ -21,6 +21,13 @@ namespace Examples.Chapter01
             (var country) _ => Vat(RateByCountry(country), order),
          };
 
+      static decimal Vat_Prop(Address address, Order order)
+         => address switch
+         {
+            { Country: "de" } => DeVat(order),
+            { Country: var c } => Vat(RateByCountry(c), order),
+         };
+
       static decimal RateByCountry(string country)
          => country switch
          {

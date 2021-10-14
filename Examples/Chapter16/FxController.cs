@@ -35,16 +35,16 @@ namespace Examples.Chapter16
    public static class FxApi
    {
       public static void Configure(WebApplication app)
-         => app.MapGet("convert/{amount}/{from}/to/{to}", FXConversion);
+         => app.MapGet("convert/{amount}/{baseCcy}/to/{quoteCcy}", FXConversion);
 
       // by the time we get C# 10, there should be a nicer syntax for this...
       //static Func<decimal, string, string, Task<IResult>> Handler = (amount, from, to)
-      static Task<IResult> FXConversion (decimal amount, string from, string to)
-         => RatesApi.GetRateAsync(from + to)
-            .OrElse(() => CurrencyLayer.GetRateAsync(from + to))
+      static Task<IResult> FXConversion (decimal amount, string baseCcy, string quoteCcy)
+         => RatesApi.GetRateAsync(baseCcy + quoteCcy)
+            .OrElse(() => CurrencyLayer.GetRateAsync(baseCcy + quoteCcy))
             .Map(rate => amount * rate)
             .Map(
-               Faulted: ex => StatusCode(StatusCodes.Status500InternalServerError),
+               Faulted: ex => StatusCode(500),
                Completed: result => Ok(result));
 
       public static Task<decimal> GetRate(string ccyPair) =>
