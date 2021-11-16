@@ -26,8 +26,8 @@ namespace Boc.Chapter19
          AccountRegistry accounts
       )
       {
-         Func<Guid, Task<Validation<AccountProcess>>> getAccountVal
-            = id => accounts.Lookup(id)
+         // Func<Guid, Task<Validation<AccountProcess>>>
+         var getAccountVal = (Guid id) => accounts.Lookup(id)
                .Map(opt => opt.ToValidation(Errors.UnknownAccountId(id)));
 
          app.MapPost("/Transfer/Make", (Func<MakeTransfer, Task<IResult>>)((MakeTransfer transfer) =>

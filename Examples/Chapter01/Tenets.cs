@@ -1,64 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using NUnit.Framework;
 
-namespace Examples.Chapter1
+using static System.Linq.Enumerable;
+
+namespace Examples.Chapter1;
+
+class FunctionsAsFirstClassValues
 {
-   using static Enumerable;
-   using static Console;
-
-   class FunctionsAsFirstClassValues
+   [Test]
+   public static void Select()
    {
-      [Test]
-      public static void Run()
-      {
-         static int triple(int x) => x * 3;
-         var range = Range(1, 3);
-         var triples = range.Select(triple);
+      var triple = (int x) => x * 3;
 
-         Assert.AreEqual(new List<int>() { 3, 6, 9 }
-            , triples);
-      }
+      // alternatively, before C# 10...
+      //Func<int, int> triple = x => x * 3;
+
+      // alternatively, with local function
+      //static int triple(int x) => x * 3;
+
+      var range = Range(1, 3);
+      var triples = range.Select(triple);
+
+      Assert.AreEqual(new List<int>() { 3, 6, 9 }
+         , triples);
+   }
+}
+
+public class MutationShouldBeAvoided
+{      
+   [Test]
+   public void NoInPlaceUpdates()
+   {
+      var isOdd = (int x) => x % 2 == 1;
+      int[] original = { 7, 6, 1 };
+
+      var sorted = original.OrderBy(x => x);
+      var filtered = original.Where(isOdd);
+
+      Assert.AreEqual(new[] { 7, 6, 1 }, original);
+      Assert.AreEqual(new[] { 1, 6, 7 }, sorted);
+      Assert.AreEqual(new[] { 7, 1 }, filtered);
    }
 
-   public class MutationShouldBeAvoided
-   {      
-      [Test]
-      public void NoInPlaceUpdates()
-      {
-         var original = new[] { 5, 7, 1 };
-         var sorted = original.OrderBy(x => x).ToList();
+   [Test]
+   public void InPlaceUpdates()
+   {
+      int[] original = { 5, 7, 1 };
+      Array.Sort(original);
+      Assert.AreEqual(new[] { 1, 5, 7 }, original);
+   }
 
-         Assert.AreEqual(new[] { 5, 7, 1 }, original);
-         Assert.AreEqual(new[] { 1, 5, 7 }, sorted);
-      }
+   static readonly int[] nums = Range(-10000, 20001).Reverse().ToArray();
 
-      [Test]
-      public void InPlaceUpdates()
-      {
-         int[] original = { 5, 7, 1 };
-         Array.Sort(original);
-         Assert.AreEqual(new[] { 1, 5, 7 }, original);
-      }
+   public static void WithArrayItBreaks()
+   {
+      void task1() => WriteLine(nums.Sum());
+      void task2() { Array.Sort(nums); WriteLine(nums.Sum()); }
 
-      static readonly int[] nums = Range(-10000, 20001).Reverse().ToArray();
+      Parallel.Invoke(task1, task2);
+   }
 
-      public static void WithArrayItBreaks()
-      {
-         void task1() => WriteLine(nums.Sum());
-         void task2() { Array.Sort(nums); WriteLine(nums.Sum()); }
+   public static void WithIEnumerableItWorks()
+   {
+      var task1 = () => WriteLine(nums.Sum());
+      var task3 = () => WriteLine(nums.OrderBy(x => x).Sum());
 
-         Parallel.Invoke(task1, task2);
-      }
-
-      public static void WithIEnumerableItWorks()
-      {
-         Action task1 = () => WriteLine(nums.Sum());
-         Action task3 = () => WriteLine(nums.OrderBy(x => x).Sum());
-
-         Parallel.Invoke(task1, task3);
-      }
+      Parallel.Invoke(task1, task3);
    }
 }

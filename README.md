@@ -4,8 +4,8 @@ Work in progress!
 
 This repo contains the code samples, exercises and solutions for the book
 [Functional Programming in C#](https://www.manning.com/books/functional-programming-in-c-sharp-second-edition&a_bid=c4a6909b)
-published by Manning. The 2nd edition has been updated to reflect new features
-in C# 9 and .NET 5.
+published by Manning. The 2nd edition builds on the success of the 1st edition, 
+but has been updated to reflect new features in C# 10 and .NET 6.
 
 [![Functional Programming in C#](cover.png)](https://www.manning.com/books/functional-programming-in-c-sharp-second-edition?a_aid=functional-programming-in-c-sharp-second-edition&a_bid=c4a6909b)
 
@@ -18,7 +18,6 @@ The code samples are organized in the following projects:
 - **LaYumba.Functional.Data**: very simple functional data structures discussed in Chapter 10
 - **LaYumba.Functional.Tests**: also illustrative of topics explained in the book, and
   useful to better understand the constructs in the library
-- **Boc.Domain**: an example of using F# for domain objects, discussed in Appendix A
 
 **Note:** you are welcome to reference `LaYumba.Functional` from your projects
 via [NuGet](https://www.nuget.org/packages/LaYumba.Functional), and submit
@@ -27,15 +26,15 @@ For a more fully-fledged functional library, consider [LanguageExt](https://gith
 
 ## Working with the code samples
 
-The code samples use .NET 5, and should compile and run on all major OS's
+The code samples use .NET 6, and should compile and run on all major OS's
 via the `dotnet` CLI.
 
 ### Prerequisites
 
-- [.NET Core 5 SDK](https://www.microsoft.com/net/download/core)
+- [.NET Core 6 SDK](https://dotnet.microsoft.com/download/dotnet)
 
 To check this is available, type `dotnet --version` at the command prompt, 
-and you should get `5.0` or greater
+and you should get `6.0` or greater
 
 ### One-time setup
 
@@ -76,7 +75,7 @@ Throughout the book, I encourage readers to try things out in the [REPL](https:/
 
 - If you use Visual Studio, you can start the REPL by going to
 `View > Other Windows > C# Interactive` (short tutorial [here](https://github.com/dotnet/roslyn/wiki/C%23-Interactive-Walkthrough))
-- On Mono, use the `csharp` command
+- On Mono, use the `csharp` or `csi` command
 - There are several other REPLs available, some even run in the browser
 
 You'll often need to import `LaYumba.Functional` in the REPL. In C# Interactive,

@@ -68,13 +68,15 @@ namespace Examples.Chapter16
             select r.Price < e.Price ? r : e;
 
       Task<Flight> BestFareA(string from, string to, DateTime on)
-         => Async(PickCheaper)
+      {
+         var pickCheaper = (Flight l, Flight r)
+            => l.Price < r.Price ? l : r;
+
+         return Async(pickCheaper)
             .Apply(ryanair.BestFare(from, to, on))
             .Apply(easyjet.BestFare(from, to, on));
-
-      static Func<Flight, Flight, Flight> PickCheaper 
-         = (l, r) => l.Price < r.Price ? l : r;
-
+      }
+         
       async Task<IEnumerable<Flight>> Search(IEnumerable<Airline> airlines
          , string from, string to, DateTime on)
       {

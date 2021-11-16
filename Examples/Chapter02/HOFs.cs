@@ -1,21 +1,17 @@
-﻿using System;
+﻿namespace Examples.Chapter2;
 
-namespace Examples.Chapter2
+static class HOFs
 {
-   using static Console;
-
-   static class HOFs
+   [Test]
+   public static void Swap()
    {
-      internal static void Run()
-      {
-         Func<double, double, double> divide = (dividend, divisor) => dividend / divisor;
-         WriteLine(divide(10, 2)); // => 5
+      var divide = (int dividend, int divisor) => dividend / divisor;
+      var divideBy = divide.SwapArgs();
 
-         var divideBy = divide.SwapArgs();
-         WriteLine(divideBy(2, 10)); // => 5
-      }
-
-      public static Func<T2, T1, R> SwapArgs<T1, T2, R>(this Func<T1, T2, R> func)
-         => (t2, t1) => func(t1, t2);
+      Assert.AreEqual(5, divide(10, 2));
+      Assert.AreEqual(5, divideBy(2, 10));
    }
+
+   public static Func<T2, T1, R> SwapArgs<T1, T2, R>(this Func<T1, T2, R> func)
+      => (t2, t1) => func(t1, t2);
 }

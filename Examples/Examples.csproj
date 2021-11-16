@@ -2,7 +2,6 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <StartupObject>Examples.Program</StartupObject>
-    <LangVersion>preview</LangVersion>
     <NoWarn>1701;1702;8321;0168;0649</NoWarn>
   </PropertyGroup>
 

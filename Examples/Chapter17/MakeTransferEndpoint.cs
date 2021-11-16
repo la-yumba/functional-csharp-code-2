@@ -28,16 +28,14 @@ namespace Boc.Chapter17
          Func<Event, Task> saveAndPublish
       )
       {
-         Func<Guid, Task<Validation<AccountState>>> getAccountVal
-            = id => getAccount(id)
+         var getAccountVal = (Guid id) => getAccount(id)
                .Map(opt => opt.ToValidation(Errors.UnknownAccountId(id)));
 
-         Func<Event, Task<Unit>> saveAndPublishF
-            = async e =>
-            {
-               await saveAndPublish(e);
-               return Unit();
-            };
+         var saveAndPublishF = async (Event e) =>
+         {
+            await saveAndPublish(e);
+            return Unit();
+         };
 
          app.MapPost("/Transfer/Make", (Func<MakeTransfer, Task<IResult>>)((MakeTransfer transfer) =>
          {

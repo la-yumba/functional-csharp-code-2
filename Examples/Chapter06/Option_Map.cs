@@ -20,7 +20,7 @@ namespace Examples.Chapter6
       [Test]
       public static void BasicExample()
       {
-         Func<string, string> greet = name => $"hello, {name}";
+         var greet = (string name) => $"hello, {name}";
 
          Option<string> empty = None;
          Option<string> optJohn = Some("John");

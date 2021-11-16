@@ -93,7 +93,7 @@ namespace LaYumba.Functional.Data.LinkedList
             ? List(value, @this)
             : @this.Match
                (
-                  () => { throw new IndexOutOfRangeException(); },
+                  () => throw new IndexOutOfRangeException(),
                   (head, tail) => List(head, tail.InsertAt(m - 1, value))
                );
 

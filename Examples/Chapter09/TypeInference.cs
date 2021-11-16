@@ -14,7 +14,7 @@ namespace Examples.Chapter9
          => $"{gr}, {name}";
 
       // the below does NOT compile!
-      //Func<Name, Greeting> __GreetWith(Greeting greeting)
+      //Func<Name, PersonalizedGreeting> __GreetWith(Greeting greeting)
       //   => GreeterMethod.Apply(greeting);
 
       // the lines below compiles, but oh my!

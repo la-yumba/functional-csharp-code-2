@@ -10,7 +10,6 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Copyright 2021 (c) Enrico Buonanno. All rights reserved.</Copyright>
     <PackageTags>functional programming</PackageTags>
-    <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>

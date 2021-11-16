@@ -56,4 +56,10 @@ namespace Examples.Chapter4
 
       public override string ToString() => Value.ToString();
    }
+
+   readonly record struct HealthData
+   (
+      Age Age,
+      Gender Gender
+   );
 }

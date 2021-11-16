@@ -30,8 +30,11 @@ namespace Examples.Chapter16
       public static async Task Main_3()
          => await ReadDeliveries("warehouse.csv")
             .GroupBy(r => r.ProductID)
-            .SelectAwait(async grp => new Delivery(grp.Key
-               , await grp.SumAsync(r => r.Quantity)))
+            .SelectAwait(async grp => new Delivery
+               (
+                  ProductID: grp.Key,
+                  Quantity: await grp.SumAsync(r => r.Quantity)
+               ))
             .ForEachAwaitAsync(UpdateDBAsync);
 
       static IAsyncEnumerable<Delivery> ReadDeliveries(string path)

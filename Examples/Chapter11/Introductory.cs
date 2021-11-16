@@ -47,41 +47,13 @@ namespace Examples.Chapter11
       }
    }
 
-   public class LocalMutationIsOk
+   class LocalMutationIsOk
    {
       int Sum(int[] ints)
       {
          var result = 0;
          foreach (int i in ints) result += i;
          return result;
-      }
-
-      public static void _main()
-      {
-         var nums = Range(-10000, 20001).Reverse().ToList();
-         Parallel.Invoke(
-            () => WriteLine(nums.Sum()),
-            () => { nums.Sort(); WriteLine(nums.Sum()); });
-      }
-
-      public static void __main()
-      {
-         var nums = Range(-10000, 20001).Reverse().ToList();
-
-         Action task1 = () => WriteLine(nums.Sum());
-         Action task2 = () => { nums.Sort(); WriteLine(nums.Sum()); };
-
-         Parallel.Invoke(task1, task2);
-      }
-
-      public static void WithIEnumerable()
-      {
-         var nums = Range(-10000, 20001).Reverse();
-
-         Action task1 = () => WriteLine(nums.Sum());
-         Action task2 = () => { nums.OrderBy(x => x); WriteLine(nums.Sum()); };
-
-         Parallel.Invoke(task1, task2);
       }
    }
 }
