@@ -1,10 +1,8 @@
 # Functional Programming in C#, 2nd Edition
 
-Work in progress!
-
 This repo contains the code samples, exercises and solutions for the book
-[Functional Programming in C#](https://www.manning.com/books/functional-programming-in-c-sharp-second-edition&a_bid=c4a6909b)
-published by Manning. The 2nd edition builds on the success of the 1st edition, 
+[Functional Programming in C#, 2nd Edition](https://www.manning.com/books/functional-programming-in-c-sharp-second-edition&a_bid=c4a6909b)
+published by Manning. The 2nd Edition builds on the success of the 1st, 
 but has been updated to reflect new features in C# 10 and .NET 6.
 
 [![Functional Programming in C#](cover.png)](https://www.manning.com/books/functional-programming-in-c-sharp-second-edition?a_aid=functional-programming-in-c-sharp-second-edition&a_bid=c4a6909b)
@@ -15,7 +13,7 @@ The code samples are organized in the following projects:
 - **Exercises**: placeholders for you to do the exercises, compile and run them;
   and compare to the provided solutions
 - **LaYumba.Functional**: a functional library that we develop throughout the book
-- **LaYumba.Functional.Data**: very simple functional data structures discussed in Chapter 10
+- **LaYumba.Functional.Data**: very simple functional data structures discussed in Chapter 12
 - **LaYumba.Functional.Tests**: also illustrative of topics explained in the book, and
   useful to better understand the constructs in the library
 
@@ -82,7 +80,7 @@ You'll often need to import `LaYumba.Functional` in the REPL. In C# Interactive,
 this can be done like so:
 
 ```csharp
-#r "functional-csharp-code-2\LaYumba.Functional\bin\Debug\netstandard1.6\LaYumba.Functional.dll"
+#r "functional-csharp-code-2\LaYumba.Functional\bin\Debug\net6.0\LaYumba.Functional.dll"
 ```
 
 The path above may not work for you, in which case use an absolute path to the dll,
@@ -98,7 +96,7 @@ using static LaYumba.Functional.F;
 You're now ready to experiment with functional code right in the REPL, for example:
 
 ```csharp
-> Func<int, int, int> plus = (a, b) => a + b;
+> var plus = (int a, int b) => a + b;
 > Some(plus).Apply(1).Apply(2)
 [Some(3)]
 > Some(plus).Apply(1).Apply(None)
