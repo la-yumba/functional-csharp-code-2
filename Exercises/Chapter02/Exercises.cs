@@ -6,7 +6,7 @@ namespace Exercises.Chapter2
 {
    static class Exercises
    {
-      // 1. Write a function that negates a given predicate: whenvever the given predicate
+      // 1. Write a function that negates a given predicate: whenever the given predicate
       // evaluates to `true`, the resulting function evaluates to `false`, and vice versa.
 
       // 2. Write a method that uses quicksort to sort a `List<int>` (return a new list,
